@@ -24,10 +24,11 @@ export default function Header(props) {
                     <>
                     <h4>Welcome {currentUser.name}!</h4>
                         <nav className='loggedIn'>
+                            <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
                             <NavLink className='navLink' to='/Dashboard/Account'>Account</NavLink>
                             <NavLink className='navLink' to='/Dashboard/CreateTicket'>Create Ticket</NavLink>
                             <NavLink className='navLink' to='/Dashboard/Unassigned'>Dashboard</NavLink>
-                            <Link className="navLink" exact to='/' onClick={logout}>Sign out</Link>
+                            <Link className="navLink" to='/' onClick={logout}>Sign out</Link>
                         </nav>
                     </>
                 );

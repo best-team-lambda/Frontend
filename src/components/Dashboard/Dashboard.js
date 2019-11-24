@@ -11,6 +11,7 @@ import ClosedTicketList from './Closed/ClosedTicketList.js';
 import ViewTicket from './ViewTicket.js';
 
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
+import CourseBuilder from '../CourseBuilder.js';
 
 
 
@@ -33,6 +34,7 @@ export default function Dashboard(props) {
                 <Route exact path='/Dashboard/Mine' component={UserTicketList} />
                 <Route exact path='/Dashboard/Resolved' component={ClosedTicketList} />
                 <Route exact path='/Dashboard/Tickets/:id' component={ViewTicket} />
+                <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} />
             </CurrentUserContext.Provider>
         </div>
     )
