@@ -83,20 +83,15 @@ function CourseBuilder(props) {
                         </select>
                         }
 
-                        {/* {selectedCourse != '' && selectedCourse != 'AddCourse' && 
-                        <>
-                            <select id="selechfghtedUnit" onChange={handleSelect} name="selectUnit">
-                                {units && units.map(unit => {
-                                    console.log(selectedUnit)
-                                    return (
-                                        <option key={unit.id} value={unit.id}>{unit.name}</option>
-                                    );
-                                })}
-                                <option value="AddUnit">Add Unit</option>
-                            </select>
-                            </>
-                        }  */}
-
+                        {props.weekSelected && 
+                        <select onChange={handleChange} name="selectDay">
+                            <option default value='default'>Select Day</option>
+                            {props.days && props.days.map(day=>{
+                            return <option key={day.id} value={day.id}>{day.name}</option>
+                            })}
+                            <option value="AddDay">Add Day</option>
+                        </select>
+                        }
 
                     </div>
                     <input  className='searchBox' name="searchTerm" type="text" onChange={handleChange} placeholder="Filter" />

@@ -13,34 +13,34 @@ const initialState = {
 
     courses: [
         {
-        id: 100564, 
-        name: 'FSW', 
+        id: 1, 
+        name: 'Full Stack Web Development', 
         units: 
             [
                 {
                     id: 1231231,
-                    name: 'abc',
+                    name: 'Unit 1: Web Fundamentals',
                     weeks: 
                     [
                         {
                             id: 122311, 
-                            name: 'abc', 
+                            name: 'Week 1: User Interface and Git', 
                             Days: [
                                 {
                                     id: 221,
-                                    name: 'monday'
+                                    name: 'User Interface 1'
                                 },
                                 {
                                     id: 222,
-                                    name: 'tuesday'
+                                    name: 'Git for Web Development'
                                 },
                                 {
                                     id: 223,
-                                    name: 'wednesday'
+                                    name: 'User Interface 2'
                                 },
                                 {
                                     id: 224,
-                                    name: 'thursday'
+                                    name: 'User Interface 3'
                                 },
                             ] 
                         },
