@@ -1,6 +1,7 @@
 import React, {useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import { axiosWithAuth } from './utils/axiosWithAuth';
+import axiosWithAuth from './utils/axiosWithAuth';
 import PrivateRoute from './utils/PrivateRoute';
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -11,10 +12,9 @@ import Login from './components/Global/Login';
 import SignUpForm from './components/Global/SignUpForm';
 import Footer from './components/Global/Footer';
 import Credits from './components/Global/Credits';
-
-
 import Dashboard from './components/Dashboard/Dashboard.js'
 
+import { getCurrentUser } from './actions/AppActions.js';
 import { CurrentUserContext } from './contexts/CurrentUserContext.js';
 
 const StyledLoader = styled(LoadingOverlay)`
@@ -49,6 +49,14 @@ function App(props) {
     }
   }, [currentUser, loading])
 
+  useEffect(() => {
+      if (!props.currentUser && sessionStorage.getItem('token')){
+        props.getCurrentUser();
+      }
+  }, [props.currentUser, props.loading])
+  
+  console.log('App Props.CurrentUser', props.currentUser)
+  console.log('App Props.Loading', props.loading)
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser, loading, setLoading,
@@ -74,4 +82,12 @@ function App(props) {
   );
 }
 
-export default App;
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        currentUser: state.AppReducer.currentUser,
+        loading: state.AppReducer.loading,
+    }
+  }
+
+export default connect(mapStateToProps, { getCurrentUser })(App)

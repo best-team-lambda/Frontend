@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import styled from 'styled-components';
-import {axiosWithAuth} from '../../utils/axiosWithAuth';
+import axiosWithAuth from '../../utils/axiosWithAuth';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileVideo, faImages} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";

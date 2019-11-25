@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import styled from 'styled-components';
-import { axiosWithAuth } from '../../utils/axiosWithAuth';
+import axiosWithAuth from '../../utils/axiosWithAuth';
 import axios from 'axios';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";

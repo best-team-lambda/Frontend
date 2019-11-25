@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import { axiosWithAuth } from '../../../utils/axiosWithAuth';
+import axiosWithAuth from '../../../utils/axiosWithAuth';
 import ClosedTicket from './ClosedTicket';
 
 import { CurrentUserContext } from '../../../contexts/CurrentUserContext.js';

@@ -117,8 +117,6 @@ function CourseBuilder(props) {
     )
 }
 
-//test
-
 const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
     return {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-import { axiosWithAuth } from "../../utils/axiosWithAuth";
+import axiosWithAuth from "../../utils/axiosWithAuth";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

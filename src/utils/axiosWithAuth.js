@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const axiosWithAuth = () => {
+export default function axiosWithAuth() {
     const token = sessionStorage.getItem('token');
 
     return axios.create({
