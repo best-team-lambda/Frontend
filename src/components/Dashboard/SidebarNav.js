@@ -7,7 +7,7 @@ import mine from '../../images/mine.png'
 import closed from '../../images/closed.png'
 
 export default function SidebarNav(props) {
-    const { searchType, setSearchType, searchTerm, setSearchTerm, filterByHelperStudentBoth, setFilterByHelperStudentBoth, 
+    const { setSearchType, searchTerm, setSearchTerm, filterByHelperStudentBoth, setFilterByHelperStudentBoth, 
         filterByOpenClosedAll, setFilterByOpenClosedAll } = useContext(CurrentUserContext);
 
         // console.log('SideBarNav', props.props.location.pathname);
@@ -65,6 +65,10 @@ export default function SidebarNav(props) {
             <div>
                 <img src={closed} alt="Closed tickets" />
                 <NavLink className='navLink' to='/Dashboard/Resolved'>Resolved</NavLink>
+            </div>
+            <div>
+                <img src={closed} alt="Closed tickets" />
+                <NavLink className='navLink' to='/Dashboard/Lambda'>Lambda</NavLink>
             </div>
             </nav>
 

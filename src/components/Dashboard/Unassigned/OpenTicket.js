@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+// import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import styled from 'styled-components';
 
 const Fa = styled(FontAwesomeIcon)`

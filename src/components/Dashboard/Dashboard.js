@@ -12,6 +12,7 @@ import ViewTicket from './ViewTicket.js';
 
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import CourseBuilder from '../CourseBuilder.js';
+import LambdaTK from './LambdaTK/LambdaTK.js';
 
 
 
@@ -35,6 +36,7 @@ export default function Dashboard(props) {
                 <Route exact path='/Dashboard/Resolved' component={ClosedTicketList} />
                 <Route exact path='/Dashboard/Tickets/:id' component={ViewTicket} />
                 <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} />
+                <Route exact path='/Dashboard/Lambda' component={LambdaTK} />
             </CurrentUserContext.Provider>
         </div>
     )

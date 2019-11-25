@@ -4,7 +4,8 @@ import { axiosWithAuth } from "../../utils/axiosWithAuth";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+// import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -13,12 +14,11 @@ const StyledLoader = styled(LoadingOverlay)`
     width:100%;
 `;
 
-const InputDiv = styled.div `
-    width: 100%
-    display: flex;
-    justify-content: space-around;
-    
-`
+// const InputDiv = styled.div `
+//     width: 100%
+//     display: flex;
+//     justify-content: space-around;
+// `
 const FileInput = styled.input `
     opacity: 0;
     position: absolute;
@@ -27,10 +27,10 @@ const FileInput = styled.input `
     height: 1px;
 `
 
-const ImagesDiv = styled.div `
-  display: flex;
-  justify-content: spaced-evenly
-`
+// const ImagesDiv = styled.div `
+//   display: flex;
+//   justify-content: spaced-evenly
+// `
 
 const Image = styled.img `
   max-width: 400px;
@@ -63,15 +63,15 @@ export default function ViewTicket(props) {
   const [resolvedPictures, setResolvedPictures] = useState([]);
   const [openVideo, setOpenVideo] = useState(null);
   const [resolvedVideo, setResolvedVideo] = useState(null);
-  const [studentPicture, setStudentPicture] = useState(null);
-  const [helperPicture, setHelperPicture] = useState(null);
+  // const [studentPicture, setStudentPicture] = useState(null);
+  // const [helperPicture, setHelperPicture] = useState(null);
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
   const ticketID = props.match.params.id;
   
-  console.log('PROPSSSSSSSSSSSSSSSSSSSSSSSSS',props)
-  console.log('currentUser: ', currentUser);
-  console.log(ticket);
+  // console.log('ViewTicket Props',props)
+  // console.log('currentUser: ', currentUser);
+  // console.log(ticket);
 
   // get ticket by props.match.params.ID
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function ViewTicket(props) {
         alert(err.response.data.message);
         props.history.push('/Dashboard/Unassigned');
       });
-  }, []);
+  }, [ticketID, props.history]);
 
   const handleInput = (e) => {
     setHelperAnswer(e.target.value);
@@ -125,9 +125,8 @@ export default function ViewTicket(props) {
   }
 
   const updateAnswer = () => {
-    console.log('updateAnswer() firing. ')
-    // PUT /resolved/:id
-    console.log('updateQuestion() firing. ')
+    // console.log('updateAnswer() firing. ')
+    // console.log('updateQuestion() firing. ')
     if ((currentUser.name === ticket.student_name || currentUser.name === ticket.teacher_name) && helperAnswer !== ''){
         setLoading(true);
         axiosWithAuth()
@@ -297,8 +296,8 @@ export default function ViewTicket(props) {
             <div className='statusDiv'>
               <div className='statusBox'><h3>Category:</h3> <p>{ticket.category.toUpperCase()}</p></div>
               <div className='statusBox'><h3>Current status:</h3> <p>{ticket.status.toUpperCase()}</p></div>
-              {ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><img className="photo" src={ticket.helper_image} alt='Expert image'/></div>}
-              {ticket.student_image && <div className='statusBox'><h3>Student:</h3><img className="photo" src={ticket.student_image} alt='Student image'/></div>}
+              {ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><img className="photo" src={ticket.helper_image} alt='Expert'/></div>}
+              {ticket.student_image && <div className='statusBox'><h3>Student:</h3><img className="photo" src={ticket.student_image} alt='Student'/></div>}
               {ticket.helper_name && !ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><Fa icon={faUserCircle}/></div>}
               {!ticket.student_image && <div className='statusBox'><h3>Student:</h3><Fa icon={faUserCircle}/></div>} 
             </div> 
@@ -374,14 +373,6 @@ export default function ViewTicket(props) {
   );
   
 }
-
-
-
-// {(()=>{
-//   if (true){
-
-//   }
-// })()}
 
 // {
 //   "ticket_details": {

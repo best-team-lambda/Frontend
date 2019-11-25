@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 export const SELECT_COURSE = 'SELECT_COURSE';
 export const SELECT_UNIT = 'SELECT_UNIT';

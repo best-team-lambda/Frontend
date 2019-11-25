@@ -131,8 +131,8 @@ const initialState = {
 
 
 export const CourseBuilderReducer = (state = initialState, action) => {
-    console.log('Reducer initialState: ', initialState);
-    console.log('reducer firing: ', action);
+    // console.log('Reducer initialState: ', initialState);
+    // console.log('reducer firing: ', action);
     switch(action.type) {
         case SELECT_COURSE:
             console.log('SELECT_COURSE FIRING', state);
@@ -140,7 +140,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
             let pickedCourse = state.courses.find(course => {
                 console.log(course.id);
                 console.log(action.payload);
-                return course.id == action.payload;
+                return course.id === action.payload;
             })
             console.log('pickedCourse', pickedCourse);
             return {
@@ -155,7 +155,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
                 let pickedUnit = state.units.find(unit => {
                     console.log(unit.id);
                     console.log(action.payload);
-                    return unit.id == action.payload;
+                    return unit.id === action.payload;
                 })
                 console.log('pickedUnit', pickedUnit);
                 return {
@@ -170,7 +170,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
                 let pickedWeek = state.weeks.find(week => {
                     console.log(week.id);
                     console.log(action.payload);
-                    return week.id == action.payload;
+                    return week.id === action.payload;
                 })
                 console.log('pickedWeek', pickedWeek);
                 return {
@@ -185,7 +185,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
                 let pickedDay = state.days.find(day => {
                     console.log(day.id);
                     console.log(action.payload);
-                    return day.id == action.payload;
+                    return day.id === action.payload;
                 })
                 console.log('pickedDay', pickedDay);
                 return {

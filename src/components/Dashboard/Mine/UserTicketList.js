@@ -41,7 +41,7 @@ export default function UserTicketList() {
                 const yo = [];
                 const mommo = [];
                 for(let val of hey){
-                    if(yo.indexOf(val.id) == -1){
+                    if(yo.indexOf(val.id) === -1){
                         yo.push(val.id);
                         mommo.push(val);
                     }

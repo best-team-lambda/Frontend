@@ -68,32 +68,32 @@ const Button = styled.button `
 const MarginDiv = styled.div `
     margin-bottom: 10px;
 `
-const Label = styled.label `
-    input[type = 'file'] {
-    // background-color: red;  
+// const Label = styled.label `
+//     input[type = 'file'] {
+//     // background-color: red;  
 
-        &::-webkit-file-upload-button {
-            // margin-left: 3rem;
-            font-size: 1.8rem;
-            background-color: #BF0033;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            font-weight: @bold-font-weight;
-            transition: 0.3s;
-            border: 0;
+//         &::-webkit-file-upload-button {
+//             // margin-left: 3rem;
+//             font-size: 1.8rem;
+//             background-color: #BF0033;
+//             color: white;
+//             border: none;
+//             border-radius: 5px;
+//             text-decoration: none;
+//             padding: 1rem 2.5rem;
+//             text-decoration: none;
+//             font-weight: @bold-font-weight;
+//             transition: 0.3s;
+//             border: 0;
 
-            margin-bottom: 15px;
-            margin-top:15px;
-            &:hover {
-                background-color: #880C23;
-            }
-        }
-    }
-` 
+//             margin-bottom: 15px;
+//             margin-top:15px;
+//             &:hover {
+//                 background-color: #880C23;
+//             }
+//         }
+//     }
+// ` 
 const Fa = styled(FontAwesomeIcon)`
     width: 60px !important;
     height: 60px;
@@ -127,9 +127,9 @@ export default function CreateTicket(props) {
     const [loading, setLoading] = useState('');
     const [images, setImages] = useInput([]);
     const [video, setVideo] = useInput(null);
-    const [category, setCategory, handleCategory] = useInput('');
-    const [title, setTitle, handleTitle] = useInput('');
-    const [description, setDescription, handleDescription] = useInput('');
+    const [category, handleCategory] = useInput('');
+    const [title, handleTitle] = useInput('');
+    const [description, handleDescription] = useInput('');
 
     const handleSubmit = async e => {
         console.log(Array.from(images));

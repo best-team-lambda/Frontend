@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { axiosWithAuth } from '../../utils/axiosWithAuth';
 import axios from 'axios';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
+// import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 
 const StyledLoader = styled(LoadingOverlay)`
@@ -112,7 +113,7 @@ const ProfileFilter = styled.div `
 
 export default function Account() {
     const { currentUser } = useContext(CurrentUserContext);
-    const [loading, setLoading] = useState('');
+    const [loading] = useState('');
     const [showEditForm, setShowEditForm] = useState(false);
 
     // state for when the user edits their account details
@@ -120,8 +121,6 @@ export default function Account() {
     const [editName, setEditName] = useState(currentUser.name);
     const [editEmail, setEditEmail] = useState(currentUser.email);
     const [editCohort, setEditCohort] = useState(currentUser.cohort);
-    const [editHelper, setEditHelper] = useState(currentUser.helper);
-    const [editStudent, setEditStudent] = useState(currentUser.student);
     const [newPassword, setNewPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
 
