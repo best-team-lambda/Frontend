@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
 import axios from 'axios';
@@ -112,7 +111,7 @@ const ProfileFilter = styled.div `
 
 
 export default function Account() {
-    const { currentUser } = useContext(CurrentUserContext);
+    const [currentUser] = useState('')
     const [loading] = useState('');
     const [showEditForm, setShowEditForm] = useState(false);
 

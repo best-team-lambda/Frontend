@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Route } from 'react-router-dom';
 import SidebarNav from './SidebarNav.js';
 
@@ -10,22 +10,15 @@ import UserTicketList from './Mine/UserTicketList.js';
 import ClosedTicketList from './Closed/ClosedTicketList.js';
 import ViewTicket from './ViewTicket.js';
 
-import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import CourseBuilder from '../CourseBuilder.js';
 import LambdaTK from './LambdaTK/LambdaTK.js';
 
 
 
 export default function Dashboard(props) {
-    const { currentUser, searchType, setSearchType, searchTerm, setSearchTerm, 
-        filterByHelperStudentBoth, setFilterByHelperStudentBoth, 
-        filterByOpenClosedAll, setFilterByOpenClosedAll, loading, setLoading} = useContext(CurrentUserContext);
         
     return (
         <div className='dashboard'>
-            <CurrentUserContext.Provider value={{ currentUser, searchTerm, setSearchTerm, searchType, setSearchType, 
-                filterByHelperStudentBoth, setFilterByHelperStudentBoth, filterByOpenClosedAll, setFilterByOpenClosedAll,
-                loading, setLoading }}>
                 <SidebarNav props={props} />
 
                 <Route exact path='/Dashboard/Account' component={Account} />
@@ -37,7 +30,6 @@ export default function Dashboard(props) {
                 <Route exact path='/Dashboard/Tickets/:id' component={ViewTicket} />
                 <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} />
                 <Route exact path='/Dashboard/Lambda' component={LambdaTK} />
-            </CurrentUserContext.Provider>
         </div>
     )
 }

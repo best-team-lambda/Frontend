@@ -1,13 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
 export default function SignUpForm(props) {
   const [loading, setLoading] = useState('');
-  const { setCurrentUser } = useContext(CurrentUserContext);
+  const [setCurrentUser] = useState('');
   const [newUser, setNewUser] = useState({
     username: "",
     password: "",

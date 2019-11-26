@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
@@ -14,18 +14,12 @@ import Credits from './components/Global/Credits';
 import Dashboard from './components/Dashboard/Dashboard.js'
 
 import { getCurrentUser, loadingDone } from './actions/AppActions.js';
-import { CurrentUserContext } from './contexts/CurrentUserContext.js';
 
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
 `;
 
 function App(props) {
-
-  const [searchType, setSearchType] = useState('Category');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterByHelperStudentBoth, setFilterByHelperStudentBoth] = useState('All');
-  const [filterByOpenClosedAll, setFilterByOpenClosedAll] = useState('All');
 
   useEffect(() => {
     //if currentUser is null, load data from server if you have a token. 
@@ -43,9 +37,6 @@ function App(props) {
 
 
   return (
-    <CurrentUserContext.Provider value={{ 
-      searchTerm, setSearchTerm, filterByHelperStudentBoth, setFilterByHelperStudentBoth,
-      filterByOpenClosedAll, setFilterByOpenClosedAll, searchType, setSearchType }}>
       <StyledLoader active={props.loading} spinner text='Loading...'>
         <div className='App'>
           <Route path='/' render={props => <Header {...props} />} />
@@ -62,7 +53,6 @@ function App(props) {
           <Footer />
         </div>
       </StyledLoader>
-    </CurrentUserContext.Provider>
   );
 }
 

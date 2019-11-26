@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  // const [currentUser] = useState(rest.props.currentUser)
-  // console.log('privateRoute Rest: ', rest);
-  // console.log('privateroute currentuser', currentUser);
   return (
     <Route
       {...rest}
@@ -16,7 +12,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
           return <Component {...props} />;
         }
         else {
-          // console.log('PrivateRoute: token == false');
           alert('You must be logged in to view this page.');
           return <Redirect to='/Login' />;
         }

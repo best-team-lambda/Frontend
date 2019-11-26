@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import axiosWithAuth from "../../utils/axiosWithAuth";
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
@@ -55,7 +54,7 @@ const FileDiv = styled.div `
 `
 
 export default function ViewTicket(props) {
-  const { currentUser } = useContext(CurrentUserContext)
+  const [currentUser] = useState('')
   const [loading, setLoading] = useState('');
   const [ticket, setTicket] = useState('')
   const [helperAnswer, setHelperAnswer] = useState('');
