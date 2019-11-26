@@ -2,13 +2,13 @@ import { SET_CURRENT_USER, LOADING_START, LOADING_DONE } from '../actions/AppAct
 
 const initialState = {
     currentUser: '',
-    loading: false,
+    loading: true,
   };
 
 
 export const AppReducer = (state = initialState, action) => {
-    // console.log('Reducer initialState: ', initialState);
-    // console.log('reducer firing: ', action);
+    console.log('AppReducer initialState: ', initialState);
+    console.log('AppReducer firing: ', action);
     switch(action.type) {
         case LOADING_START:
             console.log('LOADING_START FIRING', state);

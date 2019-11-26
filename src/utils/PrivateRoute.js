@@ -1,14 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { currentUser } = useContext(CurrentUserContext);
+  // const [currentUser] = useState(rest.props.currentUser)
+  // console.log('privateRoute Rest: ', rest);
+  // console.log('privateroute currentuser', currentUser);
   return (
     <Route
       {...rest}
       render={props => {
-        if (sessionStorage.getItem('token') && currentUser) {
+        console.log('route props?', rest.currentUser)
+        if (sessionStorage.getItem('token') && rest.currentUser) {
           //render component if user is logged in and has a token
           return <Component {...props} />;
         }

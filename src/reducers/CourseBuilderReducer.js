@@ -131,8 +131,8 @@ const initialState = {
 
 
 export const CourseBuilderReducer = (state = initialState, action) => {
-    // console.log('Reducer initialState: ', initialState);
-    // console.log('reducer firing: ', action);
+    // console.log('CourseBuilderReducer initialState: ', initialState);
+    // console.log('CourseBuilderReducer firing: ', action);
     switch(action.type) {
         case SELECT_COURSE:
             console.log('SELECT_COURSE FIRING', state);

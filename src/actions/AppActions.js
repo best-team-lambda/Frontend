@@ -14,3 +14,6 @@ export const getCurrentUser = () => dispatch => {
     .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetCurrentUser CATCH ERROR: ', err) });
     return null;
 }
+export const loadingDone = () =>{
+    return { type: LOADING_DONE, payload: null };
+}

@@ -270,10 +270,10 @@ export default function Account() {
                             </ProfileFilter>)}
                         </ProfileWrapper>
                     </ProOuter>
-                <p className> <h3 className="bold">Username:</h3> {currentUser.username}</p>
-                <p><h3 className="bold">Name:</h3> {currentUser.name}</p>
-                <p><h3 className="bold">Email:</h3> {currentUser.email !== null ? currentUser.email : 'None'} </p>
-                <p><h3 className="bold">Cohort:</h3> {currentUser.cohort !== null ? currentUser.cohort : 'Unknown'} </p>
+                <h3 className="bold">Username:</h3><p>{currentUser.username}</p>
+                <h3 className="bold">Name:</h3><p>{currentUser.name}</p>
+                <h3 className="bold">Email:</h3><p>{currentUser.email !== null ? currentUser.email : 'None'}</p>
+                <h3 className="bold">Cohort:</h3><p>{currentUser.cohort !== null ? currentUser.cohort : 'Unknown'}</p>
             </>}
 
 

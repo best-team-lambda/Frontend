@@ -14,7 +14,7 @@ import Footer from './components/Global/Footer';
 import Credits from './components/Global/Credits';
 import Dashboard from './components/Dashboard/Dashboard.js'
 
-import { getCurrentUser } from './actions/AppActions.js';
+import { getCurrentUser, loadingDone } from './actions/AppActions.js';
 import { CurrentUserContext } from './contexts/CurrentUserContext.js';
 
 const StyledLoader = styled(LoadingOverlay)`
@@ -53,6 +53,9 @@ function App(props) {
       if (!props.currentUser && sessionStorage.getItem('token')){
         props.getCurrentUser();
       }
+      else{
+        props.loadingDone();
+      }
   }, [props.currentUser, props.loading])
   
   console.log('App Props.CurrentUser', props.currentUser)
@@ -68,11 +71,11 @@ function App(props) {
           <Route exact path='/' render={props => <LandingPage {...props} />} />
           <Route exact path='/Login' render={props => <Login {...props} />} />
           <Route exact path='/Credits' render={Credits} />
-          {!loading && 
+          {!props.loading && 
           <div className="main-content">
             <Route exact path='/Register' render={props => <SignUpForm {...props} />} />
 
-            <PrivateRoute path='/Dashboard' component={Dashboard} props={props} />
+            <PrivateRoute path='/Dashboard' component={Dashboard} currentUser={props.currentUser} />
           </div>
           }
           <Footer />
@@ -90,4 +93,4 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { getCurrentUser })(App)
+export default connect(mapStateToProps, { getCurrentUser, loadingDone })(App)
