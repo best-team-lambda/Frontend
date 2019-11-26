@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { login, logout, loadingStart, loadingDone } from '../../actions/AppActions.js';
 import axios from 'axios';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -35,9 +36,7 @@ const LoginForm = styled.div`
 `;
 
 
-export default function Login(props) {
-    const [loading, setLoading] = useState('');
-    const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+function Login(props) {
     const [userCredentials, setUserCredentials] = useState({username: '', password: ''});
     
     const handleChange = (e) => {
@@ -48,42 +47,41 @@ export default function Login(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         e.target.reset();
-        setLoading(true);
+        props.loadingStart();
         // console.log('Login.js handleSubmit userCredentials:', userCredentials);
         //send inputted user credentials and receive auth token and user object
         axios.post('https://ddq.herokuapp.com/api/auth/login', userCredentials)
         .then(res => {
             // console.log('axios: api/auth/login response: ', res);
             sessionStorage.setItem('token', res.data.token);
-            setCurrentUser({...res.data.user});
-            setLoading(false);
+            props.login(res.data.user);
+            props.loadingDone();
             //redirect to open queue
             props.history.push('/Dashboard/Unassigned');
         })
-        .catch(err => {console.log('LOGIN CATCH ERROR: ', err.response.data.message);
-        setLoading(false);
-        alert(err.response.data.message)});
+        .catch(err => {console.log('LOGIN CATCH ERROR: ', err);
+        props.loadingDone();
+        alert(err)});
         setUserCredentials({username: '', password: ''})
     }
 
-    const logout = () => {
+    const logOut = () => {
         sessionStorage.removeItem('token');
-        setCurrentUser('');
-        alert('Logged out successfully. Come back soon!');
+        props.logout();
         props.history.push('/');
     }
 
-    if (currentUser){
+    if (props.currentUser){
         return (
         <div>
             <h2>You're already logged in!</h2>
-            <button className="button" onClick={logout}>Sign out</button>
+            <button className="button" onClick={logOut}>Sign out</button>
         </div>
         );
     }
 
     return (
-        <StyledLoader active={loading} spinner text='Loading...'>   
+        <StyledLoader active={props.loading} spinner text='Loading...'>   
             <LoginForm className="login-form">
                 <div className="card">
                     <h1>Login</h1>
@@ -106,6 +104,15 @@ export default function Login(props) {
     )
 }
 
-//styled components
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        currentUser: state.AppReducer.currentUser,
+        loading: state.AppReducer.loading,
+        loginFailed: state.AppReducer.loginFailed,
+    }
+  }
+
+export default connect(mapStateToProps, { login, logout, loadingStart, loadingDone })(Login)
 
 

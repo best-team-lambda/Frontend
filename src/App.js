@@ -1,7 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import axiosWithAuth from './utils/axiosWithAuth';
 import PrivateRoute from './utils/PrivateRoute';
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -22,8 +21,6 @@ const StyledLoader = styled(LoadingOverlay)`
 `;
 
 function App(props) {
-  const [currentUser, setCurrentUser] = useState('');
-  const [loading, setLoading] = useState(true);
 
   const [searchType, setSearchType] = useState('Category');
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,24 +30,7 @@ function App(props) {
   useEffect(() => {
     //if currentUser is null, load data from server if you have a token. 
     //otherwise if you don't have a token you will be unable to access private routes and will be redirected to login page if you try.
-    if (!currentUser && sessionStorage.getItem('token')){
-      // console.log('app load user useEffect firing if !current user && token');
-      setLoading(true);
-      axiosWithAuth().get('/users/user')
-      .then(res => { 
-          // console.log(res);
-          setCurrentUser(res.data);
-          // console.log(currentUser);
-      })
-      .catch(err => { console.log(err.response.data.message) });
-    }
-    else{
-      setLoading(false);
-    }
-  }, [currentUser, loading])
-
-  useEffect(() => {
-      if (!props.currentUser && sessionStorage.getItem('token')){
+      if (!props.loginFailed && !props.currentUser && sessionStorage.getItem('token')){
         props.getCurrentUser();
       }
       else{
@@ -61,11 +41,12 @@ function App(props) {
   console.log('App Props.CurrentUser', props.currentUser)
   console.log('App Props.Loading', props.loading)
 
+
   return (
-    <CurrentUserContext.Provider value={{ currentUser, setCurrentUser, loading, setLoading,
+    <CurrentUserContext.Provider value={{ 
       searchTerm, setSearchTerm, filterByHelperStudentBoth, setFilterByHelperStudentBoth,
       filterByOpenClosedAll, setFilterByOpenClosedAll, searchType, setSearchType }}>
-      <StyledLoader active={loading} spinner text='Loading...'>
+      <StyledLoader active={props.loading} spinner text='Loading...'>
         <div className='App'>
           <Route path='/' render={props => <Header {...props} />} />
           <Route exact path='/' render={props => <LandingPage {...props} />} />
@@ -90,6 +71,7 @@ const mapStateToProps = state => {
     return {
         currentUser: state.AppReducer.currentUser,
         loading: state.AppReducer.loading,
+        loginFailed: state.AppReducer.loginFailed,
     }
   }
 
