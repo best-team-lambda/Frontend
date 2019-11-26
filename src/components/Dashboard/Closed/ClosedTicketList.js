@@ -4,7 +4,6 @@ import axiosWithAuth from '../../../utils/axiosWithAuth';
 import ClosedTicket from './ClosedTicket';
 import { loadingStart, loadingDone } from '../../../actions/AppActions.js';
 
-
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 const StyledLoader = styled(LoadingOverlay)`
@@ -16,7 +15,7 @@ function ClosedTicketList(props) {
     const [closedTickets, setClosedTickets] = useState([]);
 
     useEffect(() => {
-        props.loadingStart()
+        props.loadingStart();
         axiosWithAuth().get('/tickets/resolved')
         .then(res => {
             // console.log(res.data)
@@ -29,8 +28,7 @@ function ClosedTicketList(props) {
     }, []);
 
     return (
-         <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
-         {/* <h2>Closed tickets</h2> */}
+         <div className='helperDashboard'>
         <StyledLoader active={props.loading} spinner text='Loading...'>
             <table className='tickettable'>
                 <thead>
