@@ -1,8 +1,9 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import axiosWithAuth from '../../../utils/axiosWithAuth';
 import axios from 'axios';
 import MyTicket from './MyTicket';
-import { CurrentUserContext } from '../../../contexts/CurrentUserContext.js';
+import { loadingStart, loadingDone } from '../../../actions/AppActions.js';
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -11,14 +12,11 @@ const StyledLoader = styled(LoadingOverlay)`
     width:100%;
 `;
 
-export default function UserTicketList() {
-    const { currentUser, searchTerm, searchType, filterByHelperStudentBoth, filterByOpenClosedAll} = useContext(CurrentUserContext);
-
+function UserTicketList(props) {
     const [allUserTickets, setAllUserTickets] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
+        props.loadingStart();
         (async () => {
             try{
                 const what = [
@@ -37,7 +35,7 @@ export default function UserTicketList() {
                     }
                 }
 
-                setLoading(false);
+                props.loadingDone();
                 const yo = [];
                 const mommo = [];
                 for(let val of hey){
@@ -52,7 +50,7 @@ export default function UserTicketList() {
                 console.log('after', allUserTickets);
             }catch(err){
                 console.log('CATCH ERROR: ', err);
-                setLoading(false);
+                props.loadingDone();
             }
         })()
     }, []);
@@ -60,7 +58,7 @@ export default function UserTicketList() {
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
          {/* <h2>My tickets</h2> */}
-        <StyledLoader active={loading} spinner text='Loading...'>
+        <StyledLoader active={props.loading} spinner text='Loading...'>
             <table className='tickettable'>
                 <thead>
                       <tr>
@@ -74,47 +72,47 @@ export default function UserTicketList() {
                 <tbody>{allUserTickets && allUserTickets.map(ticket => {
                     // console.log('buggy part', ticket)
                         let shouldReturn = true;
-                        if(searchTerm){
-                            if (searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(searchTerm.toLowerCase())){
+                        if(props.searchTerm){
+                            if (props.searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false; 
                             }
-                            else if (searchType === 'Student' && ticket.student_name && !ticket.student_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                            else if (props.searchType === 'Student' && ticket.student_name && !ticket.student_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                     shouldReturn = false;
                             }
-                            else if (searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(searchTerm.toLowerCase())){
+                            else if (props.searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false;
                             }
-                            else if (searchType === 'Title' && ticket.title && !ticket.title.toLowerCase().includes(searchTerm.toLowerCase())){
+                            else if (props.searchType === 'Title' && ticket.title && !ticket.title.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false;
                             }
-                            else if (searchType === 'Description' && ticket.description && !ticket.description.toLowerCase().includes(searchTerm.toLowerCase())){
+                            else if (props.searchType === 'Description' && ticket.description && !ticket.description.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false;
                             }
-                            else if (searchType === 'Solution' && ticket.solution && !ticket.solution.toLowerCase().includes(searchTerm.toLowerCase())){
+                            else if (props.searchType === 'Solution' && ticket.solution && !ticket.solution.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false;
                             }
                         }
 
-                        if (filterByOpenClosedAll === 'Resolved' && ticket.status !== 'resolved')
+                        if (props.filterByOpenClosedAll === 'Resolved' && ticket.status !== 'resolved')
                         {
                             shouldReturn = false;
                         }
-                        else if (filterByOpenClosedAll === 'Open' && ticket.status === 'resolved')
+                        else if (props.filterByOpenClosedAll === 'Open' && ticket.status === 'resolved')
                         {
                             shouldReturn = false;
                         }
 
-                        if (filterByHelperStudentBoth === 'Student' && ticket.student_name !== currentUser.name)
+                        if (props.filterByHelperStudentBoth === 'Student' && ticket.student_name !== props.currentUser.name)
                         {
                             shouldReturn = false;
                         }
-                        else if (filterByHelperStudentBoth === 'Helper' && ticket.helper_name !== currentUser.name)
+                        else if (props.filterByHelperStudentBoth === 'Helper' && ticket.helper_name !== props.currentUser.name)
                         {
                             shouldReturn = false;
                         }
                         if (shouldReturn === true){
                             return (
-                                <tr key={ticket.id}><MyTicket id={ticket.id} currentUser={currentUser} student_name={ticket.student_name} category={ticket.category} 
+                                <tr key={ticket.id}><MyTicket id={ticket.id} currentUser={props.currentUser} student_name={ticket.student_name} category={ticket.category} 
                                 title={ticket.title} description={ticket.description} status={ticket.status} created_at={ticket.created_at} student_image={ticket.student_image} helper_image={ticket.helper_image}/></tr> )
                         }
                         else{return null}
@@ -125,3 +123,17 @@ export default function UserTicketList() {
         </div>
     )
 }
+
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        searchType: state.SearchReducer.searchType,
+        searchTerm: state.SearchReducer.searchTerm,
+        filterByAskedAnsweredBoth: state.SearchReducer.filterByAskedAnsweredBoth,
+        filterByOpenClosedAll: state.SearchReducer.filterByOpenClosedAll,
+        currentUser: state.AppReducer.currentUser,
+        loading: state.AppReducer.loading,
+    }
+  }
+
+export default connect(mapStateToProps, { loadingStart, loadingDone })(UserTicketList)
