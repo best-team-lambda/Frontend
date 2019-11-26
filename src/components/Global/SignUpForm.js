@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import { connect } from 'react-redux';
 import axios from "axios";
+import { login, logout, loadingStart, loadingDone } from '../../actions/AppActions.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
-export default function SignUpForm(props) {
-  const [loading, setLoading] = useState('');
-  const [setCurrentUser] = useState('');
+function SignUpForm(props) {
   const [newUser, setNewUser] = useState({
     username: "",
     password: "",
@@ -33,27 +33,18 @@ export default function SignUpForm(props) {
     // console.log(newUser);
   };
 
-  // const toggleBool = e => {
-  //   // console.log('e.target.name: ', e.target.name);
-  //   if (e.target.name === "helper") {
-  //     setNewUser({ ...newUser, helper: !newUser.helper });
-  //   } else if (e.target.name === "student") {
-  //     setNewUser({ ...newUser, student: !newUser.student });
-  //   }
-  // };
-
   const handleSubmit = e => {
     e.preventDefault();
     // e.target.reset();
     console.log('newUser: ', newUser);
     if (validateInputs()) {
       // console.log('SignUpForm.js validateInputs returned true');
-        setLoading(true);
+      props.loadingStart();
       axios
         .post("https://ddq.herokuapp.com/api/auth/register", newUser)
         .then(res => {
           // console.log('axios: api/auth/register response: ',res);
-          alert("Signed up! Logging in now..");
+          // alert("Signed up! Logging in now..");
           axios
             .post("https://ddq.herokuapp.com/api/auth/login", {
               username: newUser.username,
@@ -61,24 +52,24 @@ export default function SignUpForm(props) {
             })
             .then(res => {
               // console.log('axios: api/auth/login response: ', res);
-              setCurrentUser({...res.data.user});
               sessionStorage.setItem("token", res.data.token);
-              alert(res.data.message);
+              props.login(res.data.user);
+              // alert(res.data.message);
               // console.log('Decoded token', decode(res.data.token));
 
               //redirect to open queue
-            setLoading(false);
+              props.loadingDone();
               props.history.push('/Dashboard/Unassigned');
             })
             .catch(err => {
               console.log("SignUp Login Catch Error: ", err.response.data.message);
-              setLoading(false);
+              props.loadingDone();
               alert(err.response.data.message);
             });
         })
         .catch(err => {
           console.log("SignUp Catch Error: ", err.response.data.message);
-          setLoading(false);
+          props.loadingDone();
           alert(err.response.data.message);
         });
     // console.log(newUser);
@@ -152,7 +143,7 @@ export default function SignUpForm(props) {
   };
 
   return (
-    <StyledLoader active={loading} spinner text='Loading...'>
+    <StyledLoader active={props.loading} spinner text='Loading...'>
       <SignUpWrap className="sign-up-form">
         <div className="card">
           <h1>Sign up</h1>
@@ -162,17 +153,6 @@ export default function SignUpForm(props) {
             <input className="text-input" name="name" onChange={handleChange} placeholder="name" />
             <input className="text-input" name="email" type="email" onChange={handleChange} placeholder="email" />
             <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder="cohort" />
-{/*             
-            <div className="checkbox-group">
-            <label> I'm a Student&nbsp;
-                <input name="student" type="checkbox" onChange={toggleBool} />
-              </label>
-              <label> I'm a Helper&nbsp;
-                <input name="helper" type="checkbox" onChange={toggleBool} />
-              </label>
-              
-            </div> */}
-            
             <button className="button fullwidth" type="submit">Submit</button>
           </form>
         </div>
@@ -180,6 +160,17 @@ export default function SignUpForm(props) {
     </StyledLoader>
   );
 }
+
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        currentUser: state.AppReducer.currentUser,
+        loading: state.AppReducer.loading,
+        loginFailed: state.AppReducer.loginFailed,
+    }
+  }
+
+export default connect(mapStateToProps, { login, logout, loadingStart, loadingDone })(SignUpForm)
 
 //Styled Components
 
