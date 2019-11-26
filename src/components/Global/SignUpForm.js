@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from 'react-redux';
 import axios from "axios";
-import { login, logout, loadingStart, loadingDone } from '../../actions/AppActions.js';
+import { login, loadingStart, loadingDone } from '../../actions/AppActions.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -170,7 +170,7 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { login, logout, loadingStart, loadingDone })(SignUpForm)
+export default connect(mapStateToProps, { login, loadingStart, loadingDone })(SignUpForm)
 
 //Styled Components
 

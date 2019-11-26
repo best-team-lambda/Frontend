@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { loadingStart, loadingDone } from '../../actions/AppActions.js';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
 import axios from 'axios';
@@ -7,119 +9,14 @@ import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 
-const StyledLoader = styled(LoadingOverlay)`
-    width:100%;
-`;
-
-const OuterDiv = styled.div `
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    background: #383651;
-    justify-content: center;
-`
-
-const Div = styled.div `
-    width: 60%;
-    flex-direction: column;
-    align-items: center;
-    background: white;
-    margin: 10rem auto;
-    padding: 3rem;
-    text-align: center;
-`
-const ProOuter = styled.div `
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
-
-
-const MarginButton = styled.button `
-    margin-top: 25px;
-`
-
-const PasswordDiv = styled.div `
-    margin-top: 50px;
-    font-style: italic;
-    color: #BF0033;
-`
-
-const ImageInput = styled.input `
-    opacity: 0;
-    position: absolute;
-    pointer-events: none;
-    width: 1px;
-    height: 1px;
-`
-const DefaultProfile = styled(FontAwesomeIcon) `
-    position: absolute;
-    width: 200px !important;
-    height: 200px;
-    /* border-radius: 50%; */
-    background: white;
-
-
-    ${props => props.edit && `
-        &:hover {
-                cursor: pointer;
-                opacity: 0.2;
-        }
-    `
-    }
-`
-
-const ProfileImg = styled.div`
-    position: absolute;
-    /* border-radius: 50%; */
-    width: 200px;
-    height: 200px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-        
-    ${props => props.edit && `
-        &:hover {
-                cursor: pointer;
-                opacity: 0.2;
-        }
-    `
-    }
-`
-const ProfileWrapper = styled.div `
-    width: 200px;
-    height: 200px;
-    margin: 2rem;
-`
-
-const ProfileFilter = styled.div `
-    font-family: 'Patua One', sans-serif;
-    width: 200px;
-    height: 200px;
-    /* border-radius: 50%; */
-    display: flex;
-    font-size: 3.5rem;
-    align-items: center;
-    justify-content: center;
-    .editPicture {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-`
-
-
-export default function Account() {
-    const [currentUser] = useState('')
-    const [loading] = useState('');
+function Account(props) {
     const [showEditForm, setShowEditForm] = useState(false);
 
     // state for when the user edits their account details
-    const [editUserName, setEditUserName] = useState(currentUser.username);
-    const [editName, setEditName] = useState(currentUser.name);
-    const [editEmail, setEditEmail] = useState(currentUser.email);
-    const [editCohort, setEditCohort] = useState(currentUser.cohort);
+    const [editUserName, setEditUserName] = useState(props.currentUser.username);
+    const [editName, setEditName] = useState(props.currentUser.name);
+    const [editEmail, setEditEmail] = useState(props.currentUser.email);
+    const [editCohort, setEditCohort] = useState(props.currentUser.cohort);
     const [newPassword, setNewPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
 
@@ -153,8 +50,8 @@ export default function Account() {
         const promises = [];
         e.preventDefault();
         e.target.reset();
-        console.log(JSON.stringify(currentUser));
-        console.log(currentUser.profile_picture)
+        console.log(JSON.stringify(props.currentUser));
+        console.log(props.currentUser.profile_picture)
         let userObj = { password: verifyPassword }
         if (editUserName){
             userObj = {...userObj, username: editUserName}
@@ -183,7 +80,7 @@ export default function Account() {
                 console.log(profilePicture);
                 console.log(formData);
 
-                if(currentUser.profile_picture){
+                if(props.currentUser.profile_picture){
                     promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
                 }else{
                     promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
@@ -236,29 +133,26 @@ export default function Account() {
             return false;
     }
 
-    // if (!isValidPassword(newPassword)) {
-    //     return false;
-    //   }
-    
+     // if (!isValidPassword(newPassword)) {
+     //     return false;
+     // }
         return true;
     };
-
-    
 
     return (
         <OuterDiv>
         <Div className='card'> 
-    <StyledLoader active={loading} spinner text='Uploading...'> 
+        <StyledLoader active={props.loading} spinner text='Uploading...'> 
             {!showEditForm && <>
                     <ProOuter>
                         <ProfileWrapper>
-                            {currentUser.profile_picture ? (
+                            {props.currentUser.profile_picture ? (
                             <ProfileFilter>
                                 <div className='editPicture'>
                                     Edit
                                     <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
                                 </div>
-                                <ProfileImg edit={false} style={{backgroundImage: `url('${currentUser.profile_picture}')`}}/>
+                                <ProfileImg edit={false} style={{backgroundImage: `url('${props.currentUser.profile_picture}')`}}/>
                             </ProfileFilter>) : (
                             <ProfileFilter>
                                 <div className='editPicture'>
@@ -269,10 +163,10 @@ export default function Account() {
                             </ProfileFilter>)}
                         </ProfileWrapper>
                     </ProOuter>
-                <h3 className="bold">Username:</h3><p>{currentUser.username}</p>
-                <h3 className="bold">Name:</h3><p>{currentUser.name}</p>
-                <h3 className="bold">Email:</h3><p>{currentUser.email !== null ? currentUser.email : 'None'}</p>
-                <h3 className="bold">Cohort:</h3><p>{currentUser.cohort !== null ? currentUser.cohort : 'Unknown'}</p>
+                <h3 className="bold">Username:</h3><p>{props.currentUser.username}</p>
+                <h3 className="bold">Name:</h3><p>{props.currentUser.name}</p>
+                <h3 className="bold">Email:</h3><p>{props.currentUser.email !== null ? props.currentUser.email : 'None'}</p>
+                <h3 className="bold">Cohort:</h3><p>{props.currentUser.cohort !== null ? props.currentUser.cohort : 'Unknown'}</p>
             </>}
 
 
@@ -280,13 +174,13 @@ export default function Account() {
             <ImageInput type='file' onChange={e => setProfilePicture(e.target.files[0])} id='imageInput'/>
             <ProOuter>
                 <ProfileWrapper>
-                    <label htmlFor='imageInput'>{currentUser.profile_picture ? (
+                    <label htmlFor='imageInput'>{props.currentUser.profile_picture ? (
                     <ProfileFilter>
                         <div className='editPicture'>
                             Edit
                             <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
                         </div>
-                        <ProfileImg  edit={true} style={{backgroundImage: `url('${currentUser.profile_picture}')`}}/>
+                        <ProfileImg  edit={true} style={{backgroundImage: `url('${props.currentUser.profile_picture}')`}}/>
                     </ProfileFilter>) : (
                     <ProfileFilter>
                         <div className='editPicture'>
@@ -299,22 +193,22 @@ export default function Account() {
                 </ProfileWrapper>
             </ProOuter>
             <label><h3 className="bold">Username:</h3>    
-                <input className="text-input" name="username" onChange={handleChange} placeholder={currentUser.username} type="text"/> 
+                <input className="text-input" name="username" onChange={handleChange} placeholder={props.currentUser.username} type="text"/> 
             </label>
             <div>
                 
             </div>
             <label><h3 className="bold">Name:</h3>
-                <input className="text-input" name="name" onChange={handleChange} placeholder={currentUser.name} />
+                <input className="text-input" name="name" onChange={handleChange} placeholder={props.currentUser.name} />
             </label>
 
           
 
             <label><h3 className="bold">Email:</h3>
-                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={currentUser.email !== null ? currentUser.email : ''} />
+                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.currentUser.email !== null ? props.currentUser.email : ''} />
             </label> 
             <label><h3 className="bold">Cohort:</h3>
-                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={currentUser.cohort !== null ? currentUser.cohort : ''} />
+                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.currentUser.cohort !== null ? props.currentUser.cohort : ''} />
             </label>
                   
             <label><h3 className="bold">New password:</h3>
@@ -337,3 +231,105 @@ export default function Account() {
         </OuterDiv>
     )
 }
+
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        currentUser: state.AppReducer.currentUser,
+        loading: state.AppReducer.loading,
+    }
+  }
+
+export default connect(mapStateToProps, { loadingStart, loadingDone })(Account)
+
+
+const StyledLoader = styled(LoadingOverlay)`
+    width:100%;
+`;
+const OuterDiv = styled.div `
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    background: #383651;
+    justify-content: center;
+`;
+const Div = styled.div `
+    width: 60%;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    margin: 10rem auto;
+    padding: 3rem;
+    text-align: center;
+`;
+const ProOuter = styled.div `
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+const MarginButton = styled.button `
+    margin-top: 25px;
+`;
+const PasswordDiv = styled.div `
+    margin-top: 50px;
+    font-style: italic;
+    color: #BF0033;
+`;
+const ImageInput = styled.input `
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+    width: 1px;
+    height: 1px;
+`;
+const DefaultProfile = styled(FontAwesomeIcon) `
+    position: absolute;
+    width: 200px !important;
+    height: 200px;
+    /* border-radius: 50%; */
+    background: white;
+    ${props => props.edit && `
+        &:hover {
+                cursor: pointer;
+                opacity: 0.2;
+        }
+    `
+    }
+`;
+const ProfileImg = styled.div`
+    position: absolute;
+    /* border-radius: 50%; */
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%; 
+    ${props => props.edit && `
+        &:hover {
+                cursor: pointer;
+                opacity: 0.2;
+        }
+    `
+    }
+`;
+const ProfileWrapper = styled.div `
+    width: 200px;
+    height: 200px;
+    margin: 2rem;
+`;
+const ProfileFilter = styled.div `
+    font-family: 'Patua One', sans-serif;
+    width: 200px;
+    height: 200px;
+    /* border-radius: 50%; */
+    display: flex;
+    font-size: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    .editPicture {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+`;
