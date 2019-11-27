@@ -33,7 +33,7 @@ function OpenTicketList(props) {
             <table className='tickettable'>
                 <thead>
                     <tr>
-                        <th className='firstTh'>Student</th>
+                        <th className='firstTh'>author</th>
                         <th>Subject</th>
                         <th>Title</th>
                         <th>Age</th>
@@ -47,7 +47,7 @@ function OpenTicketList(props) {
                            if (props.searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                shouldReturn = false; 
                            }
-                           else if (props.searchType === 'Student' && ticket.student_name && !ticket.student_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
+                           else if (props.searchType === 'author' && ticket.author_name && !ticket.author_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                    shouldReturn = false;
                            }
                            else if (props.searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
@@ -65,8 +65,8 @@ function OpenTicketList(props) {
                        }
                         if (shouldReturn === true){
                             return (
-                                <tr key={ticket.id}><OpenTicket id={ticket.id} currentUser={props.currentUser} student_name={ticket.student_name} category={ticket.category} 
-                                title={ticket.title} description={ticket.description} created_at={ticket.created_at} student_image={ticket.student_image}/></tr> )
+                                <tr key={ticket.id}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_name={ticket.author_name} category={ticket.category} 
+                                title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr> )
                         }
                         else{return null}
                         })}

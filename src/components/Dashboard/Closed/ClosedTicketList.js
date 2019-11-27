@@ -33,7 +33,7 @@ function ClosedTicketList(props) {
             <table className='tickettable'>
                 <thead>
                 <tr>
-                        <th className='firstTh'>Students</th>
+                        <th className='firstTh'>authors</th>
                         <th>Subject</th>
                         <th>Title</th>
                         <th>Age</th>
@@ -46,7 +46,7 @@ function ClosedTicketList(props) {
                         if (props.searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(props.searchTerm.toLowerCase())){
                             shouldReturn = false; 
                         }
-                        else if (props.searchType === 'Student' && ticket.student_name && !ticket.student_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
+                        else if (props.searchType === 'author' && ticket.author_name && !ticket.author_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false;
                         }
                         else if (props.searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
@@ -64,8 +64,8 @@ function ClosedTicketList(props) {
                     }
                     if (shouldReturn === true){
                         return (
-                            <tr key={ticket.id}><ClosedTicket id={ticket.id} student_name={ticket.student_name} category={ticket.category} 
-                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} student_image={ticket.student_image} helper_image={ticket.helper_image}/></tr> )
+                            <tr key={ticket.id}><ClosedTicket id={ticket.id} author_name={ticket.author_name} category={ticket.category} 
+                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image} helper_image={ticket.helper_image}/></tr> )
                     }
                     else{return null}
                     })}

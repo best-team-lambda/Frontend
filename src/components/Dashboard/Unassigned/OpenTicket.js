@@ -16,8 +16,8 @@ export default function OpenTicket(props) {
     return (
         <>
 
-            {/* <td className='boldrows'>{props.student_name}</td>  */}
-            <td><div>{props.student_image ? <img className="photo" src={props.student_image} alt='Student'/> : <Fa icon={faUserCircle} />}</div><div>{props.student_name}</div></td>
+            {/* <td className='boldrows'>{props.author_name}</td>  */}
+            <td><div>{props.author_image ? <img className="photo" src={props.author_image} alt='author'/> : <Fa icon={faUserCircle} />}</div><div>{props.author_name}</div></td>
             <td className='boldrows'>{props.category}</td>
             <td>{props.title}</td>
             {/* <td>{props.description}</td> */}

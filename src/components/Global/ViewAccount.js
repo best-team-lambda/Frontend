@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getOtherUser, loadingStart, loadingDone } from '../../actions/AppActions.js';
+import decode from 'jwt-decode';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
 import axios from 'axios';
@@ -10,8 +11,9 @@ import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 
 function ViewAccount(props) {
+    console.log('Decoded token', decode(sessionStorage.getItem('token')));
+    const [isAdmin] = useState(decode(sessionStorage.getItem('token')).admin)
     const [showEditForm, setShowEditForm] = useState(false);
-
     // state for when the user edits their account details
     const [editUserName, setEditUserName] = useState(props.otherUser.username);
     const [editName, setEditName] = useState(props.otherUser.name);
@@ -208,7 +210,7 @@ function ViewAccount(props) {
                 <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
             </label>    
             <label><h3 className="bold">New password:</h3>
-                    <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text"/> 
+                    <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text" required/> 
             </label>
            <PasswordDiv>
                 <label>
@@ -220,7 +222,7 @@ function ViewAccount(props) {
                 <button className="button" type="submit">Submit changes</button>
             </form> }
 
-            <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>
+            <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{isAdmin && !showEditForm && 'Edit'}</MarginButton>
             </StyledLoader>  
         </Div>
         </OuterDiv>

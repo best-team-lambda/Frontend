@@ -37,12 +37,3 @@ export const getOtherUser = (id) => dispatch => {
     .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetOtherUser CATCH ERROR: ', err) });
     return null;
 }
-export const setOtherUser = () => dispatch => {
-    dispatch({ type: LOADING_START, payload: null });
-    // axiosWithAuth().get('/users/user')
-    // .then(res =>{
-    //     dispatch({ type: SET_OTHER_USER, payload: res.data })
-    // })
-    // .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('SetOtherUser CATCH ERROR: ', err) });
-    return null;
-}

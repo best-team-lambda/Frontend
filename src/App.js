@@ -20,7 +20,9 @@ const StyledLoader = styled(LoadingOverlay)`
 `;
 
 function App(props) {
-
+  // console.log('App Props.CurrentUser', props.currentUser)
+  // console.log('App Props.Loading', props.loading)
+  
   useEffect(() => {
     //if currentUser is null, load data from server if you have a token. 
     //otherwise if you don't have a token you will be unable to access private routes and will be redirected to login page if you try.
@@ -31,10 +33,6 @@ function App(props) {
         props.loadingDone();
       }
   }, [props.currentUser, props.loading])
-  
-  console.log('App Props.CurrentUser', props.currentUser)
-  console.log('App Props.Loading', props.loading)
-
 
   return (
       <StyledLoader active={props.loading} spinner text='Loading...'>
@@ -66,3 +64,20 @@ const mapStateToProps = state => {
   }
 
 export default connect(mapStateToProps, { getCurrentUser, loadingDone })(App)
+
+// import {useSelector, useDispatch} from 'react-redux';
+// import {getCurrentUser, loadingDone} from './actions/AppActions.js';
+
+// const dispatch = useDispatch();
+
+//get state from store using useSelector
+// const [currentUser, loading] = useSelector(state => [state.AppReducer.currentUser, state.AppReducer.loading]);
+
+// ^^^ same thing as
+// const currentUser = useSelector(state => state.AppReducer.currentUser);
+// const loading = useSelector(state => state.AppReducer.loading);
+
+
+// use actions with useDispatch 
+// dispatch(getCurrentUser());
+// dispatch(loadingDone());

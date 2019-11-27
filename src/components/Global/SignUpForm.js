@@ -12,7 +12,7 @@ function SignUpForm(props) {
     password: "",
     name: "",
     helper: true,
-    student: true,
+    author: true,
   });
   
   const [newUserEmail, setNewUserEmail] = useState('');
@@ -119,8 +119,8 @@ function SignUpForm(props) {
       alert("You must enter your name.");
       return false;
     }
-    if (newUser.helper === false && newUser.student === false) {
-      alert("You must choose to enroll as a helper, student, or both.");
+    if (newUser.helper === false && newUser.author === false) {
+      alert("You must choose to enroll as a helper, author, or both.");
       return false;
     }
     if (newUserEmail !== "") {

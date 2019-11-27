@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { loadingStart, loadingDone } from '../../actions/AppActions.js';
 import axios from 'axios';
 import axiosWithAuth from "../../utils/axiosWithAuth";
@@ -18,7 +19,7 @@ function ViewTicket(props) {
   const [resolvedPictures, setResolvedPictures] = useState([]);
   const [openVideo, setOpenVideo] = useState(null);
   const [resolvedVideo, setResolvedVideo] = useState(null);
-  // const [studentPicture, setStudentPicture] = useState(null);
+  // const [authorPicture, setauthorPicture] = useState(null);
   // const [helperPicture, setHelperPicture] = useState(null);
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
@@ -58,7 +59,7 @@ function ViewTicket(props) {
 
   const updateQuestion = () => {
     console.log('updateQuestion() firing. ')
-    if (props.currentUser.name === ticket.student_name && helperAnswer !== null){
+    if (props.currentUser.name === ticket.author_name && helperAnswer !== null){
         props.loadingStart();
         axiosWithAuth()
           .put(`/tickets/${ticketID}`, {solution: helperAnswer})
@@ -82,7 +83,7 @@ function ViewTicket(props) {
   const updateAnswer = () => {
     // console.log('updateAnswer() firing. ')
     // console.log('updateQuestion() firing. ')
-    if ((props.currentUser.name === ticket.student_name || props.currentUser.name === ticket.teacher_name) && helperAnswer !== ''){
+    if ((props.currentUser.name === ticket.author_name || props.currentUser.name === ticket.teacher_name) && helperAnswer !== ''){
         props.loadingStart();
         axiosWithAuth()
           .put(`/tickets/${ticketID}`, {solution: helperAnswer})
@@ -105,7 +106,7 @@ function ViewTicket(props) {
   const deleteTicket = () => {
     // need to figure out a confirm button!
     console.log('deleteTicket() firing. Say goodbye to Hollywood')
-    if (props.currentUser.name === ticket.student_name)
+    if (props.currentUser.name === ticket.author_name)
     {
         props.loadingStart();
         axiosWithAuth()
@@ -172,7 +173,7 @@ function ViewTicket(props) {
 
   const claimTicket = () => {
     console.log('claimTicket() firing', ticket.helper_name)
-    if (props.currentUser.name !== ticket.student_name && ticket.status === 'open'){
+    if (props.currentUser.name !== ticket.author_name && ticket.status === 'open'){
         props.loadingStart();
         axiosWithAuth()
           .post(`/tickets/${ticketID}/help`)
@@ -241,8 +242,8 @@ function ViewTicket(props) {
                 <div><h2>TICKET #{ticketID}</h2></div>      
               </div> 
               <nav className='ticketNavRight'>
-                {ticket.student_name === props.currentUser.name && <button className='navLinkInternal button' onClick={deleteTicket}>Delete</button>}
-                {ticket.student_name !== props.currentUser.name && ticket.helper_name === null && <button className='button' onClick={claimTicket}>Claim</button>}
+                {ticket.author_name === props.currentUser.name && <button className='navLinkInternal button' onClick={deleteTicket}>Delete</button>}
+                {ticket.author_name !== props.currentUser.name && ticket.helper_name === null && <button className='button' onClick={claimTicket}>Claim</button>}
                 {ticket.helper_name === props.currentUser.name &&  <button className='button' onClick={releaseTicket}>Release</button>}
               </nav>
             </div>
@@ -252,9 +253,9 @@ function ViewTicket(props) {
               <div className='statusBox'><h3>Category:</h3> <p>{ticket.category.toUpperCase()}</p></div>
               <div className='statusBox'><h3>Current status:</h3> <p>{ticket.status.toUpperCase()}</p></div>
               {ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><img className="photo" src={ticket.helper_image} alt='Expert'/></div>}
-              {ticket.student_image && <div className='statusBox'><h3>Student:</h3><img className="photo" src={ticket.student_image} alt='Student'/></div>}
+              {ticket.author_image && <div className='statusBox'><h3>author:</h3><Link to={`/Dashboard/Account/${ticket.author_id}`}><img className="photo" src={ticket.author_image} alt='author'/></Link></div>}
               {ticket.helper_name && !ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><Fa icon={faUserCircle}/></div>}
-              {!ticket.student_image && <div className='statusBox'><h3>Student:</h3><Fa icon={faUserCircle}/></div>} 
+              {!ticket.author_image && <div className='statusBox'><h3>author:</h3><Fa icon={faUserCircle}/></div>} 
             </div> 
 {/* End Status Div */}
 
@@ -262,11 +263,11 @@ function ViewTicket(props) {
 
 {/* End Top div */}
             
-{/* Student question div  */}
+{/* author question div  */}
 
-            <div className='studentDiv'>
-              <div className='studentDivHeader'>
-                <div><p>{ticket.student_name} asked:</p></div>
+            <div className='authorDiv'>
+              <div className='authorDivHeader'>
+                <div><p>{ticket.author_name} asked:</p></div>
                 <div className='secondDiv'><p>{timeago.format(ticket.created_at)}</p></div>
               </div>
               <div><p>Title: {ticket.title}</p></div>
@@ -274,10 +275,10 @@ function ViewTicket(props) {
 
               <div className='mediaDiv'>{openPictures.length > 0 && openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
               <div className='mediaDiv'>{openVideo && <iframe src={openVideo}/>}</div>
-              {props.currentUser.name === ticket.student_name && <button className='button' onClick={updateQuestion}>Update</button>}
+              {props.currentUser.name === ticket.author_name && <button className='button' onClick={updateQuestion}>Update</button>}
             </div>
 
-{/* End student question div  */}
+{/* End author question div  */}
 
 {/* Answer div  */}
 
@@ -289,13 +290,13 @@ function ViewTicket(props) {
 
                 <div className='mediaDiv'>{resolvedPictures.length > 0 && openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
                 <div className='mediaDiv'>{resolvedVideo && <iframe src={resolvedVideo} />}</div>
-                {props.currentUser.name === ticket.student_name && <button className='button' onClick={updateAnswer}>Update</button>}
+                {props.currentUser.name === ticket.author_name && <button className='button' onClick={updateAnswer}>Update</button>}
               </div>}
 {/* End answer div */}
 
 {/* Answer box div */}
     {/* displays only if user is assigned to the ticket (creator or helper assigned) */}
-              {(props.currentUser.name === ticket.helper_name || props.currentUser.name === ticket.student_name) && 
+              {(props.currentUser.name === ticket.helper_name || props.currentUser.name === ticket.author_name) && 
               <div className='answerContainer'>
               <div className='answerBox'>
                 <h3>Write answer here:</h3>
@@ -393,11 +394,11 @@ const FileDiv = styled.div `
 //     "description": "Is tari",
 //     "created_at": "2019-11-22T09:08:28.189Z",
 //     "open_video": null,
-//     "student_image": null,
+//     "author_image": null,
 //     "helper_image": null,
 //     "resolved_video": null,
 //     "solution": null,
-//     "student_name": "Chelsea Wetzel",
+//     "author_name": "Chelsea Wetzel",
 //     "helper_name": null,
 //     "status": "open",
 //     "resolved_at": null

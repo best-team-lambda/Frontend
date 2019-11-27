@@ -9,37 +9,37 @@ const initialState = {
 
 
 export const AppReducer = (state = initialState, action) => {
-    console.log('AppReducer initialState: ', initialState);
-    console.log('AppReducer firing: ', action);
+    // console.log('AppReducer initialState: ', initialState);
+    // console.log('AppReducer firing: ', action);
     switch(action.type) {
         case LOADING_START:
-            console.log('LOADING_START FIRING', state);
+            // console.log('LOADING_START FIRING', state);
             return {
                 ...state,
                 loading: true,
             };
             case LOADING_DONE:
-                console.log('LOADING_DONE FIRING', state);
+                // console.log('LOADING_DONE FIRING', state);
                 return {
                     ...state,
                     loading: false,
                 };
         case SET_CURRENT_USER:
-            console.log('SET_CURRENT_USER FIRING', state);
+            // console.log('SET_CURRENT_USER FIRING', state);
             return {
                 ...state,
                 currentUser: action.payload,
                 loading: false,
             };
         case SET_OTHER_USER:
-            console.log('SET_OTHER_USER FIRING', state);
+            // console.log('SET_OTHER_USER FIRING', state);
             return {
                 ...state,
                 otherUser: action.payload,
                 loading: false,
             };
         case LOGIN_FAILED:
-            console.log('SET_CURRENT_USER FIRING', state);
+            // console.log('SET_CURRENT_USER FIRING', state);
             return {
                 ...state,
                 loading: false,

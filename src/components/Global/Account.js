@@ -207,8 +207,8 @@ function Account(props) {
             </label>
            <PasswordDiv>
                 <label>
-                    <p>Re-enter password to save changes:</p>
-                    <input className="text-input" type='password' name='password' onChange={passwordChange} />
+                    <p>Enter current password to confirm changes:</p>
+                    <input className="text-input" type='password' name='password' onChange={passwordChange} required/>
                 </label>
             </PasswordDiv> 
                 <br /><br />

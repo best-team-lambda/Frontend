@@ -18,10 +18,10 @@ const Names = styled.div `
 export default function ClosedTicket(props) {
     return (
         <>
-            {/* <td className='boldrows'>{props.student_name}</td>  */}
-            <td><div>{props.student_image ? <img className="photo" src={props.student_image} alt='Student'/> : (
+            {/* <td className='boldrows'>{props.author_name}</td>  */}
+            <td><div>{props.author_image ? <img className="photo" src={props.author_image} alt='author'/> : (
                 <Fa icon={faUserCircle}/>
-            )}{props.helper_name && props.helper_image ? <img className="photo2" src={props.helper_image} alt='Student'/> : <Fa icon={faUserCircle}/>}</div><Names>{props.student_name}{props.helper_name}</Names></td>
+            )}{props.helper_name && props.helper_image ? <img className="photo2" src={props.helper_image} alt='author'/> : <Fa icon={faUserCircle}/>}</div><Names>{props.author_name}{props.helper_name}</Names></td>
             <td className='boldrows'>{props.category}</td>
             <td>{props.title}</td>
             {/* <td>{props.description}</td> */}

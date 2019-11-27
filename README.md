@@ -39,7 +39,7 @@ Temporary Documentation:
 
 Login.js:
 
-Enter username and password. onSubmit, axios.get server's /api/auth/login endpoint. If username/password match a user on the server, a token containing the user object is returned and saved into sessionStorage, and then the user is redirected to their dashboard (helper > student). Link to SignUpForm at the bottom of login form.
+Enter username and password. onSubmit, axios.get server's /api/auth/login endpoint. If username/password match a user on the server, a token containing the user object is returned and saved into sessionStorage, and then the user is redirected to their dashboard (helper > author). Link to SignUpForm at the bottom of login form.
 
 SignUpForm.js
 
@@ -53,7 +53,7 @@ Password: must be between 5 and 20 characters long and include one capitol lette
 
 Name: Cannot be null
 
-Helper/Student: One or both must be selected
+Helper/author: One or both must be selected
 
 Email/cohort: Optional inputs, not currently validated except email has input type:email.
 
@@ -64,11 +64,11 @@ Allows access or redirects based off currentUser and token status. Routes:
 
 if token exists:
 
-    if path = /StudentDashboard
+    if path = /authorDashboard
 
-        if currentUser.student render component
+        if currentUser.author render component
 
-        else return 'Must be student!' and redirect home
+        else return 'Must be author!' and redirect home
 
     else if path = /HelperDashboard
 

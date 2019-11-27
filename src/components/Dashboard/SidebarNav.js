@@ -81,7 +81,7 @@ function SidebarNav(props) {
                                         {/* <label for="select-box"> */}
                                         <select id="select-box" onChange={handleSelect} name="searchBy">
                                             <option value="Category">Category</option>
-                                            <option value="Student">Student Name</option>
+                                            <option value="author">author Name</option>
                                             {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Helper">Helper Name</option>}
                                             <option value="Title">Title</option>
                                             <option value="Description">Description</option>

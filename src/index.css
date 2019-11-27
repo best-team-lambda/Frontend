@@ -608,13 +608,13 @@ td div {
   padding-left: 3%;
   font-weight: 700;
 }
-.studentDiv {
+.authorDiv {
   border: 1px solid #C3CFD9;
   width: 100%;
   min-height: 300px;
   margin-top: 7%;
 }
-.studentDiv p {
+.authorDiv p {
   padding-left: 7%;
 }
 .mediaDiv {
@@ -653,15 +653,15 @@ td div {
 .statusBox {
   width: 30%;
 }
-.studentDivHeader {
+.authorDivHeader {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
 }
-.studentDivHeader div {
+.authorDivHeader div {
   width: 50%;
 }
-.studentDivHeader .secondDiv {
+.authorDivHeader .secondDiv {
   width: 50%;
   text-align: right;
   margin-right: 5%;

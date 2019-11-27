@@ -20,8 +20,8 @@ function UserTicketList(props) {
         (async () => {
             try{
                 const what = [
-                axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/students/student/open'),
-                axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/students/student/resolved`),
+                axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/authors/author/open'),
+                axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/authors/author/resolved`),
                 axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/helpers/open'),
                 axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/helpers/resolved`)];
                 
@@ -62,7 +62,7 @@ function UserTicketList(props) {
             <table className='tickettable'>
                 <thead>
                       <tr>
-                        <th className='firstTh'>Students</th>
+                        <th className='firstTh'>authors</th>
                         <th>Subject</th>
                         <th>Title</th>
                         <th>Age</th>
@@ -76,7 +76,7 @@ function UserTicketList(props) {
                             if (props.searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false; 
                             }
-                            else if (props.searchType === 'Student' && ticket.student_name && !ticket.student_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
+                            else if (props.searchType === 'author' && ticket.author_name && !ticket.author_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                     shouldReturn = false;
                             }
                             else if (props.searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
@@ -102,18 +102,18 @@ function UserTicketList(props) {
                             shouldReturn = false;
                         }
 
-                        if (props.filterByHelperStudentBoth === 'Student' && ticket.student_name !== props.currentUser.name)
+                        if (props.filterByHelperauthorBoth === 'author' && ticket.author_name !== props.currentUser.name)
                         {
                             shouldReturn = false;
                         }
-                        else if (props.filterByHelperStudentBoth === 'Helper' && ticket.helper_name !== props.currentUser.name)
+                        else if (props.filterByHelperauthorBoth === 'Helper' && ticket.helper_name !== props.currentUser.name)
                         {
                             shouldReturn = false;
                         }
                         if (shouldReturn === true){
                             return (
-                                <tr key={ticket.id}><MyTicket id={ticket.id} currentUser={props.currentUser} student_name={ticket.student_name} category={ticket.category} 
-                                title={ticket.title} description={ticket.description} status={ticket.status} created_at={ticket.created_at} student_image={ticket.student_image} helper_image={ticket.helper_image}/></tr> )
+                                <tr key={ticket.id}><MyTicket id={ticket.id} currentUser={props.currentUser} author_name={ticket.author_name} category={ticket.category} 
+                                title={ticket.title} description={ticket.description} status={ticket.status} created_at={ticket.created_at} author_image={ticket.author_image} helper_image={ticket.helper_image}/></tr> )
                         }
                         else{return null}
                 })}

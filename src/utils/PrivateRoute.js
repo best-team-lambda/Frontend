@@ -6,7 +6,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props => {
-        console.log('route props?', rest.currentUser)
+        // console.log('route props?', rest.currentUser)
         if (sessionStorage.getItem('token') && rest.currentUser) {
           //render component if user is logged in and has a token
           return <Component {...props} />;
