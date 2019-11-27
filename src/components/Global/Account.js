@@ -19,9 +19,6 @@ function Account(props) {
     const [editCohort, setEditCohort] = useState(props.currentUser.cohort);
     const [newPassword, setNewPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
-
-    // console.log(editHelper)
-    // user inputs this so it can be sent to the API in the update request
     const [verifyPassword, setVerifyPassword] = useState('');
 
     const handleChange = e => {
@@ -50,8 +47,8 @@ function Account(props) {
         const promises = [];
         e.preventDefault();
         e.target.reset();
-        console.log(JSON.stringify(props.currentUser));
-        console.log(props.currentUser.profile_picture)
+        // console.log(JSON.stringify(props.currentUser));
+        // console.log(props.currentUser.profile_picture)
         let userObj = { password: verifyPassword }
         if (editUserName){
             userObj = {...userObj, username: editUserName}
@@ -71,6 +68,7 @@ function Account(props) {
         // console.log(editUserName)
         // console.log(userObj)
         if (validateInputs()) {
+            props.loadingStart();
            try{
             promises.push(axiosWithAuth().put("https://ddq.herokuapp.com/api/users/user", userObj));
         
@@ -87,9 +85,11 @@ function Account(props) {
                 }
             }
             const response = await axios.all(promises);
+            props.loadingDone();
             }catch(err){
                 console.log("Edit Account Catch Error: ", err.response.data.message);
                 alert(err.response.data.message);
+                props.loadingDone();
             }
         }
     }
@@ -117,14 +117,13 @@ function Account(props) {
         }
         return true;
     };
-
       
     const validateInputs = () => {
-        if (editUserName === "") {
-            alert("Your username can't be empty.");
-            return false;
-        }
-        else if(!(/^[a-z][a-z0-9_]*$/i.test(editUserName))) {
+        // if (editUserName === "") {
+        //     alert("Your username can't be empty.");
+        //     return false;
+        // }
+        if(!(/^[a-z][a-z0-9_]*$/i.test(editUserName))) {
             alert("Username must start with a letter and may only contain a-z, _, or numbers.");
             return false;
         }
@@ -168,8 +167,6 @@ function Account(props) {
                 <h3 className="bold">Email:</h3><p>{props.currentUser.email !== null ? props.currentUser.email : 'None'}</p>
                 <h3 className="bold">Cohort:</h3><p>{props.currentUser.cohort !== null ? props.currentUser.cohort : 'Unknown'}</p>
             </>}
-
-
             {showEditForm && <form onSubmit={handleSubmit}>
             <ImageInput type='file' onChange={e => setProfilePicture(e.target.files[0])} id='imageInput'/>
             <ProOuter>
@@ -187,7 +184,6 @@ function Account(props) {
                             Edit
                             <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
                         </div>
-                        
                         <DefaultProfile edit={true} icon={faUserCircle}/>
                     </ProfileFilter>)}</label>
                 </ProfileWrapper>
@@ -196,21 +192,16 @@ function Account(props) {
                 <input className="text-input" name="username" onChange={handleChange} placeholder={props.currentUser.username} type="text"/> 
             </label>
             <div>
-                
             </div>
             <label><h3 className="bold">Name:</h3>
                 <input className="text-input" name="name" onChange={handleChange} placeholder={props.currentUser.name} />
             </label>
-
-          
-
             <label><h3 className="bold">Email:</h3>
                 <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.currentUser.email !== null ? props.currentUser.email : ''} />
             </label> 
             <label><h3 className="bold">Cohort:</h3>
                 <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.currentUser.cohort !== null ? props.currentUser.cohort : ''} />
-            </label>
-                  
+            </label>    
             <label><h3 className="bold">New password:</h3>
                     <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text"/> 
             </label>

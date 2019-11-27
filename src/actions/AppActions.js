@@ -5,7 +5,6 @@ export const LOADING_DONE = 'LOADING_DONE';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT = 'LOGOUT';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
-export const GET_OTHER_USER = 'GET_OTHER_USER';
 export const SET_OTHER_USER = 'GET_OTHER_USER';
 
 
@@ -30,13 +29,12 @@ export const getCurrentUser = () => dispatch => {
     .catch(err => {dispatch({ type: LOGIN_FAILED, payload: err }); console.log('GetCurrentUser CATCH ERROR: ', err) });
     return null;
 }
-export const getOtherUser = () => dispatch => {
-    dispatch({ type: LOADING_START, payload: null });
-    // axiosWithAuth().get('/users/user')
-    // .then(res =>{
-    //     dispatch({ type: GET_OTHER_USER, payload: res.data })
-    // })
-    // .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetOtherUser CATCH ERROR: ', err) });
+export const getOtherUser = (id) => dispatch => {
+    axiosWithAuth().get(`/users/${id}`)
+    .then(res =>{
+        dispatch({ type: SET_OTHER_USER, payload: res.data })
+    })
+    .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetOtherUser CATCH ERROR: ', err) });
     return null;
 }
 export const setOtherUser = () => dispatch => {

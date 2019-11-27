@@ -1,7 +1,8 @@
-import { SET_CURRENT_USER, LOADING_START, LOADING_DONE, LOGIN_FAILED, LOGOUT, } from '../actions/AppActions.js';
+import { SET_CURRENT_USER, LOADING_START, LOADING_DONE, LOGIN_FAILED, LOGOUT, SET_OTHER_USER, } from '../actions/AppActions.js';
 
 const initialState = {
     currentUser: '',
+    otherUser: '',
     loading: true,
     loginFailed: false,
   };
@@ -28,6 +29,13 @@ export const AppReducer = (state = initialState, action) => {
             return {
                 ...state,
                 currentUser: action.payload,
+                loading: false,
+            };
+        case SET_OTHER_USER:
+            console.log('SET_OTHER_USER FIRING', state);
+            return {
+                ...state,
+                otherUser: action.payload,
                 loading: false,
             };
         case LOGIN_FAILED:
