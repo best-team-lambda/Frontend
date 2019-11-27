@@ -202,10 +202,10 @@ function ViewAccount(props) {
                 <input className="text-input" name="name" onChange={handleChange} placeholder={props.otherUser.name} />
             </label>
             <label><h3 className="bold">Email:</h3>
-                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.currentUser.email : ''} />
+                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
             </label> 
             <label><h3 className="bold">Cohort:</h3>
-                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.currentUser.cohort : ''} />
+                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
             </label>    
             <label><h3 className="bold">New password:</h3>
                     <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text"/> 
