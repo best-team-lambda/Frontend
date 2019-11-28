@@ -10,7 +10,6 @@ const initialState = {
     resolvedVideo: null,
   };
 
-
 export const TicketReducer = (state = initialState, action) => {
     // console.log('TicketReducer initialState: ', initialState);
     // console.log('TicketReducer firing: ', action);
@@ -28,7 +27,7 @@ export const TicketReducer = (state = initialState, action) => {
                 loading: false,
             };
         case SET_TICKET:
-            console.log('SET_TICKET FIRING', state);
+            // console.log('SET_TICKET FIRING', state);
             return {
                 ...state,
                 ticket: action.payload.ticket_details,
@@ -38,12 +37,6 @@ export const TicketReducer = (state = initialState, action) => {
                 openVideo: action.payload.open_video,
                 resolvedVideo: action.payload.resolved_video,
                 loading: false,
-            };
-        case ADD_COMMENT:
-            console.log('ADD_COMMENT FIRING', state);
-            return {
-                ...state,
-                loading: true,
             };
         default: //console.log('REDUCER DEFAULT'); 
         return state;

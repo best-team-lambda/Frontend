@@ -3,11 +3,6 @@ import axiosWithAuth from '../utils/axiosWithAuth.js';
 export const LOADING_START = 'LOADING_START';
 export const LOADING_DONE = 'LOADING_DONE';
 export const SET_TICKET = 'SET_TICKET';
-export const ADD_COMMENT = 'ADD_COMMENT';
-// export const LOGIN_FAILED = 'LOGIN_FAILED';
-// export const LOGOUT = 'LOGOUT';
-// export const SET_CURRENT_USER = 'SET_CURRENT_USER';
-// export const SET_OTHER_USER = 'GET_OTHER_USER';
 
 
 export const loadingStart = () =>{
@@ -21,9 +16,9 @@ export const getTicket = (props) => dispatch => {
     axiosWithAuth()
       .get(`/tickets/${props.match.params.id}`)
       .then(res => {
-        console.log('GetTicket Res', res.data);
-        console.log('GetTicket TicketDetails:', res.data.ticket_details);
-        console.log('GetTicket Comments:', res.data.ticket_comments);
+        // console.log('GetTicket Res', res.data);
+        // console.log('GetTicket TicketDetails:', res.data.ticket_details);
+        // console.log('GetTicket Comments:', res.data.ticket_comments);
         dispatch({ type: SET_TICKET, payload: res.data });
       })
       .catch(err => {
@@ -34,20 +29,42 @@ export const getTicket = (props) => dispatch => {
       });
 }
 
-// Add/delete comment:
 // Post /api/tickets/:id/comments  send comment text in object as {description}
-// Delete /api/tickets/comments/:id
-export const addComment = (id, comment) =>{
-    axiosWithAuth().post(`/api/tickets/${id}/comments`, comment)
-    .then(res =>{
-        
+export const addComment = (ticketID, comment) =>{
+    axiosWithAuth().post(`/tickets/${ticketID}/comments`, comment)
+    .then(() =>{
+        getTicket();
     })
     .catch(err => { console.log('addComment CATCH ERROR: ', err) });
 }
 
-export const deleteComment = () =>{
-    // return { type: LOADING_START, payload: null };
+// Delete /api/tickets/comments/:id
+export const deleteComment = (commentID) =>{
+    axiosWithAuth().delete(`/tickets/comments/${commentID}`)
+    .then(() =>{
+        getTicket();
+    })
+    .catch(err => { console.log('deleteComment CATCH ERROR: ', err) });
 }
+
+// Post /api/tickets/comments/:id/replies send reply text in object as {description}
+export const addReply = (commentID, reply) =>{
+    axiosWithAuth().post(`/tickets/comments/${commentID}/replies`, reply)
+    .then(() =>{
+        getTicket();
+    })
+    .catch(err => { console.log('addComment CATCH ERROR: ', err) });
+}
+// Delete /api/tickets/comments/replies/:id
+export const deleteReply = (replyID) =>{
+    axiosWithAuth().delete(`/tickets/comments/replies/${replyID}`)
+    .then(() =>{
+        getTicket();
+    })
+    .catch(err => { console.log('deleteComment CATCH ERROR: ', err) });
+}
+
+
 
 // export const login = (user) => {
 //     return { type: SET_CURRENT_USER, payload: user };

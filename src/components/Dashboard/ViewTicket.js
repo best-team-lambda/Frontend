@@ -31,8 +31,6 @@ function ViewTicket(props) {
     }
   }, [])
 
-
-
   const handleInput = (e) => {
     setHelperAnswer(e.target.value);
     console.log(helperAnswer);
