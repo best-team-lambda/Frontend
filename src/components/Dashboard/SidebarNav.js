@@ -82,7 +82,7 @@ function SidebarNav(props) {
                                         <select id="select-box" onChange={handleSelect} name="searchBy">
                                             <option value="Category">Category</option>
                                             <option value="author">author Name</option>
-                                            {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Helper">Helper Name</option>}
+                                            {/* {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Helper">Helper Name</option>} */}
                                             <option value="Title">Title</option>
                                             <option value="Description">Description</option>
                                             {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Solution">Solution</option>}
@@ -94,10 +94,10 @@ function SidebarNav(props) {
                                     <br />
                                     {props.props.location.pathname === '/Dashboard/Mine' &&
                                         <>
-                                        <label> Asked/Answered:
+                                        {/* <label> Asked/Answered:
                                         <button className="button" onClick={handleAskedAnswered}>{props.filterByAskedAnsweredBoth}</button>
                                         </label>
-                                        <br />
+                                        <br /> */}
                                         <label> Status:
                                         <button className="button" onClick={handleOpenClosed}>{props.filterByOpenClosedAll}</button>
                                         </label>

@@ -79,9 +79,9 @@ function UserTicketList(props) {
                             else if (props.searchType === 'author' && ticket.author_name && !ticket.author_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                     shouldReturn = false;
                             }
-                            else if (props.searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
-                                shouldReturn = false;
-                            }
+                            // else if (props.searchType === 'Helper' && ticket.helper_name && !ticket.helper_name.toLowerCase().includes(props.searchTerm.toLowerCase())){
+                            //     shouldReturn = false;
+                            // }
                             else if (props.searchType === 'Title' && ticket.title && !ticket.title.toLowerCase().includes(props.searchTerm.toLowerCase())){
                                 shouldReturn = false;
                             }
@@ -106,10 +106,10 @@ function UserTicketList(props) {
                         {
                             shouldReturn = false;
                         }
-                        else if (props.filterByHelperauthorBoth === 'Helper' && ticket.helper_name !== props.currentUser.name)
-                        {
-                            shouldReturn = false;
-                        }
+                        // else if (props.filterByHelperauthorBoth === 'Helper' && ticket.helper_name !== props.currentUser.name)
+                        // {
+                        //     shouldReturn = false;
+                        // }
                         if (shouldReturn === true){
                             return (
                                 <tr key={ticket.id}><MyTicket id={ticket.id} currentUser={props.currentUser} author_name={ticket.author_name} category={ticket.category} 

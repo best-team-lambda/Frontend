@@ -11,8 +11,6 @@ function SignUpForm(props) {
     username: "",
     password: "",
     name: "",
-    helper: true,
-    author: true,
   });
   
   const [newUserEmail, setNewUserEmail] = useState('');
