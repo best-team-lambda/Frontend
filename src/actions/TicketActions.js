@@ -3,7 +3,7 @@ import axiosWithAuth from '../utils/axiosWithAuth.js';
 export const LOADING_START = 'LOADING_START';
 export const LOADING_DONE = 'LOADING_DONE';
 export const SET_TICKET = 'SET_TICKET';
-export const TOGGLE_COLLAPSE = 'SET_TICKET';
+export const TOGGLE_COLLAPSE = 'TOGGLE_COLLAPSE';
 
 
 export const loadingStart = () =>{
@@ -78,6 +78,6 @@ export const deleteReply = (replyID) =>{
     })
     .catch(err => { console.log('deleteRply CATCH ERROR: ', err) });
 }
-export const collapseComment = (commentID) => {
+export const toggleCollapse = (commentID) => {
     return { type: TOGGLE_COLLAPSE, payload: commentID };
 }

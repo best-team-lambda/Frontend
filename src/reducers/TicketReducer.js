@@ -39,14 +39,17 @@ export const TicketReducer = (state = initialState, action) => {
                 loading: false,
             };
         case TOGGLE_COLLAPSE:
+          // console.log('TOGGLE_COLLAPSE FIRING', action.payload)
           let newComments = state.comments.map((comment)=>{
-            if (comment.id === action.payload){
+            // console.log('commentid: ', comment.id, 'payload: ', action.payload)
+            if (comment.id == action.payload){
               return {...comment, collapsed: !comment.collapsed}
             }
             else{
               return comment
             }
           });
+          // console.log('newcomments ',newComments);
           return{
             ...state, 
             comments: newComments

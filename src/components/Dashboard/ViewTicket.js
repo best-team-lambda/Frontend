@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { loadingStart, loadingDone, getTicket } from '../../actions/TicketActions';
+import { loadingStart, loadingDone, getTicket, toggleCollapse } from '../../actions/TicketActions';
 import axios from 'axios';
 import axiosWithAuth from "../../utils/axiosWithAuth";
 import * as timeago from 'timeago.js';
@@ -39,6 +39,11 @@ function ViewTicket(props) {
   const toggleShowReplies = () => {
     setShowReplies(!showReplies);
   };
+
+  const toggleReplies = (e) => {
+    console.log(e.target.value);
+    props.toggleCollapse(e.target.value);
+  }
 
   // const setActiveThread = (e) => {
   //   setActiveThread(e.target.value);
@@ -183,19 +188,6 @@ function ViewTicket(props) {
                 {props.ticket.helper_name === props.currentUser.name &&  <button className='button' onClick={releaseTicket}>Release</button>} 
               </nav> */}
             </div>
-
-{/* Status div */}
-            {/* <div className='statusDiv'>
-              {props.ticket.author_image && 
-              <div className='statusBox'>
-                <h3>Author:</h3>
-                <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
-                <span className='tooltiptext'>View Profile</span></div>
-                <p>{props.ticket.author_name}</p>
-              </div>}
-              {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
-            </div>  */}
-{/* End Status Div */}
             
 {/* author question div  */}
             <div className='authorDiv'>
@@ -244,9 +236,11 @@ function ViewTicket(props) {
                     {props.currentUser.id === comment.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
                     <div className='mediaDiv'>{comment.comment_video && <iframe src={comment.comment_video} />}</div>
+                    {comment.comment_replies.length > 0 && comment.collapsed && <button className='button' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
+                    {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
                     {/* {props.currentUser.name === props.ticket.author_name && <button className='button' onClick={updateAnswer}>Update</button>} */}
                   </div>
-                  {comment.comment_replies && comment.comment_replies.map((reply)=>{
+                  {!comment.collapsed && comment.comment_replies.length > 0 && comment.comment_replies.map((reply)=>{
                     return <Fragment key={reply.id}>
                     <div className='ticketCommentReply'>
                     <div className='ticketComment2'>
@@ -270,12 +264,13 @@ function ViewTicket(props) {
                   })}
                 </Fragment>
               })}
-{/* New Comment Reply Box Here */}
+  {/* New Comment Reply Box Here */}
 
 
-{/* End New Comment Reply Box */}
+  {/* End New Comment Reply Box */}
+
+
               </>}
-
 {/* End Comments div */}
 
 {/* New Comment div */}
@@ -328,7 +323,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { loadingStart, loadingDone, getTicket })(ViewTicket)
+export default connect(mapStateToProps, { loadingStart, loadingDone, getTicket, toggleCollapse })(ViewTicket)
 
 
 
