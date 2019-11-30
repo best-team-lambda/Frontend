@@ -197,7 +197,7 @@ function ViewTicket(props) {
 {/* End Status Div */}
             
 {/* author question div  */}
-
+{/* dasda */}
             <div className='authorDiv'>
               <div className='authorDivHeader'>
                 {props.ticket.author_image && 

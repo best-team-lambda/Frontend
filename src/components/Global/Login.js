@@ -45,6 +45,7 @@ function Login(props) {
     // console.log(userCredentials);
 
     const handleSubmit = (e) => {
+        console.log(process.env.CLIENT_ID);
         e.preventDefault();
         e.target.reset();
         props.loadingStart();
