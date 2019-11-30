@@ -173,35 +173,37 @@ function ViewTicket(props) {
           <>
             <div className='ticketNav'>
               <div className='ticketNavLeft'>
-                <div><h2>TICKET #{props.match.params.id}</h2></div>      
+                <div><h2>TICKET #{props.match.params.id}</h2></div>
+                <div className='statusBox'><h3>Category: {props.ticket.category.toUpperCase()}</h3></div>
+                <div className='statusBox'><h3>Current status: {props.ticket.status.toUpperCase()}</h3></div>
               </div> 
-              <nav className='ticketNavRight'>
+              {/* <nav className='ticketNavRight'>
                 {props.ticket.author_name === props.currentUser.name && <button className='navLinkInternal button' onClick={deleteTicket}>Delete</button>}
                 {/* {props.ticket.author_name !== props.currentUser.name && props.ticket.helper_name === null && <button className='button' onClick={claimTicket}>Claim</button>}
-                {props.ticket.helper_name === props.currentUser.name &&  <button className='button' onClick={releaseTicket}>Release</button>} */}
-              </nav>
+                {props.ticket.helper_name === props.currentUser.name &&  <button className='button' onClick={releaseTicket}>Release</button>} 
+              </nav> */}
             </div>
 
 {/* Status div */}
-            <div className='statusDiv'>
+            {/* <div className='statusDiv'>
               {props.ticket.author_image && 
               <div className='statusBox'>
                 <h3>Author:</h3>
-                <Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
+                <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
+                <span className='tooltiptext'>View Profile</span></div>
                 <p>{props.ticket.author_name}</p>
               </div>}
               {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
-              <div className='statusBox'><h3>Category:</h3> <p>{props.ticket.category.toUpperCase()}</p></div>
-              <div className='statusBox'><h3>Current status:</h3> <p>{props.ticket.status.toUpperCase()}</p></div>
-            </div> 
+            </div>  */}
 {/* End Status Div */}
             
 {/* author question div  */}
             <div className='authorDiv'>
               <div className='authorDivHeader'>
                 {props.ticket.author_image && 
-                <div className='statusBox'>
-                  <Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
+                <div className='statusBox2'>
+                  <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
+                  <span className='tooltiptext'>View Profile</span></div>
                   {/* <p>{props.ticket.author_name}</p> */}
                 </div>}
                 {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
@@ -226,11 +228,19 @@ function ViewTicket(props) {
               {props.comments.map((comment)=>{
                 return <Fragment key={comment.id}>
                   <div className='ticketComment'>
-                    <div className='authorDivHeader'>
-                      <div><p>{comment.author_name} replied:</p></div>
+                    <div className='ticketComment2'>
+                      <div className='commentFixer'>
+                        <div className='tooltip'>
+                          <Link to={`/Dashboard/Account/${comment.author_id}`}><img className="photo3" src={comment.author_picture} alt='comment author'/></Link>
+                          <span className='tooltiptext'>View Profile</span>
+                        </div>
+                        <div className='commentText'>
+                          <h4>{comment.author_name} replied:</h4>
+                          <p>{comment.description}</p>    
+                        </div>
+                      </div>
                       <div className='secondDiv'><p>{timeago.format(comment.created_at)}</p></div>
-                    </div>
-                    <p>{comment.description}</p>                    
+                    </div>                
                     {props.currentUser.id === comment.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
                     <div className='mediaDiv'>{comment.comment_video && <iframe src={comment.comment_video} />}</div>
@@ -239,11 +249,19 @@ function ViewTicket(props) {
                   {comment.comment_replies && comment.comment_replies.map((reply)=>{
                     return <Fragment key={reply.id}>
                     <div className='ticketCommentReply'>
-                      <div className='authorDivHeader'>
-                        <div><p>{reply.author_name} replied:</p></div>
-                        <div className='secondDiv'><p>{timeago.format(reply.created_at)}</p></div>
+                    <div className='ticketComment2'>
+                      <div className='commentFixer'>
+                        <div className='tooltip'>
+                          <Link to={`/Dashboard/Account/${reply.author_id}`}><img className="photo3" src={reply.author_picture} alt='reply author'/></Link>
+                          <span className='tooltiptext'>View Profile</span>
+                        </div>
+                        <div className='commentText'>
+                          <h4>{reply.author_name} replied:</h4>
+                          <p>{reply.description}</p>    
+                        </div>
                       </div>
-                      <p>{reply.description}</p>
+                      <div className='secondDiv'><p>{timeago.format(reply.created_at)}</p></div>
+                    </div>           
                       {props.currentUser.id === reply.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
                       <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
                       <div className='mediaDiv'>{reply.reply_video && <iframe src={reply.reply_video} />}</div>

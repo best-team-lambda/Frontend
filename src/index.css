@@ -569,9 +569,8 @@ td div {
   width: 100%;
   display: flex;
   flex-flow: column wrap;
-  padding: 20px;
   text-align: left;
-  padding-left: 6%;
+  padding: 0 3%;
 }
 .ticketNav {
   display: flex;
@@ -582,21 +581,10 @@ td div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
-  height: 100px;
+  width: 100%;
 }
 .ticketNavLeft div {
   display: flex;
-}
-.ticketNavRight {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 40%;
-  height: 100px;
-}
-.ticketNavRight button {
-  height: 40px;
 }
 .topDiv {
   border: 1px solid #C3CFD9;
@@ -611,8 +599,6 @@ td div {
 .authorDiv {
   border: 1px solid #C3CFD9;
   width: 100%;
-  min-height: 300px;
-  margin-top: 7%;
 }
 .authorDiv p {
   padding-left: 7%;
@@ -643,24 +629,6 @@ td div {
 .uploadDiv button {
   height: 40px;
 }
-.ticketComment {
-  border: 1px solid #C3CFD9;
-  margin-left: 5%;
-  width: 95%;
-  height: 300px;
-}
-.ticketComment p {
-  padding-left: 7%;
-}
-.ticketCommentReply {
-  border: 1px solid #C3CFD9;
-  margin-left: 10%;
-  width: 90%;
-  height: 300px;
-}
-.ticketCommentReply p {
-  padding-left: 7%;
-}
 .statusDiv {
   display: flex;
   flex-direction: row;
@@ -669,6 +637,10 @@ td div {
   align-items: baseline;
 }
 .statusBox {
+  width: 30%;
+}
+.statusBox2 {
+  margin-top: 12px;
   width: 30%;
 }
 .answerBox textarea {
@@ -700,4 +672,87 @@ td div {
 }
 .stacked {
   margin-left: -20%;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #BF0033;
+  color: #fff;
+  text-align: center;
+  padding: 0;
+  border-radius: 6px;
+  width: 120px;
+  top: 100%;
+  left: 50%;
+  margin-left: -56px;
+  /* Use half of the width (120/2 = 60), to center the tooltip */
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  /* At the top of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #BF0033 transparent;
+}
+.ticketComment {
+  border: 1px solid #C3CFD9;
+  margin-left: 5%;
+  width: 95%;
+}
+.ticketComment p {
+  padding-left: 7%;
+}
+.ticketComment2 {
+  display: flex;
+  justify-content: space-between;
+}
+.ticketComment2 .secondDiv {
+  width: 20%;
+  text-align: right;
+  margin-right: 5%;
+  font-weight: 600;
+}
+.ticketCommentReply {
+  border: 1px solid #C3CFD9;
+  margin-left: 10%;
+  width: 90%;
+}
+.ticketCommentReply p {
+  padding-left: 7%;
+}
+.photo3 {
+  height: 100px;
+  border-radius: 5px;
+  margin-top: 8%;
+  margin-left: 7%;
+}
+.commentFixer {
+  display: flex;
+  width: 80%;
+}
+.commentText {
+  width: 90%;
+  padding: 0;
+  margin: 0;
+  margin-top: 2px;
+  margin-left: 15px;
+}
+.commentText h4 {
+  margin: 0;
+  padding: 0;
 }

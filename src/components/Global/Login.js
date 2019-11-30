@@ -45,7 +45,7 @@ function Login(props) {
     // console.log(userCredentials);
 
     const handleSubmit = (e) => {
-        console.log(process.env.CLIENT_ID);
+        console.log(process.env.REACT_APP_CLIENT_ID);
         e.preventDefault();
         e.target.reset();
         props.loadingStart();
@@ -94,7 +94,7 @@ function Login(props) {
                             <input className="text-input" placeholder="Password" type='password' name='password' onChange={handleChange} />
                         </label>
                         <button className="button fullwidth" type='submit'>Login</button>
-                        <a href={`https://slack.com/oauth/authorize?scope=identity.basic&client_id=${process.env.CLIENT_ID}`}><img src="https://api.slack.com/img/sign_in_with_slack.png" /></a>
+                        <a href={`https://slack.com/oauth/authorize?scope=identity.basic&client_id=${process.env.REACT_APP_CLIENT_ID}`}><img src="https://api.slack.com/img/sign_in_with_slack.png" /></a>
                     </form>
 
                     <br />
@@ -105,6 +105,7 @@ function Login(props) {
         </StyledLoader>   
     )
 }
+
 
 const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
