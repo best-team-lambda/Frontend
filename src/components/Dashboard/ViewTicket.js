@@ -202,9 +202,8 @@ function ViewTicket(props) {
               <div className='authorDivHeader'>
                 {props.ticket.author_image && 
                 <div className='statusBox'>
-                  <h3>Author:</h3>
                   <Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
-                  <p>{props.ticket.author_name}</p>
+                  {/* <p>{props.ticket.author_name}</p> */}
                 </div>}
                 {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
                 <div><p>{props.ticket.author_name} asked:</p></div>
