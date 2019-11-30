@@ -13,23 +13,36 @@ import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
 function ViewTicket(props) {
+  const [showReplies, setShowReplies] = useState(true);
+  // const [activeThread, setActiveThread] = useState('');
   // const [ticket, setTicket] = useState('')
   const [helperAnswer, setHelperAnswer] = useState('');
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
   const ticketID = props.match.params.id;
+  const Fragment = React.Fragment;
   
   // console.log('ViewTicket Props',props)
-  // console.log('currentUser: ', currentUser);
+  console.log('props.currentUser: ', props.currentUser);
   // console.log(ticket);
   console.log('props.ticket: ', props.ticket)
+  console.log('props.comments: ', props.comments)
 
   //load ticket on start
   useEffect(() => {
-    if (!props.ticket){
+    if (!props.ticket || props.ticket.id != props.match.params.id){
+      props.loadingStart();
       props.getTicket(props);
     }
   }, [])
+
+  const toggleShowReplies = () => {
+    setShowReplies(!showReplies);
+  };
+
+  // const setActiveThread = (e) => {
+  //   setActiveThread(e.target.value);
+  // }
 
   const handleInput = (e) => {
     setHelperAnswer(e.target.value);
@@ -150,64 +163,6 @@ function ViewTicket(props) {
     }
   };
 
-  const claimTicket = () => {
-    console.log('claimTicket() firing', props.ticket.helper_name)
-    if (props.currentUser.name !== props.ticket.author_name && props.ticket.status === 'open'){
-        props.loadingStart();
-        axiosWithAuth()
-          .post(`/tickets/${ticketID}/help`)
-          .then(res => {
-            console.log('claimTicket res:', res.data.ticket_details);
-            props.loadingDone();
-            // setTicket(res.data.ticket_details);
-          })
-          .catch(err => {
-            console.log("claimTicket CATCH ERROR: ", err.response.data.message);
-            props.loadingDone();
-            alert(err.response.data.message);
-          });
-    }
-    else {
-      alert("You can't claim your own ticket.");
-    }
-  }
-
-  const releaseTicket = () => {
-    console.log('releaseTicket() firing')
-    if (props.ticket.helper_name === props.currentUser.name && props.ticket.status === 'assigned'){
-        props.loadingStart();
-        axiosWithAuth()
-          .delete(`/tickets/${ticketID}/queue`)
-          .then(res => {
-            console.log('releaseTicket res:', res.data);
-            axiosWithAuth()
-              .get(`/tickets/${ticketID}`)
-              .then(res => {
-                console.log('getTicket res:', res.data);
-                props.loadingDone();
-                // setTicket(res.data.ticket_details);
-                // setOpenPictures(res.data.open_pictures);
-                // setResolvedPictures(res.data.resolved_pictures);
-                // setOpenVideo(res.data.ticket_details.open_video);
-                // setResolvedVideo(res.data.ticket_details.resolved_video);
-              })
-              .catch(err => {
-                console.log("CATCH ERROR: ", err.response.data.message);
-                props.loadingDone();
-                alert(err.response.data.message);
-              });
-          })
-          .catch(err => {
-            console.log("CATCH ERROR: ", err.response.data.message);
-            props.loadingDone();
-            alert(err.response.data.message);
-          });
-    }
-    else {
-      alert('You may only release a ticket that you are assigned to.');
-    }
-  }
-
   return (
 
     <StyledLoader active={props.loading} spinner text='Loading...'>
@@ -222,30 +177,36 @@ function ViewTicket(props) {
               </div> 
               <nav className='ticketNavRight'>
                 {props.ticket.author_name === props.currentUser.name && <button className='navLinkInternal button' onClick={deleteTicket}>Delete</button>}
-                {props.ticket.author_name !== props.currentUser.name && props.ticket.helper_name === null && <button className='button' onClick={claimTicket}>Claim</button>}
-                {props.ticket.helper_name === props.currentUser.name &&  <button className='button' onClick={releaseTicket}>Release</button>}
+                {/* {props.ticket.author_name !== props.currentUser.name && props.ticket.helper_name === null && <button className='button' onClick={claimTicket}>Claim</button>}
+                {props.ticket.helper_name === props.currentUser.name &&  <button className='button' onClick={releaseTicket}>Release</button>} */}
               </nav>
             </div>
 
 {/* Status div */}
             <div className='statusDiv'>
+              {props.ticket.author_image && 
+              <div className='statusBox'>
+                <h3>Author:</h3>
+                <Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
+                <p>{props.ticket.author_name}</p>
+              </div>}
+              {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
               <div className='statusBox'><h3>Category:</h3> <p>{props.ticket.category.toUpperCase()}</p></div>
               <div className='statusBox'><h3>Current status:</h3> <p>{props.ticket.status.toUpperCase()}</p></div>
-              {props.ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><img className="photo" src={props.ticket.helper_image} alt='Expert'/></div>}
-              {props.ticket.author_image && <div className='statusBox'><h3>author:</h3><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link></div>}
-              {props.ticket.helper_name && !props.ticket.helper_image && <div className='statusBox'><h3>Expert:</h3><Fa icon={faUserCircle}/></div>}
-              {!props.ticket.author_image && <div className='statusBox'><h3>author:</h3><Fa icon={faUserCircle}/></div>} 
             </div> 
 {/* End Status Div */}
-
-{/* Top div */}
-
-{/* End Top div */}
             
 {/* author question div  */}
 
             <div className='authorDiv'>
               <div className='authorDivHeader'>
+                {props.ticket.author_image && 
+                <div className='statusBox'>
+                  <h3>Author:</h3>
+                  <Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
+                  <p>{props.ticket.author_name}</p>
+                </div>}
+                {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
                 <div><p>{props.ticket.author_name} asked:</p></div>
                 <div className='secondDiv'><p>{timeago.format(props.ticket.created_at)}</p></div>
               </div>
@@ -254,52 +215,81 @@ function ViewTicket(props) {
 
               <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
               <div className='mediaDiv'>{props.openVideo && <iframe src={props.openVideo}/>}</div>
-              {props.currentUser.name === props.ticket.author_name && <button className='button' onClick={updateQuestion}>Update</button>}
+              {props.comments.length > 0 && showReplies && <button className='button' onClick={toggleShowReplies}>Hide Replies</button>}
+              {props.comments.length > 0 && !showReplies && <button className='button' onClick={toggleShowReplies}>Show Replies</button>}
+              {props.currentUser.id === props.ticket.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
             </div>
 
 {/* End author question div  */}
 
-{/* Answer div  */}
+{/* Comments div  */}
+              
+              {showReplies && props.comments && <>
+              {props.comments.map((comment)=>{
+                return <Fragment key={comment.id}>
+                  <div className='ticketComment'>
+                    <div className='authorDivHeader'>
+                      <div><p>{comment.author_name} replied:</p></div>
+                      <div className='secondDiv'><p>{timeago.format(comment.created_at)}</p></div>
+                    </div>
+                    <p>{comment.description}</p>                    
+                    {props.currentUser.id === comment.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
+                    <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
+                    <div className='mediaDiv'>{comment.comment_video && <iframe src={comment.comment_video} />}</div>
+                    {/* {props.currentUser.name === props.ticket.author_name && <button className='button' onClick={updateAnswer}>Update</button>} */}
+                  </div>
+                  {comment.comment_replies && comment.comment_replies.map((reply)=>{
+                    return <Fragment key={reply.id}>
+                    <div className='ticketCommentReply'>
+                      <div className='authorDivHeader'>
+                        <div><p>{reply.author_name} replied:</p></div>
+                        <div className='secondDiv'><p>{timeago.format(reply.created_at)}</p></div>
+                      </div>
+                      <p>{reply.description}</p>
+                      {props.currentUser.id === reply.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
+                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
+                      <div className='mediaDiv'>{reply.reply_video && <iframe src={reply.reply_video} />}</div>
+                      {/* {props.currentUser.name === props.ticket.author_name && <button className='button' onClick={updateAnswer}>Update</button>} */}
+                    </div> </Fragment>
+                  })}
+                </Fragment>
+              })}
+{/* New Comment Reply Box Here */}
 
-              {props.ticket.solution && 
-              <div className='helperDiv'>
-                <div>{props.ticket.helper_name} replied:</div>
-                <p>{timeago.format(props.ticket.resolved_at)}</p>
-                <p>{props.ticket.solution}</p>
 
-                <div className='mediaDiv'>{props.resolvedPictures.length > 0 && props.openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
-                <div className='mediaDiv'>{props.resolvedVideo && <iframe src={props.resolvedVideo} />}</div>
-                {props.currentUser.name === props.ticket.author_name && <button className='button' onClick={updateAnswer}>Update</button>}
-              </div>}
-{/* End answer div */}
+{/* End New Comment Reply Box */}
+              </>}
 
-{/* Answer box div */}
-    {/* displays only if user is assigned to the ticket (creator or helper assigned) */}
-              {(props.currentUser.name === props.ticket.helper_name || props.currentUser.name === props.ticket.author_name) && 
+{/* End Comments div */}
+
+{/* New Comment div */}
+  {/* create a new comment thread*/}
               <div className='answerContainer'>
-              <div className='answerBox'>
-                <h3>Write answer here:</h3>
-                <textarea onChange={handleInput}></textarea>
-              </div>
-              <div className='uploadDiv'>
-                    <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
-                    <FileInput id='videoInput' className='input' type='file' accept=".avi,.mov,.mp4" onChange={e => setVideo(e.target.files[0])}/>
-                    <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
-                        <FileDiv>
-                            <Fa icon={faImages}/><p>Add images</p>
-                        </FileDiv>
-                    </label>
-                    {images && Array.from(images).map(image => <p key={image.name}>{image.name}</p>)}
-                    <label style={{cursor: 'pointer'}} htmlFor='videoInput'>
-                        <FileDiv>
-                            <Fa icon={faFileVideo}/><p>Add a video</p>
-                        </FileDiv>
-                    </label>
-                    {video && <p>{video.name}</p>}
-                {props.ticket.status === 'open' && <button className="button" onClick={resolveTicket}>Submit Answer</button>}
-                {props.ticket.status === 'assigned' && <button className="button" onClick={updateAnswer}>Update Answer</button>}
+                <div className='answerBox'>
+                  <h3>Write answer here:</h3>
+                  <textarea onChange={handleInput}></textarea>
                 </div>
-              </div>}
+                <div className='uploadDiv'>
+                      <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
+                      <FileInput id='videoInput' className='input' type='file' accept=".avi,.mov,.mp4" onChange={e => setVideo(e.target.files[0])}/>
+                      <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
+                          <FileDiv>
+                              <Fa icon={faImages}/><p>Add images</p>
+                          </FileDiv>
+                      </label>
+                      {images && Array.from(images).map(image => <p key={image.name}>{image.name}</p>)}
+                      <label style={{cursor: 'pointer'}} htmlFor='videoInput'>
+                          <FileDiv>
+                              <Fa icon={faFileVideo}/><p>Add a video</p>
+                          </FileDiv>
+                      </label>
+                      {video && <p>{video.name}</p>}
+                  {props.ticket.status === 'open' && <button className="button" onClick={resolveTicket}>Submit Answer</button>}
+                  {props.ticket.status === 'assigned' && <button className="button" onClick={updateAnswer}>Update Answer</button>}
+                </div>
+              </div>
+{/* End New Comment div */}
+
           </>
           );}})()}
    

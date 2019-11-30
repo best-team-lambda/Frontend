@@ -617,42 +617,6 @@ td div {
 .authorDiv p {
   padding-left: 7%;
 }
-.mediaDiv {
-  display: flex;
-  margin: 0 auto;
-}
-.uploadDiv {
-  display: flex;
-  margin: 0 auto;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.uploadDiv button {
-  height: 40px;
-}
-.helperDiv {
-  border: 1px solid #C3CFD9;
-  width: 100%;
-  height: 300px;
-}
-.helperDiv p {
-  padding-left: 7%;
-}
-.helperDiv div {
-  padding-left: 3%;
-  margin-top: 2%;
-  font-weight: 700;
-}
-.statusDiv {
-  display: flex;
-  flex-direction: row;
-}
-.statusDiv div {
-  align-items: baseline;
-}
-.statusBox {
-  width: 30%;
-}
 .authorDivHeader {
   display: flex;
   justify-content: space-between;
@@ -666,6 +630,47 @@ td div {
   text-align: right;
   margin-right: 5%;
 }
+.mediaDiv {
+  display: flex;
+  margin: 0 auto;
+}
+.uploadDiv {
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.uploadDiv button {
+  height: 40px;
+}
+.ticketComment {
+  border: 1px solid #C3CFD9;
+  margin-left: 5%;
+  width: 95%;
+  height: 300px;
+}
+.ticketComment p {
+  padding-left: 7%;
+}
+.ticketCommentReply {
+  border: 1px solid #C3CFD9;
+  margin-left: 10%;
+  width: 90%;
+  height: 300px;
+}
+.ticketCommentReply p {
+  padding-left: 7%;
+}
+.statusDiv {
+  display: flex;
+  flex-direction: row;
+}
+.statusDiv div {
+  align-items: baseline;
+}
+.statusBox {
+  width: 30%;
+}
 .answerBox textarea {
   width: 100%;
   height: 200px;
@@ -673,7 +678,7 @@ td div {
   margin-bottom: 20px;
 }
 .photo {
-  height: 65px;
+  height: 80px;
   border-top-left-radius: 1px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 3px;

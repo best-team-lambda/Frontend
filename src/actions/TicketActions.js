@@ -3,6 +3,7 @@ import axiosWithAuth from '../utils/axiosWithAuth.js';
 export const LOADING_START = 'LOADING_START';
 export const LOADING_DONE = 'LOADING_DONE';
 export const SET_TICKET = 'SET_TICKET';
+export const TOGGLE_COLLAPSE = 'SET_TICKET';
 
 
 export const loadingStart = () =>{
@@ -28,7 +29,6 @@ export const getTicket = (props) => dispatch => {
         props.history.push('/Dashboard/Unassigned');
       });
 }
-
 // Post /api/tickets/:id/comments  send comment text in object as {description}
 export const addComment = (ticketID, comment) =>{
     axiosWithAuth().post(`/tickets/${ticketID}/comments`, comment)
@@ -37,7 +37,14 @@ export const addComment = (ticketID, comment) =>{
     })
     .catch(err => { console.log('addComment CATCH ERROR: ', err) });
 }
-
+// Post /api/tickets/:id/comments  send comment text in object as {description}
+export const updateComment = (commentID, comment) =>{
+    // axiosWithAuth().post(`/tickets/${ticketID}/comments`, comment)
+    // .then(() =>{
+    //     getTicket();
+    // })
+    // .catch(err => { console.log('updateComment CATCH ERROR: ', err) });
+}
 // Delete /api/tickets/comments/:id
 export const deleteComment = (commentID) =>{
     axiosWithAuth().delete(`/tickets/comments/${commentID}`)
@@ -53,7 +60,15 @@ export const addReply = (commentID, reply) =>{
     .then(() =>{
         getTicket();
     })
-    .catch(err => { console.log('addComment CATCH ERROR: ', err) });
+    .catch(err => { console.log('addReply CATCH ERROR: ', err) });
+}
+//put update reply
+export const updateReply = (replyID, reply) =>{
+    // axiosWithAuth().post(`/tickets/comments/${commentID}/replies`, reply)
+    // .then(() =>{
+    //     getTicket();
+    // })
+    // .catch(err => { console.log('updateReply CATCH ERROR: ', err) });
 }
 // Delete /api/tickets/comments/replies/:id
 export const deleteReply = (replyID) =>{
@@ -61,31 +76,8 @@ export const deleteReply = (replyID) =>{
     .then(() =>{
         getTicket();
     })
-    .catch(err => { console.log('deleteComment CATCH ERROR: ', err) });
+    .catch(err => { console.log('deleteRply CATCH ERROR: ', err) });
 }
-
-
-
-// export const login = (user) => {
-//     return { type: SET_CURRENT_USER, payload: user };
-// }
-// export const logout = () =>{
-//     return { type: LOGOUT, payload: null };
-// }
-// export const getCurrentUser = () => dispatch => {
-//     dispatch({ type: LOADING_START, payload: null });
-//     axiosWithAuth().get('/users/user')
-//     .then(res =>{
-//         dispatch({ type: SET_CURRENT_USER, payload: res.data })
-//     })
-//     .catch(err => {dispatch({ type: LOGIN_FAILED, payload: err }); console.log('GetCurrentUser CATCH ERROR: ', err) });
-//     return null;
-// }
-// export const getOtherUser = (id) => dispatch => {
-//     axiosWithAuth().get(`/users/${id}`)
-//     .then(res =>{
-//         dispatch({ type: SET_OTHER_USER, payload: res.data })
-//     })
-//     .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetOtherUser CATCH ERROR: ', err) });
-//     return null;
-// }
+export const collapseComment = (commentID) => {
+    return { type: TOGGLE_COLLAPSE, payload: commentID };
+}

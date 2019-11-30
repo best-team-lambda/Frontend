@@ -1,7 +1,7 @@
-import { LOADING_START, LOADING_DONE, ADD_COMMENT, SET_TICKET } from '../actions/TicketActions.js';
+import { LOADING_START, LOADING_DONE, ADD_COMMENT, SET_TICKET, TOGGLE_COLLAPSE } from '../actions/TicketActions.js';
 
 const initialState = {
-    loading: false,
+    loading: true,
     ticket: '',
     comments: '',
     openPictures: [],
@@ -15,7 +15,7 @@ export const TicketReducer = (state = initialState, action) => {
     // console.log('TicketReducer firing: ', action);
     switch(action.type) {
         case LOADING_START:
-        // console.log('LOADING_START FIRING', state);
+        console.log('LOADING_START FIRING', state);
             return {
                 ...state,
                 loading: true,
@@ -27,7 +27,7 @@ export const TicketReducer = (state = initialState, action) => {
                 loading: false,
             };
         case SET_TICKET:
-            // console.log('SET_TICKET FIRING', state);
+            // console.log('SET_TICKET FIRING', action.payload);
             return {
                 ...state,
                 ticket: action.payload.ticket_details,
@@ -38,7 +38,22 @@ export const TicketReducer = (state = initialState, action) => {
                 resolvedVideo: action.payload.resolved_video,
                 loading: false,
             };
+        case TOGGLE_COLLAPSE:
+          let newComments = state.comments.map((comment)=>{
+            if (comment.id === action.payload){
+              return {...comment, collapsed: !comment.collapsed}
+            }
+            else{
+              return comment
+            }
+          });
+          return{
+            ...state, 
+            comments: newComments
+          }
         default: //console.log('REDUCER DEFAULT'); 
         return state;
   }
 }
+
+

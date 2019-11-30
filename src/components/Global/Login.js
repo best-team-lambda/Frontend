@@ -93,6 +93,7 @@ function Login(props) {
                             <input className="text-input" placeholder="Password" type='password' name='password' onChange={handleChange} />
                         </label>
                         <button className="button fullwidth" type='submit'>Login</button>
+                        <a href={`https://slack.com/oauth/authorize?scope=identity.basic&client_id=${process.env.CLIENT_ID}`}><img src="https://api.slack.com/img/sign_in_with_slack.png" /></a>
                     </form>
 
                     <br />

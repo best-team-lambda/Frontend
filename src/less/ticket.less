@@ -55,15 +55,30 @@
     width: 100%;
     min-height: 300px;
     margin-top: 7%;
-
     p {
         padding-left: 7%;
     }
   }
+
+  .authorDivHeader {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      div {
+          width: 50%;
+      }
+      .secondDiv {
+          width: 50%;
+          text-align: right;
+          margin-right: 5%;
+      }
+  }
+
   .mediaDiv{
     display: flex;
     margin: 0 auto;
   }
+
   .uploadDiv{
     display: flex;
     margin: 0 auto;
@@ -74,21 +89,28 @@
     }
   }
 
-  .helperDiv{
+  .ticketComment{
     border: 1px solid #C3CFD9;
-    width: 100%;
+    margin-left: 5%;
+    width: 95%;
+    height: 300px;
+    p {
+        padding-left: 7%;   
+    }
+    // div {
+    //     padding-left: 3%;
+    //     margin-top: 2%;
+    //     font-weight: 700;
+    // }
+  }
+  .ticketCommentReply{
+    border: 1px solid #C3CFD9;
+    margin-left: 10%;
+    width: 90%;
     height: 300px;
     p {
         padding-left: 7%;
-        
     }
-
-    div {
-        padding-left: 3%;
-        margin-top: 2%;
-        font-weight: 700;
-    }
-
   }
 
   .statusDiv {
@@ -106,21 +128,6 @@
     width: 30%;
 }
 
-.authorDivHeader {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-    div {
-        width: 50%;
-    }
-    .secondDiv {
-        width: 50%;
-        text-align: right;
-        margin-right: 5%;
-    }
-
-}
-
 .answerBox {
 
 textarea {
@@ -133,7 +140,7 @@ margin-bottom: 20px;
 }
 
 .photo {
-  height: 65px;
+  height: 80px;
   border-top-left-radius: 1px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 3px;
