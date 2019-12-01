@@ -207,8 +207,8 @@ function ViewTicket(props) {
 
               <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
               <div className='mediaDiv'>{props.openVideo && <iframe src={props.openVideo}/>}</div>
-              {props.comments.length > 0 && showReplies && <button className='button' onClick={toggleShowReplies}>Hide Replies</button>}
-              {props.comments.length > 0 && !showReplies && <button className='button' onClick={toggleShowReplies}>Show Replies</button>}
+              {props.comments.length > 0 && showReplies && <button className='button alignRight' onClick={toggleShowReplies}>Hide Replies</button>}
+              {props.comments.length > 0 && !showReplies && <button className='button alignRight' onClick={toggleShowReplies}>Show Replies</button>}
               {props.currentUser.id === props.ticket.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
             </div>
 
@@ -236,9 +236,10 @@ function ViewTicket(props) {
                     {props.currentUser.id === comment.author_id && <button className='button' onClick={console.log('click click')}>Edit</button>}
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
                     <div className='mediaDiv'>{comment.comment_video && <iframe src={comment.comment_video} />}</div>
-                    {comment.comment_replies.length > 0 && comment.collapsed && <button className='button' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
-                    {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
-                    {/* {props.currentUser.name === props.ticket.author_name && <button className='button' onClick={updateAnswer}>Update</button>} */}
+                    {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
+                    {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
+                    <button className='button alignRight' onClick={updateAnswer}>Add Reply</button>
+                    {props.currentUser.id === comment.author_id && <button className='button alignRight' onClick={updateAnswer}>Edit Thread</button>}
                   </div>
                   {!comment.collapsed && comment.comment_replies.length > 0 && comment.comment_replies.map((reply)=>{
                     return <Fragment key={reply.id}>
@@ -265,7 +266,7 @@ function ViewTicket(props) {
                 </Fragment>
               })}
   {/* New Comment Reply Box Here */}
-
+{/* if no replys have add reply button on comment, else show answer box at bottom of replies if comment is expanded */}
 
   {/* End New Comment Reply Box */}
 

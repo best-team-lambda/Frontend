@@ -4,6 +4,8 @@ export const LOADING_START = 'LOADING_START';
 export const LOADING_DONE = 'LOADING_DONE';
 export const SET_TICKET = 'SET_TICKET';
 export const TOGGLE_COLLAPSE = 'TOGGLE_COLLAPSE';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const ADD_REPLY = 'ADD_REPLY';
 
 
 export const loadingStart = () =>{
