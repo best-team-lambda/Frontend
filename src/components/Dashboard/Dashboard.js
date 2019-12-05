@@ -5,7 +5,7 @@ import SidebarNav from './SidebarNav.js';
 import Account from '../Global/Account.js';
 import ViewAccount from '../Global/ViewAccount.js';
 import CreateTicket from './CreateTicket.js';
-import OpenTicketList from './Unassigned/OpenTicketList.js';
+import OpenTicketList from './OpenTickets/OpenTicketList.js';
 import UserTicketList from './Mine/UserTicketList.js';
 import ClosedTicketList from './Closed/ClosedTicketList.js';
 import ViewTicket from './ViewTicket.js';
@@ -22,7 +22,7 @@ export default function Dashboard(props) {
                 <Route exact path='/Dashboard/Account' component={Account} />
                 <Route exact path='/Dashboard/Account/:id' component={ViewAccount} />
                 <Route exact path='/Dashboard/CreateTicket' component={CreateTicket} />
-                <Route exact path='/Dashboard/Unassigned' component={OpenTicketList} />
+                <Route exact path='/Dashboard/OpenTickets' component={OpenTicketList} />
                 <Route exact path='/Dashboard/Mine' component={UserTicketList} />
                 <Route exact path='/Dashboard/Resolved' component={ClosedTicketList} />
                 <Route exact path='/Dashboard/Tickets/:id' component={ViewTicket} />

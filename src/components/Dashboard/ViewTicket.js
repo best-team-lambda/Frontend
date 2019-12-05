@@ -8,12 +8,14 @@ import axiosWithAuth from "../../utils/axiosWithAuth";
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+import process2 from '../../images/process2.jpg';
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
 function ViewTicket(props) {
+// #region local state
   const [commentInputText, setCommentInputText] = useState('');
   const [replyInputText, setReplyInputText] = useState(''); //inputted text into reply box
   const [replyToComment, setReplyToComment] = useState(''); //set which comment has reply box active by comment ID.
@@ -23,18 +25,19 @@ function ViewTicket(props) {
   const [editCommentID, setEditCommentID] = useState('');
   const [editReplyText, setEditReplyText] = useState('');
   const [editReplyID, setEditReplyID] = useState('');
+  const [modalToggle, setModalToggle] = useState('none');
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
   const ticketID = props.match.params.id;
   const Fragment = React.Fragment;
-
+// #endregion
+// #region console logs
   // console.log('ViewTicket Props',props)
   // console.log('props.currentUser: ', props.currentUser);
-  // console.log(ticket);
   console.log('props.ticket: ', props.ticket)
   console.log('props.comments: ', props.comments)
-  console.log('edit question obj: ', editQuestionObj);
-
+  // console.log('edit question obj: ', editQuestionObj);
+//#endregion
 
   //load ticket on start
   useEffect(() => {
@@ -44,8 +47,9 @@ function ViewTicket(props) {
     }
   }, [])
 
+//#region toggle funcs
   const toggleReplies = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     props.toggleCollapse(e.target.value);
   }
   const collapseAll = (e) => {
@@ -54,14 +58,16 @@ function ViewTicket(props) {
   const expandAll = (e) => {
     props.expandAll()
   }
+// #endregion
+
+//#region submit funcs
   const markAsAnswer = (e) => {
-    console.log('markAsAnswer e.target.value', JSON.parse(e.target.value));
+    // console.log('markAsAnswer e.target.value', JSON.parse(e.target.value));
     props.markAsAnswer(ticketID, JSON.parse(e.target.value));
   }
   const removeAnswer = () => {
     props.removeAnswer(ticketID);
   }
-
   const addComment = () => {
     if(commentInputText !== ''){
       props.addComment(ticketID, commentInputText);
@@ -71,7 +77,7 @@ function ViewTicket(props) {
       alert('Comment cannot be empty! Add an answer.');
     }
   }
-  const addReply = () => {
+  const submitReply = () => {
     if(replyInputText !== ''){
       props.addReply(replyToComment, replyInputText);
       setReplyInputText('');
@@ -126,7 +132,9 @@ function ViewTicket(props) {
       alert('You must add text to update the comment.');
     }
   }
+// #endregion
   
+//#region delete funcs
   const deleteComment = (e) => {
     props.deleteComment(e.target.value)
   }
@@ -141,28 +149,32 @@ function ViewTicket(props) {
       alert('Only the author of the ticket may delete it. How did you even trigger this?');
     }
   }
+// #endregion
 
+//#region editSelector funcs
   const toggleEditingTicket = () => {
     setEditingQuestion(true);
     setEditQuestionObj({title: '', category: '', description: ''});
   }
   const pickReplyToComment = (e) => {
-    console.log('asfasfasfasf');
-    console.log('ReplyToComment set to: ', e.target.value);
+    // console.log('asfasfasfasf');
+    // console.log('ReplyToComment set to: ', e.target.value);
     setReplyInputText(''); //wipe any reply text typed into another box
     setReplyToComment(e.target.value);
   }
   const pickCommentToEdit = (e) => {
-    console.log('editCommentID set to: ', e.target.value);
+    // console.log('editCommentID set to: ', e.target.value);
     setEditCommentText(''); //wipe any reply text typed into another box
     setEditCommentID(e.target.value);
   }
   const pickReplyToEdit = (e) => {
-    console.log('editReplyID set to: ', e.target.value);
+    // console.log('editReplyID set to: ', e.target.value);
     setEditReplyText(''); //wipe any reply text typed into another box
     setEditReplyID(e.target.value);
   }
+//#endregion
 
+//#region inputHandlerFuncs
   const handleCommentInput = (e) => {
     setCommentInputText(e.target.value);
     // console.log('comment input text: ', commentInputText);
@@ -190,7 +202,9 @@ function ViewTicket(props) {
       setEditQuestionObj({...editQuestionObj, description: e.target.value});
     }
   }
+// #endregion
 
+//#region cancelEdit funcs
   const cancelTicketEdit = () => {
     setEditingQuestion(false);
     setEditQuestionObj({title: '', category: '', description: ''});
@@ -203,8 +217,23 @@ function ViewTicket(props) {
     setEditReplyID('');
     setEditReplyText('');
   }
+  const cancelReplyToComment = () => {
+    setReplyInputText(''); //wipe any reply text typed into another box
+    setReplyToComment('');
+  }
+// #endregion
 
+const modalExpand = () => {
+  if (modalToggle === 'none'){
+    setModalToggle('block');
+  }
+  else if (modalToggle === 'block')
+  {
+    setModalToggle('none');
+  }
+}
 
+//#region oldfuncs
   const updateQuestion = () => {
     // console.log('updateQuestion() firing. ')
     // if (props.currentUser.name === props.ticket.author_name && inputText !== null){
@@ -292,9 +321,9 @@ function ViewTicket(props) {
     //   alert('You must submit an answer to close the ticket.');
     // }
   };
+// #endregion
 
   return (
-
     <StyledLoader active={props.loading} spinner text='Loading...'>
     <section className="ticketContainer">
       {(()=>{
@@ -308,33 +337,61 @@ function ViewTicket(props) {
                 <div className='statusBox'><h3>Current status: {props.ticket.status.toUpperCase()}</h3></div>
               </div> 
             </div>
-            
-{/* author question div  */}
-            <div className='authorDiv'>
-              <div className='authorDivHeader'>
-                {props.ticket.author_image && 
-                <div className='statusBox2'>
-                  <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="photo" src={props.ticket.author_image} alt='author'/></Link>
-                  <span className='tooltiptext'>View Profile</span></div>
-                  {/* <p>{props.ticket.author_name}</p> */}
-                </div>}
-                {!props.ticket.author_image && <div className='statusBox'><h3>Author:</h3><Fa icon={faUserCircle}/></div>} 
-                <div><p>{props.ticket.author_name} asked:</p></div>
+{/* //#region author question div  */}
+            <div className='ticketComment'>
+              <div className='ticketComment2'>
+                <div className='commentFixer'>
+                  {props.ticket.author_image && 
+                    <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="viewTicketPhoto" src={props.ticket.author_image} alt='author'/></Link>
+                      <span className='tooltiptext'>View Profile</span>
+                    </div>
+                  }
+                  {!props.ticket.author_image && 
+                    <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><Fa icon={faUserCircle}/></Link>
+                    <span className='tooltiptext'>View Profile</span>
+                    </div>
+                    } 
+                  <div className='commentText'>
+                    <h4>{props.ticket.author_name} asked:</h4>
+                    <div><p><b>Title:{'\xa0\xa0'}</b> {props.ticket.title}</p></div>
+                  </div>
+                </div>
                 <div className='secondDiv'><p>{timeago.format(props.ticket.created_at)}</p></div>
               </div>
-              <div><p>Title: {props.ticket.title}</p></div>
-              <p>Description: {props.ticket.description}</p>
+              <p><b>Description:{'\xa0\xa0'}</b> {props.ticket.description}</p>
+
+              {/* <!-- Trigger the Modal --> */}
+              <img className="modalImg" onClick={modalExpand} src={process2} alt="process 2" />
+
+              {/* <!-- The Modal --> */}
+              <div id='myModal' className="modal" onClick={modalExpand} style={{display: modalToggle}}>
+
+                {/* <!-- The Close Button --> */}
+                <span className="close">&times;</span>
+
+                {/* <!-- Modal Content (The Image) --> */}
+                <img className="modal-content" id="img01" src={process2}/>
+
+                {/* <!-- Modal Caption (Image Text) --> */}
+                <div id="caption">process 2</div>
+              </div>
+
 
               <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
               <div className='mediaDiv'>{props.openVideo && <iframe src={props.openVideo}/>}</div>
+
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={collapseAll}>Collapse All</button>}
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={expandAll}>Expand All</button>}
+
               {props.currentUser.id === props.ticket.author_id && !editingQuestion && <button className='button alignRight' onClick={toggleEditingTicket}>Edit</button>}
               {props.currentUser.id === props.ticket.author_id && editingQuestion && <button className='button alignRight' onClick={cancelTicketEdit}>Cancel Edit</button>}
+
               {props.currentUser.id === props.ticket.author_id && !editingQuestion && <button className='button alignRight' onClick={deleteTicket}>Delete</button>}
+
+              {props.ticket.status == 'resolved' && props.currentUser.id === props.ticket.author_id && !editingQuestion && <button className='button alignRight' onClick={removeAnswer}>Re-open ticket</button>}
             </div>
             
-{/* End author question div  */}
+{/* //#endregion End author question div  */}
 
 {/* Edit Question box */}
             {editingQuestion && <div>
@@ -383,7 +440,7 @@ function ViewTicket(props) {
                     <div className='ticketComment2'>
                       <div className='commentFixer'>
                         <div className='tooltip'>
-                          <Link to={`/Dashboard/Account/${comment.author_id}`}><img className="photo3" src={comment.author_picture} alt='comment author'/></Link>
+                          <Link to={`/Dashboard/Account/${comment.author_id}`}><img className="viewTicketPhoto" src={comment.author_image} alt='comment author'/></Link>
                           <span className='tooltiptext'>View Profile</span>
                         </div>
                         <div className='commentText'>
@@ -395,15 +452,19 @@ function ViewTicket(props) {
                     </div>                
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
                     <div className='mediaDiv'>{comment.comment_video && <iframe src={comment.comment_video} />}</div>
+                    
                     {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
                     {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
 
-                    {comment.comment_replies.length === 0 && comment.id != editCommentID && <button className='button alignRight' onClick={console.log('click click fix me comment add reply')}>Add Reply</button>}
-                    
+                    {comment.comment_replies.length === 0 && comment.id != editCommentID && comment.id != replyToComment && <button className='button alignRight' value={comment.id} onClick={pickReplyToComment}>Add Reply</button>}
+                    {comment.comment_replies.length === 0 && comment.id != editCommentID && comment.id == replyToComment && <button className='button alignRight' value={comment.id} onClick={cancelReplyToComment}>Cancel Reply</button>}
+
                     {props.currentUser.id === comment.author_id && comment.id != editCommentID && <button className='button alignRight' value={comment.id} onClick={pickCommentToEdit}>Edit</button>}
                     {props.currentUser.id === comment.author_id && comment.id == editCommentID && <button className="button alignRight" onClick={cancelCommentEdit}>Cancel Edit</button>}
+                    
                     {props.currentUser.id === comment.author_id && comment.id != editCommentID && <button className='button alignRight' value={comment.id} onClick={deleteComment}>Delete</button>}
-                    {props.currentUser.id === props.ticket.author_id && comment.id != editCommentID && <button className='button alignRight' value={JSON.stringify(comment)} onClick={markAsAnswer}>Mark as Answer</button>}
+                    
+                    {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && comment.id != editCommentID && <button className='button alignRight' value={JSON.stringify(comment)} onClick={markAsAnswer}>Mark as Answer</button>}
                   </div>
           {/* Edit comment box */}
                   {comment.id == editCommentID && <div>
@@ -437,7 +498,7 @@ function ViewTicket(props) {
                       <div className='ticketComment2'>
                         <div className='commentFixer'>
                           <div className='tooltip'>
-                            <Link to={`/Dashboard/Account/${reply.author_id}`}><img className="photo3" src={reply.author_picture} alt='reply author'/></Link>
+                            <Link to={`/Dashboard/Account/${reply.author_id}`}><img className="viewTicketPhoto" src={reply.author_image} alt='reply author'/></Link>
                             <span className='tooltiptext'>View Profile</span>
                           </div>
                           <div className='commentText'>
@@ -447,10 +508,14 @@ function ViewTicket(props) {
                         </div>
                         <div className='secondDiv'><p>{timeago.format(reply.created_at)}</p></div>
                       </div>           
+                      
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={pickReplyToEdit}>Edit</button>}
                       {props.currentUser.id === reply.author_id && reply.id == editReplyID && <button className='button alignRight' value={reply.id} onClick={cancelReplyEdit}>Cancel Edit</button>}
+                      
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={deleteReply}>Delete</button>}
-                      {props.currentUser.id === props.ticket.author_id && reply.id != editReplyID && <button className='button alignRight' value={JSON.stringify(reply)} onClick={markAsAnswer}>Mark as Answer</button>}
+                      
+                      {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && reply.id != editReplyID && <button className='button alignRight' value={JSON.stringify(reply)} onClick={markAsAnswer}>Mark as Answer</button>}
+                      
                       <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
                       <div className='mediaDiv'>{reply.reply_video && <iframe src={reply.reply_video} />}</div>
                   </div> 
@@ -482,11 +547,12 @@ function ViewTicket(props) {
                   </Fragment> })} 
 {/* New Reply Box Here */}
   {/* if no repliess have add reply button on comment, else show answer box at bottom of replies if comment is expanded */}
-                    {console.log('comment: ', comment)}
-                    {console.log('replytocomment: ', replyToComment)}
-                    {console.log('replies length: ', comment.comment_replies.length)}
-                    {comment.id != replyToComment && comment.comment_replies.length === 0 && <button className='button alignRight' value={comment.id} onClick={pickReplyToComment}>Add Reply</button>}
-                    {comment.id == replyToComment && comment.comment_replies.length === 0 && <div>
+                    <div className='replyBox'>
+                      {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id != replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={pickReplyToComment}>Add Reply</button>}
+                      {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id == replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={cancelReplyToComment}>Cancel Reply</button>}
+                    </div>
+
+                    {comment.id == replyToComment && !comment.collapsed && <div>
                       <div className='replyBox'>
                         <h3>Reply to thread:</h3>
                         <textarea onChange={handleReplyInput}></textarea>
@@ -506,11 +572,10 @@ function ViewTicket(props) {
                             </FileDiv>
                         </label>
                         {video && <p>{video.name}</p>}
-                        <button className="button" onClick={addReply}>Submit Reply</button>
+                        <button className="button" onClick={submitReply}>Submit Reply</button>
                       </div>
                     </div>}
-  {/* End New Reply Box */}
-                   </Fragment>  })}  </>}
+  {/* End New Reply Box */}</Fragment>  })}  </>}
 {/* End Comments div */}
 
 {/* New Comment div */}

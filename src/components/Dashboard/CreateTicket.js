@@ -145,17 +145,17 @@ export default function CreateTicket(props) {
         
         try{
         setLoading(true);
-        const ticket = await axiosWithAuth().post('https://ddq.herokuapp.com/api/tickets', ticketDetails);
+        const ticket = await axiosWithAuth().post('/tickets', ticketDetails);
     
         if(images){
-          const urls  = await axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/${ticket.data.id}/pictures/open`, imagesData);
+          const urls  = await axiosWithAuth().post(`/tickets/${ticket.data.id}/pictures/open`, imagesData);
           console.log(urls);
         }
 
         if(video){
           const videoData = new FormData();
           videoData.append('video', video);
-          const url  = await axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/${ticket.data.id}/video/open`, videoData);
+          const url  = await axiosWithAuth().post(`/tickets/${ticket.data.id}/video/open`, videoData);
           console.log(url);  
         }
         setLoading(false);

@@ -26,7 +26,7 @@ function Header(props) {
                             <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
                             <NavLink className='navLink' to='/Dashboard/Account'>Account</NavLink>
                             <NavLink className='navLink' to='/Dashboard/CreateTicket'>Create Ticket</NavLink>
-                            <NavLink className='navLink' to='/Dashboard/Unassigned'>Dashboard</NavLink>
+                            <NavLink className='navLink' to='/Dashboard/OpenTickets'>Dashboard</NavLink>
                             <Link className="navLink" to='/' onClick={logOut}>Sign out</Link>
                         </nav>
                     </>

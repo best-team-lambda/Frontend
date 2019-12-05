@@ -52,7 +52,7 @@ function SidebarNav(props) {
             <nav className='sidebarNav'>
             <div>
                 <img src={unclaimed} alt="Unclaimed tickets" />
-                <NavLink className='navLink' to='/Dashboard/Unassigned'>Unassigned</NavLink> 
+                <NavLink className='navLink' to='/Dashboard/OpenTickets'>Open</NavLink> 
             </div>
             <div>
                 <img src={mine} alt="My tickets" />
@@ -72,7 +72,7 @@ function SidebarNav(props) {
                 
             <div className='filterToolsDiv'>
                 {(()=>{ //immediately invoked function to allow javascript inside JSX. syntax: {(()=>{})()}
-                        if(props.props.location.pathname === '/Dashboard/Unassigned' | props.props.location.pathname === '/Dashboard/Mine' | props.props.location.pathname === '/Dashboard/Resolved')
+                        if(props.props.location.pathname === '/Dashboard/OpenTickets' | props.props.location.pathname === '/Dashboard/Mine' | props.props.location.pathname === '/Dashboard/Resolved')
                         {   //only if at any of the three above routes display filter tools.
                             return(
                                 <>
@@ -82,10 +82,10 @@ function SidebarNav(props) {
                                         <select id="select-box" onChange={handleSelect} name="searchBy">
                                             <option value="Category">Category</option>
                                             <option value="author">author Name</option>
-                                            {/* {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Helper">Helper Name</option>} */}
+                                            {/* {props.props.location.pathname !== '/Dashboard/OpenTickets' && <option value="Helper">Helper Name</option>} */}
                                             <option value="Title">Title</option>
                                             <option value="Description">Description</option>
-                                            {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Solution">Solution</option>}
+                                            {props.props.location.pathname !== '/Dashboard/OpenTickets' && <option value="Solution">Solution</option>}
                                         </select>
                                     </div>
                                     <input  className='searchBox' name="searchTerm" type="text" onChange={handleChange} value={props.searchTerm} placeholder="Filter" />

@@ -38,7 +38,7 @@ export const getTicket = (props) => dispatch => {
         console.log("CATCH ERROR: ", err.response.data.message, '');
         dispatch({ type: LOADING_DONE, payload: null });
         alert(err.response.data.message);
-        props.history.push('/Dashboard/Unassigned');
+        props.history.push('/Dashboard/OpenTickets');
       });
 }
 export const updateTicket = (ticketID, editedTicket) => dispatch => {
@@ -56,18 +56,18 @@ export const deleteTicket = (props) => dispatch => {
       .delete(`/tickets/${props.match.params.id}`)
       .then(res => {
         alert('Ticket deleted successfully. Redirecting...');
-        props.history.push('/Dashboard/Unassigned');
+        props.history.push('/Dashboard/OpenTickets');
       })
       .catch(err => {
         console.log("CATCH ERROR: ", err.response.data.message, '');
         alert(err.response.data.message);
-        props.history.push('/Dashboard/Unassigned');
+        props.history.push('/Dashboard/OpenTickets');
       });
 }
 export const addComment = (ticketID, newCommentText) => dispatch => {
     axiosWithAuth().post(`/tickets/${ticketID}/comments`, {description: newCommentText})
     .then((res) =>{
-        // console.log(res.data);
+        console.log("comment response", res.data);
         dispatch({ type: ADD_COMMENT, payload: res.data });
     })
     .catch(err => { console.log('addComment CATCH ERROR: ', err) });
@@ -115,12 +115,12 @@ export const deleteReply = (replyID) => dispatch => {
 }
 export const markAsAnswer = (ticketID, commentOrReply) => dispatch => {
     console.log('markAsAnswer action commentOrReply: ', commentOrReply);
-    let commentId = '';
-    let replyId = '';
-    replyId = commentOrReply.comment_id;
-    console.log(replyId);
+    // let commentId = '';
+    // let replyId = '';
+    // replyId = commentOrReply.comment_id;
+    // console.log(replyId);
     let objToSend;
-    if (commentOrReply.comment_id === undefined){
+    if (commentOrReply.comment_id !== undefined){
         objToSend = { reply_id: commentOrReply.id, solution: commentOrReply.description }
     }
     else if (commentOrReply.id !== undefined && commentOrReply.comment_id === undefined){
@@ -129,7 +129,7 @@ export const markAsAnswer = (ticketID, commentOrReply) => dispatch => {
     else {
         objToSend = { solution: commentOrReply.description }
     }
-    console.log('objTosend'. objToSend);
+    console.log('objTosend', objToSend);
     axiosWithAuth().post(`/tickets/${ticketID}/resolve`, objToSend)
     .then((res) =>{
         console.log('markAsAnswer res data', res.data)
@@ -138,11 +138,11 @@ export const markAsAnswer = (ticketID, commentOrReply) => dispatch => {
     .catch(err => { console.log('markAsAnswer CATCH ERROR: ', err.response.data.message) });
 }
 export const removeAnswer = (ticketID) => dispatch => {
-    // axiosWithAuth().post(`/tickets/${ticketID}/resolve`)
-    // .then(() =>{
-    //     dispatch({ type: REMOVE_ANSWER, payload: null });
-    // })
-    // .catch(err => { console.log('markAsAnswer CATCH ERROR: ', err.response.data.message) });
+    axiosWithAuth().post(`/tickets/${ticketID}/reopen`)
+    .then(() =>{
+        dispatch({ type: REMOVE_ANSWER, payload: null });
+    })
+    .catch(err => { console.log('removeAnswer CATCH ERROR: ', err.response.data.message) });
 }
 export const toggleCollapse = (commentID) => {
     return { type: TOGGLE_COLLAPSE, payload: commentID };

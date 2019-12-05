@@ -58,7 +58,7 @@ function Login(props) {
             props.login(res.data.user);
             props.loadingDone();
             //redirect to open queue
-            props.history.push('/Dashboard/Unassigned');
+            props.history.push('/Dashboard/OpenTickets');
         })
         .catch(err => {console.log('LOGIN CATCH ERROR: ', err);
         props.loadingDone();

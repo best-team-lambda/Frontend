@@ -57,7 +57,7 @@ function SignUpForm(props) {
 
               //redirect to open queue
               props.loadingDone();
-              props.history.push('/Dashboard/Unassigned');
+              props.history.push('/Dashboard/OpenTickets');
             })
             .catch(err => {
               console.log("SignUp Login Catch Error: ", err.response.data.message);

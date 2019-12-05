@@ -15,45 +15,60 @@ const StyledLoader = styled(LoadingOverlay)`
 function UserTicketList(props) {
     const [allUserTickets, setAllUserTickets] = useState([]);
 
+    // useEffect(() => {
+    //     props.loadingStart();
+    //     (async () => {
+    //         try{
+    //             const what = [
+    //             axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/authors/author/open'),
+    //             axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/authors/author/resolved`),
+    //             axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/helpers/open'),
+    //             axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/helpers/resolved`)];
+                
+    //             const mom = await axios.all(what);
+    //                 const hey = [];
+    //             for(let val of mom){
+    //                 if(Array.isArray(val.data)){
+    //                     for(let mom of val.data){
+    //                         hey.push(mom);
+    //                     }
+    //                 }
+    //             }
+
+    //             props.loadingDone();
+    //             const yo = [];
+    //             const mommo = [];
+    //             for(let val of hey){
+    //                 if(yo.indexOf(val.id) === -1){
+    //                     yo.push(val.id);
+    //                     mommo.push(val);
+    //                 }
+    //             }
+    //             setAllUserTickets(mommo);
+                
+    //             // console.log(hey);
+    //             console.log('after', allUserTickets);
+    //         }catch(err){
+    //             console.log('CATCH ERROR: ', err);
+    //             props.loadingDone();
+    //         }
+    //     })()
+    // }, []);
+
     useEffect(() => {
         props.loadingStart();
-        (async () => {
-            try{
-                const what = [
-                axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/authors/author/open'),
-                axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/authors/author/resolved`),
-                axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/helpers/open'),
-                axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/helpers/resolved`)];
-                
-                const mom = await axios.all(what);
-                    const hey = [];
-                for(let val of mom){
-                    if(Array.isArray(val.data)){
-                        for(let mom of val.data){
-                            hey.push(mom);
-                        }
-                    }
-                }
-
-                props.loadingDone();
-                const yo = [];
-                const mommo = [];
-                for(let val of hey){
-                    if(yo.indexOf(val.id) === -1){
-                        yo.push(val.id);
-                        mommo.push(val);
-                    }
-                }
-                setAllUserTickets(mommo);
-                
-                // console.log(hey);
-                console.log('after', allUserTickets);
-            }catch(err){
-                console.log('CATCH ERROR: ', err);
-                props.loadingDone();
-            }
-        })()
-    }, []);
+        axiosWithAuth()
+        .get(`/tickets/mine`)
+        .then(res => {
+            console.log(res);
+            // setAllUserTickets(res.data);
+            props.loadingDone();
+        })
+        .catch(err => {
+            console.log("CATCH ERROR: ", err.response.data.message, '');
+            props.loadingDone();
+        });
+    }, [])
 
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
@@ -62,7 +77,7 @@ function UserTicketList(props) {
             <table className='tickettable'>
                 <thead>
                       <tr>
-                        <th className='firstTh'>authors</th>
+                        <th className='firstTh'>Authors</th>
                         <th>Subject</th>
                         <th>Title</th>
                         <th>Age</th>

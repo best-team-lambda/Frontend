@@ -18,7 +18,7 @@ function OpenTicketList(props) {
         props.loadingStart()
         axiosWithAuth().get('/tickets/open')
         .then(res => {
-            //console.log(res.data)
+            console.log(res.data)
             setOpenTickets(res.data)
             props.loadingDone();
         })
@@ -33,7 +33,7 @@ function OpenTicketList(props) {
             <table className='tickettable'>
                 <thead>
                     <tr>
-                        <th className='firstTh'>author</th>
+                        <th className='firstTh' >Author</th>
                         <th>Subject</th>
                         <th>Title</th>
                         <th>Age</th>
@@ -65,7 +65,7 @@ function OpenTicketList(props) {
                        }
                         if (shouldReturn === true){
                             return (
-                                <tr key={ticket.id}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_name={ticket.author_name} category={ticket.category} 
+                                <tr key={ticket.id}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
                                 title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr> )
                         }
                         else{return null}

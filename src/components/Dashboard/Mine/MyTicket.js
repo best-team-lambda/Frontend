@@ -12,39 +12,26 @@ const Fa = styled(FontAwesomeIcon)`
 `
 
 export default function MyTicket(props) { 
-    //display teacher and author on mine list
-
-    // let curUser;
-    // let secondUser = 'FIX ME Myticket.js';
-    // console.log(props)
-    // if (props.status === 'open'){
-    //     curUser = props.currentUser.name;
-    // }
-    // else if (props.data === 'assigned')
-    // {
-    //     if (props.currentUser === props.author_name){
-    //         curUser = props.author_name;
-    //     }
-    //     if (props.currentUser === props.author_name){
-    //         curUser = props.author_name;
-    //     }
-    // }
-    // else if (props.data === 'resolved')
-    // {
-    //     if (props.currentUser === props.author_name){
-    //         curUser = props.author_name;
-    //     }
-    //     if (props.currentUser === props.author_name){
-    //         curUser = props.author_name;
-    //     }
-    // }
-
 
     return (
         <>
              {/* <td className='boldrows'>{props.author_name}</td>  */}
-             <td><div>{props.author_image ? <img className="photo" src={props.author_image} alt='author'/> : <Fa icon={faUserCircle}/>}
-             {props.helper_image ? <img className="photo2" src={props.helper_image} alt='Helper'/> : <Fa icon={faUserCircle}/>}</div><div>{props.author_name}</div></td>
+             <td>
+                {/* <div> */}
+                    <div className='tooltip'>
+                        <Link to={`/Dashboard/Account/${props.ticket.author_id}`}>
+                            {props.author_image 
+                                ? <img className="photo" src={props.author_image} alt='author'/> 
+                                : <Fa icon={faUserCircle}/>}
+                        </Link>
+                        <span className='tooltiptext'>View Profile</span>
+                    </div>
+                    {/* {props.helper_image 
+                        ? <img className="photo2" src={props.helper_image} alt='Helper'/> 
+                        : <Fa icon={faUserCircle}/>} */}
+                {/* </div> */}
+                <div>{props.author_name}</div>
+            </td>
             <td className='boldrows'>{props.category}</td>
             <td>{props.title}</td>
             {/* <td>{props.description}</td> */}

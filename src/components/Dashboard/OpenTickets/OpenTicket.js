@@ -15,9 +15,17 @@ const Fa = styled(FontAwesomeIcon)`
 export default function OpenTicket(props) {
     return (
         <>
-
-            {/* <td className='boldrows'>{props.author_name}</td>  */}
-            <td><div>{props.author_image ? <img className="photo" src={props.author_image} alt='author'/> : <Fa icon={faUserCircle} />}</div><div>{props.author_name}</div></td>
+            <td align='center'>
+                <div className='tooltip'>
+                    <Link to={`/Dashboard/Account/${props.author_id}`}>
+                        {props.author_image 
+                            ? <img className="photo3" src={props.author_image} alt='ticket author'/> 
+                            : <Fa icon={faUserCircle} />}
+                    </Link>
+                    <span className='tooltiptext'>View Profile</span>
+                </div>
+                <div>{props.author_name}</div>
+            </td>
             <td className='boldrows'>{props.category}</td>
             <td>{props.title}</td>
             {/* <td>{props.description}</td> */}
