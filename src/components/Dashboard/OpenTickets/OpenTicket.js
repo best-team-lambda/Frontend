@@ -31,9 +31,7 @@ export default function OpenTicket(props) {
             {/* <td>{props.description}</td> */}
             <td>{timeago.format(props.created_at)}</td>
             <td><Link to={`/Dashboard/Tickets/${props.id}`}>View</Link></td>
-            
         </>
-    
     )
 }
 

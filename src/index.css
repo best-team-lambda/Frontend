@@ -159,7 +159,7 @@ header {
   right: 0;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 9;
   background-color: #fff;
   height: 75px;
   display: flex;
@@ -433,112 +433,6 @@ header + section:first-of-type {
 .credits .card {
   margin-bottom: 4%;
 }
-.dashboard {
-  display: flex;
-}
-.courseContainer {
-  display: flex;
-  flex-wrap: wrap;
-}
-.courseBox {
-  color: white;
-  width: 300px;
-  height: 165px;
-  border-radius: 5px;
-  margin: 10px;
-  text-align: center;
-  vertical-align: middle;
-  line-height: 165px;
-}
-.courseBox:hover {
-  cursor: pointer;
-  opacity: 0.98;
-}
-.sidebarDiv {
-  /* bg color colorpicked from whimsical template */
-  background-color: #c3cfd9;
-  border: 1px solid black;
-  border-top: none;
-  width: 25%;
-  min-height: 100vh;
-}
-.filterToolsDiv {
-  position: sticky;
-  top: 300px;
-}
-.sidebarNav {
-  /* border: 1px solid black; */
-  position: sticky;
-  top: 75px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding-top: 20px;
-  text-decoration: none;
-  /* flex-wrap: wrap; */
-}
-.sidebarNav a {
-  margin-bottom: 20px;
-}
-.navLink {
-  color: black;
-  text-decoration: none;
-  line-height: 24px;
-  font-size: 2rem;
-}
-.navLink:hover {
-  color: #BF0033;
-}
-.helperDashboard {
-  width: 85%;
-}
-.tickettable {
-  width: 100%;
-  text-align: left;
-  padding: 2%;
-  border-collapse: collapse;
-}
-.tickettable > thead {
-  color: #788896;
-}
-tbody td,
-thead th {
-  padding: 2%;
-}
-thead tr th:first-child {
-  width: 20%;
-}
-thead tr th:nth-child(2) {
-  width: 10%;
-}
-thead tr th:nth-child(3) {
-  width: 30%;
-}
-thead tr th:nth-child(4) {
-  width: 15%;
-}
-thead tr th:nth-child(5) {
-  width: 15%;
-}
-tbody tr {
-  border-bottom: 1px solid #788896;
-}
-td.boldrows {
-  font-weight: 600;
-}
-td a {
-  text-decoration: none;
-}
-th {
-  position: sticky;
-  top: 70px;
-  background: white;
-  z-index: 99999999;
-}
-.firstTh {
-  background-color: pink;
-  text-align: center;
-}
 .ticketContainer {
   width: 100%;
   display: flex;
@@ -721,13 +615,13 @@ th {
   padding: 0;
   border-radius: 6px;
   width: 120px;
-  top: 100%;
+  bottom: 105%;
   left: 50%;
   margin-left: -60px;
   /* Use half of the width (120/2 = 60), to center the tooltip */
   /* Position the tooltip text */
   position: absolute;
-  z-index: 1;
+  z-index: 5;
 }
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
@@ -736,13 +630,13 @@ th {
 .tooltip .tooltiptext::after {
   content: " ";
   position: absolute;
-  bottom: 100%;
+  top: 100%;
   /* At the top of the tooltip */
   left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
+  margin-left: -8px;
+  border-width: 8px;
   border-style: solid;
-  border-color: transparent transparent #BF0033 transparent;
+  border-color: #BF0033 transparent transparent transparent;
 }
 .ticketComment {
   border: 1px solid #C3CFD9;
@@ -796,6 +690,10 @@ th {
 .alignRight {
   float: right;
   margin: 10px;
+}
+.solution {
+  background-color: lightseagreen;
+  border: 2px solid black;
 }
 /* Style the Image Used to Trigger the Modal */
 .modalImg {
@@ -877,4 +775,102 @@ th {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
+}
+.dashboard {
+  display: flex;
+}
+.courseContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.courseBox {
+  color: white;
+  width: 300px;
+  height: 165px;
+  border-radius: 5px;
+  margin: 10px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 165px;
+}
+.courseBox:hover {
+  cursor: pointer;
+  opacity: 0.98;
+}
+.sidebarDiv {
+  /* bg color colorpicked from whimsical template */
+  background-color: #c3cfd9;
+  border: 1px solid black;
+  border-top: none;
+  width: 25%;
+  min-height: 100vh;
+}
+.filterToolsDiv {
+  position: sticky;
+  top: 310px;
+}
+.sidebarNav {
+  /* border: 1px solid black; */
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 20px;
+  text-decoration: none;
+  /* flex-wrap: wrap; */
+}
+.sidebarNav a {
+  margin-bottom: 20px;
+}
+.navLink {
+  color: black;
+  text-decoration: none;
+  line-height: 24px;
+  font-size: 2rem;
+}
+.navLink:hover {
+  color: #BF0033;
+}
+.helperDashboard {
+  width: 85%;
+}
+.tickettable {
+  width: 100%;
+  text-align: left;
+  padding: 2%;
+  border-collapse: collapse;
+}
+.tickettable > thead {
+  color: #788896;
+}
+tbody td,
+thead th {
+  padding: 2%;
+}
+tbody tr {
+  border-bottom: 1px solid #788896;
+}
+td.boldrows {
+  font-weight: 600;
+}
+td a {
+  text-decoration: none;
+}
+td div {
+  text-align: center;
+}
+.firstTh {
+  text-align: center;
+}
+th:after,
+th:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+th:after {
+  bottom: 0;
+  border-bottom: 1px solid #c3cfd9;
 }

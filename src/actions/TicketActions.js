@@ -35,7 +35,7 @@ export const getTicket = (props) => dispatch => {
         dispatch({ type: SET_TICKET, payload: res.data });
       })
       .catch(err => {
-        console.log("CATCH ERROR: ", err.response.data.message, '');
+        console.log("CATCH ERROR: ", err.response.data.message);
         dispatch({ type: LOADING_DONE, payload: null });
         alert(err.response.data.message);
         props.history.push('/Dashboard/OpenTickets');

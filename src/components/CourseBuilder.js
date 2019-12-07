@@ -1,12 +1,15 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { connect } from 'react-redux';
-import { selectCourse, selectUnit, selectWeek, selectDay } from '../actions/CourseBuilderActions.js';
+import { getCourses, selectCourse, selectUnit, selectWeek, selectDay } from '../actions/CourseBuilderActions.js';
 
 
 
 
 
 function CourseBuilder(props) {
+    useEffect(() => {
+        props.getCourses();
+    }, [])
     const handleChange = (e) => {
         e.persist();
         // console.log(e);
@@ -131,11 +134,7 @@ const mapStateToProps = state => {
         selectedDay: state.CourseBuilderReducer.selectingDay,
 
         courses: state.CourseBuilderReducer.courses,
-        units: state.CourseBuilderReducer.units,
-        weeks: state.CourseBuilderReducer.weeks,
-        days: state.CourseBuilderReducer.days,
-        day: state.CourseBuilderReducer.day,
     }
   }
 
-export default connect(mapStateToProps, { selectCourse, selectUnit, selectWeek, selectDay })(CourseBuilder)
+export default connect(mapStateToProps, { getCourses, selectCourse, selectUnit, selectWeek, selectDay })(CourseBuilder)

@@ -212,13 +212,13 @@
   padding: 0;
   border-radius: 6px;
   width: 120px;
-  top: 100%;
+  bottom: 105%;
   left: 50%;
   margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
  
   /* Position the tooltip text */
   position: absolute;
-  z-index: 1;
+  z-index: 5;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -228,12 +228,12 @@
 .tooltip .tooltiptext::after {
   content: " ";
   position: absolute;
-  bottom: 100%;  /* At the top of the tooltip */
+  top: 100%;  /* At the top of the tooltip */
   left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
+  margin-left: -8px;
+  border-width: 8px;
   border-style: solid;
-  border-color: transparent transparent @secondary-red transparent;
+  border-color: @secondary-red transparent transparent transparent; //arrow bit direction
 }
 
 .ticketComment{
@@ -296,4 +296,9 @@
 .alignRight{
   float: right;
   margin: 10px;
+}
+
+.solution{
+  background-color: lightseagreen;
+  border: 2px solid black;
 }

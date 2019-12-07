@@ -32,12 +32,12 @@ function OpenTicketList(props) {
         <StyledLoader active={props.loading} spinner text='Loading...'>
             <table className='tickettable'>
                 <thead>
-                    <tr>
-                        <th className='firstTh' >Author</th>
-                        <th>Subject</th>
-                        <th>Title</th>
-                        <th>Age</th>
-                        <th>Link</th>
+                    <tr >
+                        <th className='firstTh stickyTH' >Author</th>
+                        <th className='stickyTH'>Subject</th>
+                        <th className='stickyTH'>Title</th>
+                        <th className='stickyTH'>Age</th>
+                        <th className='stickyTH'>Link</th>
                     </tr>
                 </thead>
                 <tbody>

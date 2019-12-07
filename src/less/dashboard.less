@@ -33,13 +33,13 @@
   
   .filterToolsDiv{
     position: sticky;
-    top: 300px;
+    top: 310px;
   }
 
   .sidebarNav{
     /* border: 1px solid black; */
     position: sticky;
-    top: 75px;
+    top: 80px;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -67,11 +67,11 @@
     width: 85%;
   }
 
-  .tickettable {
-    width: 100%;
-    text-align: left;
-    padding: 2%;
-    border-collapse: collapse; 
+.tickettable {
+  width: 100%;
+  text-align: left;
+  padding: 2%;
+  border-collapse: collapse; 
 }
 
 .tickettable > thead {
@@ -83,27 +83,48 @@ tbody td, thead th {
     padding: 2%;
 }
 
-thead {
-  tr { 
-    th {
-      &:first-child {
-        width: 20%;
-      }
-      &:nth-child(2) {
-        width: 10%;
-      }
-      &:nth-child(3) {
-        width: 30%;
-      }
-      &:nth-child(4) {
-        width: 15%;
-      }
-      &:nth-child(5) {
-        width: 15%;
-      }
-    }
-  }
-}
+// .thead {
+//   tr { 
+//     th {
+//       &:first-child {
+//         width: 20%;
+//       }
+//       &:nth-child(2) {
+//         width: 10%;
+//       }
+//       &:nth-child(3) {
+//         width: 30%;
+//       }
+//       &:nth-child(4) {
+//         width: 15%;
+//       }
+//       &:nth-child(5) {
+//         width: 15%;
+//       }
+//     }
+//   }
+// }
+
+// .topTHead{
+//   width:100%;
+//   tr { 
+//     width: 100%;
+//     th {
+//       &:first-child {
+//         width: 20%;
+//       }
+//       &:nth-child(2) {
+//         width: 30%;
+//       }
+//       &:nth-child(3) {
+//         width: 30%;
+//       }
+//       &:nth-child(4) {
+//         width: 20%;
+//       }
+//     }
+//   }
+// }
 
 tbody tr {
     border-bottom: 1px solid #788896;
@@ -117,22 +138,32 @@ td a {
     text-decoration: none;
 }
 
-th {
-  position: sticky;
-  top: 70px;  
-  background: white;
-  z-index: 99999999;
 
+
+td {
+  div {
+    text-align: center;
+  }
 }
 
 .firstTh {
-  background-color: pink;
+  // background-color: pink;
   text-align: center;
   // padding-left: 10%;
 }
 
-// td {
-//   div {
-//     text-align: center;
-//   }
+th:after,
+th:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+// th:before {
+//   top: 0;
+//   border-top: 1px solid blue;
 // }
+th:after {
+  bottom: 0;
+  border-bottom: 1px solid #c3cfd9;
+}

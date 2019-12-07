@@ -1,9 +1,8 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import axiosWithAuth from '../../../utils/axiosWithAuth';
-import axios from 'axios';
+import OpenTicket from '../OpenTickets/OpenTicket.js';
 import MyTicket from './MyTicket';
-import { loadingStart, loadingDone } from '../../../actions/AppActions.js';
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -14,76 +13,189 @@ const StyledLoader = styled(LoadingOverlay)`
 
 function UserTicketList(props) {
     const [allUserTickets, setAllUserTickets] = useState([]);
+    const [openTickets, setOpenTickets] = useState([]);
+    const [resolvedTickets, setResolvedTickets] = useState([]);
+    const [commentedTickets, setCommentedTickets] = useState([]);
+    const [repliedTickets, setRepliedTickets] = useState([]);
+    const [dimensions, setDimensions] = useState(0);
+    const [scroll, setScroll] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-    // useEffect(() => {
-    //     props.loadingStart();
-    //     (async () => {
-    //         try{
-    //             const what = [
-    //             axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/authors/author/open'),
-    //             axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/authors/author/resolved`),
-    //             axiosWithAuth().get('https://ddq.herokuapp.com/api/tickets/helpers/open'),
-    //             axiosWithAuth().get(`https://ddq.herokuapp.com/api/tickets/helpers/resolved`)];
-                
-    //             const mom = await axios.all(what);
-    //                 const hey = [];
-    //             for(let val of mom){
-    //                 if(Array.isArray(val.data)){
-    //                     for(let mom of val.data){
-    //                         hey.push(mom);
-    //                     }
-    //                 }
-    //             }
+// #region Th styles. just don't open it it's bad
+    const [height, setHeight] = useState(75);
+    const [height1, setHeight1] = useState(0);
+    const [height2, setHeight2] = useState(0);
+    const [height3, setHeight3] = useState(0);
+    const [height4, setHeight4] = useState(0);
+    const ref = useRef(null);
+    const ref1 = useRef(null);
+    const ref2 = useRef(null);
+    const ref3 = useRef(null);
+    const ref4 = useRef(null);
 
-    //             props.loadingDone();
-    //             const yo = [];
-    //             const mommo = [];
-    //             for(let val of hey){
-    //                 if(yo.indexOf(val.id) === -1){
-    //                     yo.push(val.id);
-    //                     mommo.push(val);
-    //                 }
-    //             }
-    //             setAllUserTickets(mommo);
-                
-    //             // console.log(hey);
-    //             console.log('after', allUserTickets);
-    //         }catch(err){
-    //             console.log('CATCH ERROR: ', err);
-    //             props.loadingDone();
-    //         }
-    //     })()
-    // }, []);
+    const Sdiv = styled.div`
+    position: sticky;
+    top: ${height}px;
+    height: ${height1-75}px;
+    background-color: #c3cfd9;
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+    `;
+    const Th1 = styled.th`
+    position: sticky;
+    top: ${height1}px;  
+    text-align: center;
+    background: white;
+    z-index: 2;
+    `;
+    const Th2 = styled.th`
+    position: sticky;
+    top: ${height2}px;  
+    text-align: center;
+    background: white;
+    z-index: 2;
+    `;
+    const Th3 = styled.th`
+    position: sticky;
+    top: ${height3}px;  
+    text-align: center;
+    background: white;
+    z-index: 2;
+    `;
+    const Th4 = styled.th`
+    position: sticky;
+    top: ${height4}px;  
+    text-align: center;
+    background: white;
+    z-index: 2;
+    `;
+// #endregion
+    
 
     useEffect(() => {
-        props.loadingStart();
+        // console.log('please no');
         axiosWithAuth()
         .get(`/tickets/mine`)
         .then(res => {
             console.log(res);
             // setAllUserTickets(res.data);
-            props.loadingDone();
+            setOpenTickets(res.data.openTickets);
+            setResolvedTickets(res.data.resolvedTickets);
+            setCommentedTickets(res.data.commentedOn);
+            setRepliedTickets(res.data.repliedOn);
+            setLoading(false);
         })
         .catch(err => {
             console.log("CATCH ERROR: ", err.response.data.message, '');
-            props.loadingDone();
+            setLoading(false);
         });
     }, [])
 
+    // #region setHeights
+    useEffect(() => {
+            setHeight1(ref.current.getBoundingClientRect().bottom + 10);
+            // console.log('assads ',ref.current.getBoundingClientRect().bottom);
+            if (ref1.current){
+                setHeight2(ref1.current.getBoundingClientRect().bottom -1);
+            }
+            else{
+                setHeight2(height1);
+            }
+            if (ref2.current){
+                setHeight3(height2+ ref1.current.clientHeight);
+                // setHeight3(ref2.current.getBoundingClientRect().bottom -1);
+            }
+            else{
+                setHeight3(height2);
+            }
+            if (ref3.current){
+                setHeight4(ref3.current.getBoundingClientRect().bottom -1);
+            }
+            else{
+                setHeight4(height3);
+            }
+    }, [openTickets, resolvedTickets, commentedTickets, repliedTickets, dimensions, scroll]);
+    // console.log('height', height);
+    // console.log('height1', height1);
+    // console.log('height2', height2);
+    // console.log('height3', height3);
+    // console.log('height4', height4);
+    // #endregion
+    
+  useEffect(() => {
+    function handleResize() {
+        setDimensions({ height: window.innerHeight, width: window.innerWidth});
+        setScroll(window.pageYOffset);
+    }
+    function handleScroll() {
+        setScroll(window.pageYOffset);
+    }
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleScroll)
+      return () => {
+        window.removeEventListener('resize', handleResize)
+        window.removeEventListener('scroll', handleScroll)
+      };
+  }, []);
+
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
-         {/* <h2>My tickets</h2> */}
-        <StyledLoader active={props.loading} spinner text='Loading...'>
+        <StyledLoader active={loading} spinner text='Loading...'>
+            <Sdiv>
+                <button className='button alignRight'>asdeafa</button>
+                <button className='button alignRight'>asdsddeafa</button>
+                <button ref={ref} className='button alignRight'>asdeddaaaaafa</button>
+            </Sdiv>
             <table className='tickettable'>
-                <thead>
-                      <tr>
-                        <th className='firstTh'>Authors</th>
-                        <th>Subject</th>
-                        <th>Title</th>
-                        <th>Age</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
+                <thead> <tr > <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1> <Th1>Title</Th1> <Th1>Age</Th1> 
+                <Th1 onClick={()=>{console.log('dasdasfasf')}}>Link</Th1> </tr> </thead>
+                {openTickets.length === 0 && <h2>None</h2>}
+                {openTickets.length > 0 && //!collapsed
+                    <tbody>
+                        {openTickets.map(ticket=>{
+                            return <tr key={`open ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
+                        })}
+                    </tbody>
+                }
+
+                <thead> <tr> <Th2 ref={ref2}>Resolved Tickets</Th2> <Th2>Subject</Th2> <Th2>Title</Th2> <Th2>Age</Th2> 
+                <Th2 onClick={()=>{console.log('dasdasfasf')}}>Link</Th2> </tr> </thead>
+                {/* {resolvedTickets.length === 0 && <tbody><tr key='fsdfsdggs'><td align='center'><div style={{height: '40px', marginBottom: '30px'}}>none</div></td><td></td><td></td><td></td><td></td></tr></tbody>} */}
+                {resolvedTickets.length > 0 && //!collapsed
+                    <tbody>
+                        {resolvedTickets.map(ticket=>{
+                            return <tr key={`open ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
+                        })}
+                    </tbody>
+                }
+
+                <thead> <tr> <Th3 ref={ref3}>Threads</Th3> <Th3>Subject</Th3> <Th3>Title</Th3> <Th3>Age</Th3> 
+                <Th3 onClick={()=>{console.log('dasdasfasf')}}>Link</Th3> </tr> </thead>
+                {commentedTickets.length === 0 && <h2>None</h2>}
+                {commentedTickets.length > 0 && //!collapsed
+                    <tbody>
+                        {commentedTickets.map(ticket=>{
+                            return <tr key={`comment ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
+                        })}
+                    </tbody>
+                }
+
+                <thead> <tr> <Th4 ref={ref4}>Comments</Th4> <Th4>Subject</Th4> <Th4>Title</Th4> <Th4>Age</Th4> 
+                <Th4 onClick={()=>{console.log('dasdasfasf')}}>Link</Th4> </tr> </thead>
+                {repliedTickets.length === 0 && <h2>None</h2>}
+                {repliedTickets.length > 0 && //!collapsed
+                    <tbody>
+                        {repliedTickets.map(ticket=>{
+                            return <tr key={`reply ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
+                        })}
+                    </tbody>
+                }
+                
                 <tbody>{allUserTickets && allUserTickets.map(ticket => {
                     // console.log('buggy part', ticket)
                         let shouldReturn = true;
@@ -147,8 +259,7 @@ const mapStateToProps = state => {
         filterByAskedAnsweredBoth: state.SearchReducer.filterByAskedAnsweredBoth,
         filterByOpenClosedAll: state.SearchReducer.filterByOpenClosedAll,
         currentUser: state.AppReducer.currentUser,
-        loading: state.AppReducer.loading,
     }
   }
 
-export default connect(mapStateToProps, { loadingStart, loadingDone })(UserTicketList)
+export default connect(mapStateToProps, {  })(UserTicketList)

@@ -210,7 +210,7 @@ function ViewAccount(props) {
                 <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
             </label>    
             <label><h3 className="bold">New password:</h3>
-                    <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text" required/> 
+                    <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text"/> 
             </label>
            <PasswordDiv>
                 <label>
@@ -222,7 +222,8 @@ function ViewAccount(props) {
                 <button className="button" type="submit">Submit changes</button>
             </form> }
 
-            <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{isAdmin && !showEditForm && 'Edit'}</MarginButton>
+            {isAdmin && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
+            
             </StyledLoader>  
         </Div>
         </OuterDiv>

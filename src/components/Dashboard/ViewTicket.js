@@ -81,6 +81,7 @@ function ViewTicket(props) {
     if(replyInputText !== ''){
       props.addReply(replyToComment, replyInputText);
       setReplyInputText('');
+      setReplyToComment('');
     }
     else{
       alert('Reply cannot be empty! Add an answer.');
@@ -337,7 +338,7 @@ const modalExpand = () => {
                 <div className='statusBox'><h3>Current status: {props.ticket.status.toUpperCase()}</h3></div>
               </div> 
             </div>
-{/* //#region author question div  */}
+{/* #region author question div  */}
             <div className='ticketComment'>
               <div className='ticketComment2'>
                 <div className='commentFixer'>
@@ -434,9 +435,12 @@ const modalExpand = () => {
 {/* Comments div  */}
             {props.comments.length > 0 && <>
               {props.comments.map((comment)=>{
+                if (comment.comment_replies.length === 0){
+                  comment.collapsed = false;
+                }
                 return <Fragment key={comment.id}>
                   <>
-                  <div className='ticketComment'>
+                  <div className={`ticketComment ${props.ticket.solution_comment_id == comment.id ? 'solution' : null }`}>
                     <div className='ticketComment2'>
                       <div className='commentFixer'>
                         <div className='tooltip'>
@@ -555,7 +559,7 @@ const modalExpand = () => {
                     {comment.id == replyToComment && !comment.collapsed && <div>
                       <div className='replyBox'>
                         <h3>Reply to thread:</h3>
-                        <textarea onChange={handleReplyInput}></textarea>
+                        <textarea onChange={handleReplyInput} value={replyInputText}></textarea>
                       </div>
                       <div className='uploadDiv2'>
                         <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
@@ -583,7 +587,7 @@ const modalExpand = () => {
               <div>
                 <div className='commentBox'>
                   <h3>Add new thread:</h3>
-                  <textarea onChange={handleCommentInput}></textarea>
+                  <textarea onChange={handleCommentInput} value={commentInputText}></textarea>
                 </div>
                 <div className='uploadDiv'>
                       <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
