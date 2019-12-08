@@ -3,85 +3,77 @@
     display:flex;
   }
 
-  .courseContainer{
-    display:flex;
-    flex-wrap: wrap;
+.courseContainer{
+  display:flex;
+  flex-wrap: wrap;
+}
+.courseBox{
+  color: white;
+  width: 300px;
+  height: 165px;
+  border-radius: 5px;
+  margin: 10px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 165px;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.98;
   }
-  .courseBox{
-    color: white;
-    width: 300px;
-    height: 165px;
-    border-radius: 5px;
-    margin: 10px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 165px;
-    &:hover {
-            cursor: pointer;
-            opacity: 0.98;
-    }
-  }
+}
 
-  .sidebarDiv{
-    /* bg color colorpicked from whimsical template */
-    background-color: #c3cfd9;
-    border: 1px solid black;
-    border-top: none;
-    width: 25%;
-    min-height: 100vh;
-  }
-  
-  .filterToolsDiv{
-    position: sticky;
-    top: 310px;
-  }
+.sidebarDiv{
+  background-color: #c3cfd9;
+  border: 1px solid black;
+  border-top: none;
+  width: 25%;
+  min-height: 100vh;
+}
 
-  .sidebarNav{
-    /* border: 1px solid black; */
-    position: sticky;
-    top: 80px;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding-top: 20px;
-    text-decoration: none;
-    /* flex-wrap: wrap; */
-  }
-  .sidebarNav a{
-    margin-bottom: 20px;
-  }
-  .navLink{
-    color: black;
-    text-decoration: none;
-    line-height: 24px;
-    font-size: 2rem;
-  }
-  // .navLink:visited{
-  //   color: black;
-  // }
-  .navLink:hover{
-    color: #BF0033;
-  }
-  
-  .helperDashboard{
-    width: 85%;
-  }
+.filterToolsDiv{
+  position: sticky;
+  top: 310px;
+}
+
+.sidebarNav{
+  /* border: 1px solid black; */
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 20px;
+  text-decoration: none;
+}
+.sidebarNav a{
+  margin-bottom: 20px;
+}
+.navLink{
+  color: black;
+  text-decoration: none;
+  line-height: 24px;
+  font-size: 2rem;
+}
+.navLink:hover{
+  color: #BF0033;
+}
+
+.helperDashboard{
+  width: 85%;
+}
 
 .tickettable {
-  // position: absolute;
-  top: 150px;
-  // overflow-y:auto;
-  // top: 224px;
-  // max-height: 60vh;
-  width: 100%;
-  text-align: center;
-  padding: 2%;
-  border-collapse: collapse; 
+// position: absolute;
+top: 150px;
+width: 100%;
+text-align: center;
+padding: 2%;
+border-collapse: collapse; 
 }
 
 .tickettable > thead {
-    color: #788896;
-    
+  color: #788896;
+  
 }
 
 tbody td, thead th {
@@ -125,27 +117,6 @@ tbody td, thead th {
     }
   }
 
-// .topTHead{
-//   width:100%;
-//   tr { 
-//     width: 100%;
-//     th {
-//       &:first-child {
-//         width: 20%;
-//       }
-//       &:nth-child(2) {
-//         width: 30%;
-//       }
-//       &:nth-child(3) {
-//         width: 30%;
-//       }
-//       &:nth-child(4) {
-//         width: 20%;
-//       }
-//     }
-//   }
-// }
-
 tbody tr {
     border: 1px solid #788896;
     // border-bottom: 1px solid #788896;
@@ -176,10 +147,10 @@ th:after {
   content: '';
   position: absolute;
   left: 0;
-  // width: 100%;
+  width: 100%;
   bottom: 0;
-  border-bottom: 1px solid red;
-  margin-bottom: 1px;
+  border-bottom: 2px solid #c3cfd9;
+  // margin-bottom: 1px;
 }
 
 .pointer{

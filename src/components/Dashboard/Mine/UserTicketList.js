@@ -126,11 +126,10 @@ function UserTicketList(props) {
         }
         // #endregion
             setHeight(ref.current.getBoundingClientRect().bottom-65);
-            console.log('thething', ref.current.getBoundingClientRect().bottom + 10)
             setHeight1(ref.current.getBoundingClientRect().bottom + 10);
             // console.log('assads ',ref.current.getBoundingClientRect().bottom);
             if (ref1.current){
-                    setHeight2(ref1.current.getBoundingClientRect().bottom);
+                    setHeight2(ref1.current.getBoundingClientRect().bottom-1);
             }
             if (ref2.current){
                 if (closedCollapsed){
@@ -145,15 +144,14 @@ function UserTicketList(props) {
                     setHeight4(height3 + ref3.current.clientHeight -1);
                 }
                 else{
-                    console.log('ddddd', scroll)
                     setHeight4(ref3.current.getBoundingClientRect().bottom -1);
                 }
             }
 
-            ref1body.current ? setHeight1body(ref1body.current.clientHeight) : setHeight1body(0);
-            ref2body.current ? setHeight2body(ref2body.current.clientHeight) : setHeight2body(0);
-            ref3body.current ? setHeight3body(ref3body.current.clientHeight) : setHeight3body(0);
-            ref4body.current ? setHeight4body(ref4body.current.clientHeight) : setHeight4body(0);
+            ref1body.current && setHeight1body(ref1body.current.clientHeight);
+            ref2body.current && setHeight2body(ref2body.current.clientHeight);
+            ref3body.current && setHeight3body(ref3body.current.clientHeight);
+            ref4body.current && setHeight4body(ref4body.current.clientHeight);
             ref4.current && setCombinedHeight(ref.current.getBoundingClientRect().bottom + ref1.current.clientHeight + ref2.current.clientHeight + ref3.current.clientHeight)
     }, [openTickets, resolvedTickets, commentedTickets, repliedTickets, dimensions, scroll, openCollapsed, closedCollapsed, commentsCollapsed, repliesCollapsed]);
         // console.log('height', height);
@@ -164,8 +162,8 @@ function UserTicketList(props) {
         // console.log('height4', height4);
         // console.log('offset', window.pageYOffset);
         // console.log('offset', scroll);
-        console.log('combinedHeight', combinedHeight);
-        console.log('height1body', height1body);
+        // console.log('combinedHeight', combinedHeight);
+        // console.log('height1body', height1body);
 
 
     useEffect(() => {
@@ -189,10 +187,11 @@ function UserTicketList(props) {
       const handleCollapse = (name) => {
         console.log(name);
         if (name === 'open' && openTickets.length > 0){
-            // console.log(openCollapsed);
-            // ref1.current.scrollTop = -3000;
             setOpenCollapsed(!openCollapsed);
             window.scrollTo(0, (height1-height1body));
+            console.log('height1body', height1body);
+            // set height1body
+            // window.scrollTo(0, height1 - he1ght1body); 
         }
         else if (name === 'closed' && resolvedTickets.length > 0){
             setClosedCollapsed(!closedCollapsed);
@@ -203,8 +202,15 @@ function UserTicketList(props) {
             window.scrollTo(0, (height3-height3body));
         }
         else if (name === 'replies' && repliedTickets.length > 0){
+            console.log(height4body);
+            if(repliesCollapsed){
+                console.log('h4b-1', height4body*-1);
+                window.scrollBy(0, (height4body));
+            }
+            else{
+                window.scrollBy(0, height4body);
+            }
             setRepliesCollapsed(!repliesCollapsed);
-            window.scrollTo(0, (height4-height4body));
         }
       }
 
@@ -287,7 +293,7 @@ function UserTicketList(props) {
                 }
 
             {/* all hail */}
-            {<div style={{position: 'relative', top: '230px', height: `${330}px`}}></div>}
+            {<div style={{backgroundColor: 'blue', height: `${330}px`}}></div>}
             {/* if you delete this i will hurt you */}
                 
                 <tbody>{allUserTickets && allUserTickets.map(ticket => {

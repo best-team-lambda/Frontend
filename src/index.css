@@ -802,7 +802,6 @@ header + section:first-of-type {
   opacity: 0.98;
 }
 .sidebarDiv {
-  /* bg color colorpicked from whimsical template */
   background-color: #c3cfd9;
   border: 1px solid black;
   border-top: none;
@@ -822,7 +821,6 @@ header + section:first-of-type {
   width: 100%;
   padding-top: 20px;
   text-decoration: none;
-  /* flex-wrap: wrap; */
 }
 .sidebarNav a {
   margin-bottom: 20px;
@@ -905,9 +903,9 @@ th:after {
   content: '';
   position: absolute;
   left: 0;
+  width: 100%;
   bottom: 0;
-  border-bottom: 1px solid red;
-  margin-bottom: 1px;
+  border-bottom: 2px solid #c3cfd9;
 }
 .pointer:hover {
   cursor: pointer;
