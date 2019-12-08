@@ -602,6 +602,9 @@ header + section:first-of-type {
   position: relative;
   display: inline-block;
 }
+.tooltip:hover {
+  z-index: 200;
+}
 #testbox {
   padding: 0;
   text-align: center;
@@ -626,6 +629,7 @@ header + section:first-of-type {
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+  z-index: 20;
 }
 .tooltip .tooltiptext::after {
   content: " ";
@@ -836,8 +840,9 @@ header + section:first-of-type {
   width: 85%;
 }
 .tickettable {
+  top: 150px;
   width: 100%;
-  text-align: left;
+  text-align: center;
   padding: 2%;
   border-collapse: collapse;
 }
@@ -848,11 +853,44 @@ tbody td,
 thead th {
   padding: 2%;
 }
+tr th:first-child {
+  width: 20%;
+}
+tr th:nth-child(2) {
+  width: 10%;
+}
+tr th:nth-child(3) {
+  width: 30%;
+}
+tr th:nth-child(4) {
+  width: 15%;
+}
+tr th:nth-child(5) {
+  width: 15%;
+}
+tr td:first-child {
+  width: 20%;
+}
+tr td:nth-child(2) {
+  width: 10%;
+}
+tr td:nth-child(3) {
+  width: 30%;
+}
+tr td:nth-child(4) {
+  width: 15%;
+}
+tr td:nth-child(5) {
+  width: 15%;
+}
 tbody tr {
-  border-bottom: 1px solid #788896;
+  border: 1px solid #788896;
 }
 td.boldrows {
   font-weight: 600;
+}
+td {
+  border: 1px solid red;
 }
 td a {
   text-decoration: none;
@@ -863,14 +901,14 @@ td div {
 .firstTh {
   text-align: center;
 }
-th:after,
-th:before {
+th:after {
   content: '';
   position: absolute;
   left: 0;
-  width: 100%;
-}
-th:after {
   bottom: 0;
-  border-bottom: 1px solid #c3cfd9;
+  border-bottom: 1px solid red;
+  margin-bottom: 1px;
+}
+.pointer:hover {
+  cursor: pointer;
 }

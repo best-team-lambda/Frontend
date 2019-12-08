@@ -68,8 +68,13 @@
   }
 
 .tickettable {
+  // position: absolute;
+  top: 150px;
+  // overflow-y:auto;
+  // top: 224px;
+  // max-height: 60vh;
   width: 100%;
-  text-align: left;
+  text-align: center;
   padding: 2%;
   border-collapse: collapse; 
 }
@@ -83,27 +88,42 @@ tbody td, thead th {
     padding: 2%;
 }
 
-// .thead {
-//   tr { 
-//     th {
-//       &:first-child {
-//         width: 20%;
-//       }
-//       &:nth-child(2) {
-//         width: 10%;
-//       }
-//       &:nth-child(3) {
-//         width: 30%;
-//       }
-//       &:nth-child(4) {
-//         width: 15%;
-//       }
-//       &:nth-child(5) {
-//         width: 15%;
-//       }
-//     }
-//   }
-// }
+  tr { 
+    th {
+      &:first-child {
+        width: 20%;
+      }
+      &:nth-child(2) {
+        width: 10%;
+      }
+      &:nth-child(3) {
+        width: 30%;
+      }
+      &:nth-child(4) {
+        width: 15%;
+      }
+      &:nth-child(5) {
+        width: 15%;
+      }
+    }
+    td {
+      &:first-child {
+        width: 20%;
+      }
+      &:nth-child(2) {
+        width: 10%;
+      }
+      &:nth-child(3) {
+        width: 30%;
+      }
+      &:nth-child(4) {
+        width: 15%;
+      }
+      &:nth-child(5) {
+        width: 15%;
+      }
+    }
+  }
 
 // .topTHead{
 //   width:100%;
@@ -127,20 +147,20 @@ tbody td, thead th {
 // }
 
 tbody tr {
-    border-bottom: 1px solid #788896;
+    border: 1px solid #788896;
+    // border-bottom: 1px solid #788896;
 }
 
 td.boldrows {
     font-weight: 600;
 }
 
-td a {
-    text-decoration: none;
-}
-
-
 
 td {
+  border: 1px solid red;
+  a {
+    text-decoration: none;
+  }
   div {
     text-align: center;
   }
@@ -152,18 +172,18 @@ td {
   // padding-left: 10%;
 }
 
-th:after,
-th:before {
+th:after {
   content: '';
   position: absolute;
   left: 0;
-  width: 100%;
-}
-// th:before {
-//   top: 0;
-//   border-top: 1px solid blue;
-// }
-th:after {
+  // width: 100%;
   bottom: 0;
-  border-bottom: 1px solid #c3cfd9;
+  border-bottom: 1px solid red;
+  margin-bottom: 1px;
+}
+
+.pointer{
+  &:hover {
+    cursor: pointer;
+}
 }
