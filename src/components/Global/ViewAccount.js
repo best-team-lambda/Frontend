@@ -23,6 +23,13 @@ function ViewAccount(props) {
     const [profilePicture, setProfilePicture] = useState(null);
     const [verifyPassword, setVerifyPassword] = useState('');
 
+    console.log(props.match.params.id, props.currentUser.id)
+    useEffect(() => {
+        if (props.match.params.id == props.currentUser.id){
+            props.history.push('/Dashboard/Account');
+        }
+    }, [])
+
     useEffect(() => {
         props.loadingStart();
         props.getOtherUser(props.match.params.id);
