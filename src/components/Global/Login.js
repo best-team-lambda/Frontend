@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { login, logout, loadingStart, loadingDone } from '../../actions/AppActions.js';
+import { login, logout, } from '../../actions/AppActions.js';
 import axios from 'axios';
 
 import styled from "styled-components";
@@ -37,6 +37,7 @@ const LoginForm = styled.div`
 
 
 function Login(props) {
+    const [loading, setLoading] = useState(false);
     const [userCredentials, setUserCredentials] = useState({username: '', password: ''});
     
     const handleChange = (e) => {
@@ -48,7 +49,7 @@ function Login(props) {
         console.log(process.env.REACT_APP_CLIENT_ID);
         e.preventDefault();
         e.target.reset();
-        props.loadingStart();
+        setLoading(true);
         // console.log('Login.js handleSubmit userCredentials:', userCredentials);
         //send inputted user credentials and receive auth token and user object
         axios.post('https://ddq.herokuapp.com/api/auth/login', userCredentials)
@@ -56,12 +57,12 @@ function Login(props) {
             // console.log('axios: api/auth/login response: ', res);
             sessionStorage.setItem('token', res.data.token);
             props.login(res.data.user);
-            props.loadingDone();
+            setLoading(false);
             //redirect to open queue
             props.history.push('/Dashboard/OpenTickets');
         })
         .catch(err => {console.log('LOGIN CATCH ERROR: ', err);
-        props.loadingDone();
+        setLoading(false);
         alert(err)});
         setUserCredentials({username: '', password: ''})
     }
@@ -82,7 +83,7 @@ function Login(props) {
     }
 
     return (
-        <StyledLoader active={props.loading} spinner text='Loading...'>   
+        <StyledLoader active={loading} spinner text='Loading...'>   
             <LoginForm className="login-form">
                 <div className="card">
                     <h1>Login</h1>
@@ -116,6 +117,6 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { login, logout, loadingStart, loadingDone })(Login)
+export default connect(mapStateToProps, { login, logout, })(Login)
 
 
