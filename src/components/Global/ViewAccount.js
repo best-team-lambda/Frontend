@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getOtherUser, loadingStart, loadingDone } from '../../actions/AppActions.js';
+import { getOtherUser } from '../../actions/AppActions.js';
+import { isUsernameAvailable, isValidPassword, validateInputs } from '../../utils/AppUtils.js';
 import decode from 'jwt-decode';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
@@ -11,10 +12,11 @@ import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 
 function ViewAccount(props) {
-    console.log('Decoded token', decode(sessionStorage.getItem('token')));
+    const [loading, setLoading] = useState(true);
     const [isAdmin] = useState(decode(sessionStorage.getItem('token')).admin)
     const [showEditForm, setShowEditForm] = useState(false);
     // state for when the user edits their account details
+    const [isAvailable, setIsAvailable] = useState('');
     const [editUserName, setEditUserName] = useState(props.otherUser.username);
     const [editName, setEditName] = useState(props.otherUser.name);
     const [editEmail, setEditEmail] = useState(props.otherUser.email);
@@ -22,22 +24,25 @@ function ViewAccount(props) {
     const [newPassword, setNewPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [verifyPassword, setVerifyPassword] = useState('');
+// #region console logs
+    // console.log('Current User', props.currentUser.id, 'Other User: ', props.match.params.id)
+    // console.log('Decoded token', decode(sessionStorage.getItem('token')));
+// #endregion
 
-    console.log(props.match.params.id, props.currentUser.id)
     useEffect(() => {
-        if (props.match.params.id == props.currentUser.id){
-            props.history.push('/Dashboard/Account');
+        if (!props.otherUser){
+            setLoading(true);
+            props.getOtherUser(props.match.params.id);
         }
-    }, [])
-
-    useEffect(() => {
-        props.loadingStart();
-        props.getOtherUser(props.match.params.id);
-      }, [])
+        else{
+            setLoading(false);
+        }
+      }, [props.otherUser])
 
     const handleChange = e => {
         if (e.target.name === 'username'){
             setEditUserName(e.target.value);
+            isUsernameAvailable(e.target.value).then(res => {console.log(res)})
         }
         else if (e.target.name === 'name'){
             setEditName(e.target.value);
@@ -79,83 +84,51 @@ function ViewAccount(props) {
         if (newPassword){
             userObj = {...userObj, newPassword: newPassword}
         }
+
         // console.log(editUserName)
         // console.log(userObj)
-        if (validateInputs()) {
+
+        if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
+            console.log('passed validation');
             props.loadingStart();
-           try{
-            promises.push(axiosWithAuth().put(`users/${props.match.params.id}`, userObj));
         
-            // if(profilePicture){
-            //     const formData = new FormData();
-            //     formData.append('image', profilePicture);
-            //     console.log(profilePicture);
-            //     console.log(formData);
-
-            //     if(props.currentUser.profile_picture){
-            //         promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-            //     }else{
-            //         promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
-            //     }
-            // }
-            const response = await axios.all(promises);
-            props.loadingDone();
-            }catch(err){
-                console.log("Edit Account Catch Error: ", err.response.data.message);
-                alert(err.response.data.message);
-                props.loadingDone();
+            //call admin code first in case admin has special edit powers that normal user doesn't, admin should be able to use said powers
+            //on themselves
+            if (isAdmin)
+            {
+                
             }
-        }
+            else if (props.currentUser.id == props.match.params.id){
+                try{
+                    promises.push(axiosWithAuth().put(`/admin/users/${props.match.params.id}`, userObj));
+                
+                    if(profilePicture){
+                        const formData = new FormData();
+                        formData.append('image', profilePicture);
+                        console.log(profilePicture);
+                        console.log(formData);
+        
+                        if(props.currentUser.profile_picture){
+                            promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                        }else{
+                            promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                        }
+                    }
+                    const response = await axios.all(promises);
+                    if(response) { setLoading(false); }
+                    }catch(err){
+                        console.log("Edit Account Catch Error: ", err);
+                        alert(err.response.data);
+                        setLoading(false);
+                    }
+                }
+            }
     }
-
-    const isValidPassword = password => {
-        if (password === "") {
-            alert("You must enter a password.");
-            return false;
-        }
-        if (password.length < 5 || password.length > 20) {
-            alert("Password cannot be less than 5 or greater than 20 characters");
-            return false;
-        }
-        if (!/(!|@|#|\$|&|\*|%|^)/.test(password)) {
-            alert("Password must contain at least one special character");
-            return false;
-        }
-        if (!/([A-Z])/.test(password)) {
-            alert("Password must contain at least one capitalized letter");
-            return false;
-        }
-        if (!/([0-9])/.test(password)) {
-            alert("Password must contain at least one number");
-            return false;
-        }
-        return true;
-    };
-      
-    const validateInputs = () => {
-        // if (editUserName === "") {
-        //     alert("Your username can't be empty.");
-        //     return false;
-        // }
-        if(!(/^[a-z][a-z0-9_]*$/i.test(editUserName))) {
-            alert("Username must start with a letter and may only contain a-z, _, or numbers.");
-            return false;
-        }
-        if (editName === "") {
-            alert("You must enter your name.");
-            return false;
-    }
-
-     // if (!isValidPassword(newPassword)) {
-     //     return false;
-     // }
-        return true;
-    };
 
     return (
         <OuterDiv>
         <Div className='card'> 
-        <StyledLoader active={props.loading} spinner text='Uploading...'> 
+        <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
                     <ProOuter>
                         <ProfileWrapper>
@@ -229,7 +202,7 @@ function ViewAccount(props) {
                 <button className="button" type="submit">Submit changes</button>
             </form> }
 
-            {isAdmin && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
+            {(props.currentUser.id == props.match.params.id || isAdmin) && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
             
             </StyledLoader>  
         </Div>
@@ -242,11 +215,10 @@ const mapStateToProps = state => {
     return {
         currentUser: state.AppReducer.currentUser,
         otherUser: state.AppReducer.otherUser,
-        loading: state.AppReducer.loading,
     }
   }
 
-export default connect(mapStateToProps, { getOtherUser, loadingStart, loadingDone })(ViewAccount)
+export default connect(mapStateToProps, { getOtherUser })(ViewAccount)
 
 
 const StyledLoader = styled(LoadingOverlay)`

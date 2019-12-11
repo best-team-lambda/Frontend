@@ -12,19 +12,24 @@ const StyledLoader = styled(LoadingOverlay)`
 `;
 
 function UserTicketList(props) {
+    //unsed, remove. its in for search box atm
     const [allUserTickets, setAllUserTickets] = useState([]);
+
+    const [loading, setLoading] = useState(true);
+
     const [openTickets, setOpenTickets] = useState([]);
     const [resolvedTickets, setResolvedTickets] = useState([]);
     const [commentedTickets, setCommentedTickets] = useState([]);
     const [repliedTickets, setRepliedTickets] = useState([]);
+
     const [dimensions, setDimensions] = useState(0);
     const [scroll, setScroll] = useState(0);
-    const [loading, setLoading] = useState(true);
+
     const [openCollapsed, setOpenCollapsed] = useState(false);
-    const [closedCollapsed, setClosedCollapsed] = useState(false);
+    const [resolvedCollapsed, setResolvedCollapsed] = useState(false);
     const [commentsCollapsed, setCommentsCollapsed] = useState(false);
     const [repliesCollapsed, setRepliesCollapsed] = useState(false);
-    const [combinedHeight, setCombinedHeight] = useState(0);
+    const [tableOffset, setTableOffset] = useState(0);
 
 // #region Th styles. just don't open it it's bad
     const [height, setHeight] = useState(75);
@@ -36,6 +41,7 @@ function UserTicketList(props) {
     const [height3body, setHeight3body] = useState(0);
     const [height4, setHeight4] = useState(0);
     const [height4body, setHeight4body] = useState(0);
+    const buttonDivRef = useRef(null);
     const ref = useRef(null);
     const ref1 = useRef(null);
     const ref1body = useRef(null);
@@ -85,15 +91,12 @@ function UserTicketList(props) {
     `;
 // #endregion
     
-
     useEffect(() => {
-        // console.log('please no');
         window.scrollTo(0, 0);
         axiosWithAuth()
         .get(`/tickets/mine`)
         .then(res => {
             console.log(res);
-            // setAllUserTickets(res.data);
             setOpenTickets(res.data.openTickets);
             setResolvedTickets(res.data.resolvedTickets);
             setCommentedTickets(res.data.commentedOn);
@@ -107,15 +110,16 @@ function UserTicketList(props) {
     }, [])
 
     // #region setHeights/resize and scroll event listeners
-    useEffect(() => {
 
+    useEffect(() => {
         // #region auto collapse if length is 0
+
         if (loading === false){
             if (openTickets.length === 0){
                 setOpenCollapsed(true);
             }
             if (resolvedTickets.length === 0){
-                setClosedCollapsed(true);
+                setResolvedCollapsed(true);
             }
             if (commentedTickets.length === 0){
                 setCommentsCollapsed(true);
@@ -125,46 +129,51 @@ function UserTicketList(props) {
             }
         }
         // #endregion
-            setHeight(ref.current.getBoundingClientRect().bottom-65);
-            setHeight1(ref.current.getBoundingClientRect().bottom + 10);
-            // console.log('assads ',ref.current.getBoundingClientRect().bottom);
-            if (ref1.current){
-                    setHeight2(ref1.current.getBoundingClientRect().bottom-1);
+        // #region set sticky heights for the table headers
+        setHeight(ref.current.getBoundingClientRect().bottom-65);
+        setHeight1(ref.current.getBoundingClientRect().bottom + 10);
+        if (ref1.current){
+                setHeight2(ref1.current.getBoundingClientRect().bottom-1);
+        }
+        if (ref2.current){
+            if (resolvedCollapsed){
+                setHeight3(height2 +  ref2.current.clientHeight -1);
             }
-            if (ref2.current){
-                if (closedCollapsed){
-                    setHeight3(height2 +  ref2.current.clientHeight -1);
-                }
-                else{
-                    setHeight3(ref2.current.getBoundingClientRect().bottom -1);
-                }
+            else{
+                setHeight3(ref2.current.getBoundingClientRect().bottom -1);
             }
-            if (ref3.current){
-                if (commentsCollapsed){
-                    setHeight4(height3 + ref3.current.clientHeight -1);
-                }
-                else{
-                    setHeight4(ref3.current.getBoundingClientRect().bottom -1);
-                }
+        }
+        if (ref3.current){
+            if (commentsCollapsed){
+                setHeight4(height3 + ref3.current.clientHeight -1);
             }
+            else{
+                setHeight4(ref3.current.getBoundingClientRect().bottom -1);
+            }
+        }
+        // #endregion
 
-            ref1body.current && setHeight1body(ref1body.current.clientHeight);
-            ref2body.current && setHeight2body(ref2body.current.clientHeight);
-            ref3body.current && setHeight3body(ref3body.current.clientHeight);
-            ref4body.current && setHeight4body(ref4body.current.clientHeight);
-            ref4.current && setCombinedHeight(ref.current.getBoundingClientRect().bottom + ref1.current.clientHeight + ref2.current.clientHeight + ref3.current.clientHeight)
-    }, [openTickets, resolvedTickets, commentedTickets, repliedTickets, dimensions, scroll, openCollapsed, closedCollapsed, commentsCollapsed, repliesCollapsed]);
-        // console.log('height', height);
-        // console.log('height1', height1);
-        // console.log('height2', height2);
-        // console.log('height3', height3);
-        // ref2.current && console.log('abcdddd', scroll - height1);
-        // console.log('height4', height4);
-        // console.log('offset', window.pageYOffset);
-        // console.log('offset', scroll);
-        // console.log('combinedHeight', combinedHeight);
-        // console.log('height1body', height1body);
+        let tableBody;
+        let tableHeaders;
+        let gap; 
 
+        //set body lengths based off collapsed or not (and length)
+        openCollapsed ? setHeight1body(0) : (ref1body.current &&  setHeight1body(ref1body.current.clientHeight));
+        resolvedCollapsed ? setHeight2body(0) : (ref2body.current &&  setHeight2body(ref2body.current.clientHeight));
+        commentsCollapsed ? setHeight3body(0) : (ref3body.current &&  setHeight3body(ref3body.current.clientHeight));
+        repliesCollapsed ? setHeight4body(0) : (ref4body.current &&  setHeight4body(ref4body.current.clientHeight));
+        
+        //set totalbody to all body lengths added
+        ref4.current && (tableBody = height1body + height2body + height3body + height4body);
+
+        //set totalHeaders to header lengths
+        ref4.current && (tableHeaders = ref1.current.clientHeight + ref2.current.clientHeight + ref3.current.clientHeight + ref4.current.clientHeight);
+
+        buttonDivRef.current && (gap = window.innerHeight - (225 + buttonDivRef.current.clientHeight + tableBody + tableHeaders));
+        // console.log('GAP: ', gap);
+        setTableOffset(gap + tableBody );
+        // console.log(tableOffset);
+    }, [openTickets, resolvedTickets, commentedTickets, repliedTickets, dimensions, scroll, openCollapsed, resolvedCollapsed, commentsCollapsed, repliesCollapsed]);
 
     useEffect(() => {
         function handleResize() {
@@ -185,16 +194,16 @@ function UserTicketList(props) {
     // #endregion
     
       const handleCollapse = (name) => {
-        console.log(name);
+        // console.log(name);
         if (name === 'open' && openTickets.length > 0){
             setOpenCollapsed(!openCollapsed);
             window.scrollTo(0, (height1-height1body));
-            console.log('height1body', height1body);
+            // console.log('height1body', height1body);
             // set height1body
             // window.scrollTo(0, height1 - he1ght1body); 
         }
         else if (name === 'closed' && resolvedTickets.length > 0){
-            setClosedCollapsed(!closedCollapsed);
+            setResolvedCollapsed(!resolvedCollapsed);
             window.scrollTo(0, (height2-height2body));
         }
         else if (name === 'comments' && commentedTickets.length > 0){
@@ -204,7 +213,7 @@ function UserTicketList(props) {
         else if (name === 'replies' && repliedTickets.length > 0){
             console.log(height4body);
             if(repliesCollapsed){
-                console.log('h4b-1', height4body*-1);
+                // console.log('h4b-1', height4body*-1);
                 window.scrollBy(0, (height4body));
             }
             else{
@@ -216,7 +225,7 @@ function UserTicketList(props) {
 
       const collapseAll = () => {
           setOpenCollapsed(true);
-          setClosedCollapsed(true);
+          setResolvedCollapsed(true);
           setCommentsCollapsed(true);
           setRepliesCollapsed(true);
           if(window.pageYOffset == 0){
@@ -228,7 +237,7 @@ function UserTicketList(props) {
       }
       const expandAll = () => {
           setOpenCollapsed(false);
-          setClosedCollapsed(false);
+          setResolvedCollapsed(false);
           setCommentsCollapsed(false);
           setRepliesCollapsed(false);
           window.scrollTo(0, 0);
@@ -238,13 +247,13 @@ function UserTicketList(props) {
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
         <StyledLoader active={loading} spinner text='Loading...'>
             {/* <div style={{height: '200px', backgroundColor: 'blue'}}></div> */}
-            <Sdiv>
-                <button className='button alignRight'>asdeafa</button>
+            <Sdiv ref={buttonDivRef}>
+                {/* <button className='button alignRight'>asdeafa</button> */}
                 <button className='button alignRight' onClick={expandAll}>Expand All</button>
                 <button ref={ref} className='button alignRight' onClick={collapseAll}>Collapse All</button>
             </Sdiv>
-            <table className='tickettable' style={{top: `${height1}px`}}>
-                <thead  style={{position: 'sticky', top: `${height1}px`, bottom: `${height1 + 20}px`}}> <tr className='pointer' onClick={()=>{handleCollapse('open')}}> <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1> <Th1>Title</Th1> <Th1>Age</Th1> 
+            <table className='tickettable' >
+                <thead  style={{position: 'sticky', top: `${0}px`, bottom: `${0}px`}}> <tr className='pointer' onClick={()=>{handleCollapse('open')}}> <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1> <Th1>Title</Th1> <Th1>Age</Th1> 
                 <Th1 onClick={()=>{console.log('dasdasfasf')}}>Link</Th1> </tr> </thead>
                 {/* {openTickets.length === 0 && <h2>None</h2>} */}
                 {!openCollapsed && openTickets.length > 0 && //!collapsed
@@ -259,7 +268,7 @@ function UserTicketList(props) {
                 <thead> <tr className='pointer' onClick={()=>{handleCollapse('closed')}}> <Th2 ref={ref2}>Resolved Tickets</Th2> <Th2>Subject</Th2> <Th2>Title</Th2> <Th2>Age</Th2> 
                 <Th2 onClick={()=>{console.log('dasdasfasf')}}>Link</Th2> </tr> </thead>
                 {/* {resolvedTickets.length === 0 && <tbody><tr key='fsdfsdggs'><td align='center'><div style={{height: '40px', marginBottom: '30px'}}>none</div></td><td></td><td></td><td></td><td></td></tr></tbody>} */}
-                {!closedCollapsed && resolvedTickets.length > 0 && //!collapsed
+                {!resolvedCollapsed && resolvedTickets.length > 0 && //!collapsed
                     <tbody ref={ref2body}>
                         {resolvedTickets.map(ticket=>{
                             return <tr key={`open ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
@@ -293,7 +302,8 @@ function UserTicketList(props) {
                 }
 
             {/* all hail */}
-            {<div style={{backgroundColor: 'blue', height: `${330}px`}}></div>}
+            {/* {<div style={{backgroundColor: 'blue', height: `${tableOffset}px`}}></div>} */}
+            {<div style={{height: `${tableOffset}px`}}></div>}
             {/* if you delete this i will hurt you */}
                 
                 <tbody>{allUserTickets && allUserTickets.map(ticket => {

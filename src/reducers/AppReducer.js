@@ -1,16 +1,17 @@
-import { SET_CURRENT_USER, LOADING_START, LOADING_DONE, LOGIN_FAILED, LOGOUT, SET_OTHER_USER, } from '../actions/AppActions.js';
+import { SET_CURRENT_USER, LOADING_START, LOADING_DONE, LOGIN_FAILED, LOGOUT, SET_OTHER_USER,  } from '../actions/AppActions.js';
 
 const initialState = {
     currentUser: '',
     otherUser: '',
     loading: true,
     loginFailed: false,
+    usernameAvail: '',
   };
 
 
 export const AppReducer = (state = initialState, action) => {
     // console.log('AppReducer initialState: ', initialState);
-    // console.log('AppReducer firing: ', action);
+    console.log('AppReducer firing: ', action);
     switch(action.type) {
         case LOADING_START:
             // console.log('LOADING_START FIRING', state);

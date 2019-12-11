@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { connect } from 'react-redux';
 import axios from "axios";
 import { login, loadingStart, loadingDone } from '../../actions/AppActions.js';
+import { isValidPassword , validateInputs } from '../../utils/AppUtils.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -12,7 +13,6 @@ function SignUpForm(props) {
     password: "",
     name: "",
   });
-  
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserCohort, setNewUserCohort] = useState('');
 
@@ -28,15 +28,31 @@ function SignUpForm(props) {
     else{
       setNewUser({ ...newUser, [e.target.name]: e.target.value });
     }
-    // console.log(newUser);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    // e.target.reset();
+    // #region build user obj to send to validate
+    if (newUserEmail !== "") {
+      //email is not a required input- to validate check if it is not null then check the data
+      //empty strings cannot be sent to the backend as they will be stored incorrectly- 
+      //so if email/cohort is empty we will not send them on the user object
+
+      //add to newUser obj since not null
+      setNewUser({...newUser, email: newUserEmail})
+    }
+    if (newUserCohort !== "") {
+      //cohort is not a required input- to validate check if it is not null then check the data
+      //empty strings cannot be sent to the backend as they will be stored incorrectly- 
+      //so if email/cohort is empty we will not send them on the user object
+
+      //add to newUser obj since not null
+      setNewUser({...newUser, cohort: newUserCohort});
+    }
+    // #endregion
+
     console.log('newUser: ', newUser);
-    if (validateInputs()) {
-      // console.log('SignUpForm.js validateInputs returned true');
+    if (validateInputs(newUser) && isValidPassword(newUser.password)) {
       props.loadingStart();
       axios
         .post("https://ddq.herokuapp.com/api/auth/register", newUser)
@@ -74,70 +90,6 @@ function SignUpForm(props) {
     } else {
       // console.log("SignUpForm.js validateInputs returned false");
     }
-  };
-
-  const isValidPassword = password => {
-    if (password === "") {
-      alert("You must enter a password.");
-      return false;
-    }
-    if (password.length < 5 || password.length > 20) {
-      alert("Password cannot be less than 5 or greater than 20 characters");
-      return false;
-    }
-    if (!/(!|@|#|\$|&|\*|%|^)/.test(password)) {
-      alert("Password must contain at least one special character");
-      return false;
-    }
-    if (!/([A-Z])/.test(password)) {
-      alert("Password must contain at least one capitalized letter");
-      return false;
-    }
-    if (!/([0-9])/.test(password)) {
-        alert("Password must contain at least one number");
-        return false;
-    }
-    return true;
-  };
-
-  const validateInputs = () => {
-    // console.log("validate Firing");
-    if (newUser.username === "") {
-      alert("You must enter a username.");
-      return false;
-    }
-    else if(!(/^[a-z][a-z0-9_]*$/i.test(newUser.username))) {
-      alert("Username must start with a letter and may only contain a-z, _, or numbers.");
-      return false;
-    }
-    if (!isValidPassword(newUser.password)) {
-      return false;
-    }
-    if (newUser.name === "") {
-      alert("You must enter your name.");
-      return false;
-    }
-    if (newUser.helper === false && newUser.author === false) {
-      alert("You must choose to enroll as a helper, author, or both.");
-      return false;
-    }
-    if (newUserEmail !== "") {
-      //email is not a required input- to validate check if it is not null then check the data
-      //empty strings cannot be sent to the backend as they will be stored incorrectly- 
-      //so if email/cohort is empty we will not send them on the user object
-
-      //add to newUser obj since not null
-      setNewUser({...newUser, email: newUserEmail})
-    }
-    if (newUserCohort !== "") {
-      //cohort is not a required input- to validate check if it is not null then check the data
-      //empty strings cannot be sent to the backend as they will be stored incorrectly- 
-      //so if email/cohort is empty we will not send them on the user object
-
-      //add to newUser obj since not null
-      setNewUser({...newUser, cohort: newUserCohort});
-    }
-    return true;
   };
 
   return (

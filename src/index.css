@@ -39,6 +39,7 @@ body {
   font-size: 1.8rem;
   background-color: #F6F7FB;
   line-height: 1.6;
+  overflow: auto;
 }
 h1 {
   font-size: 4.5rem;
@@ -883,6 +884,8 @@ tr td:nth-child(5) {
 }
 tbody tr {
   border: 1px solid #788896;
+  border-left: none;
+  border-right: none;
 }
 td.boldrows {
   font-weight: 600;
