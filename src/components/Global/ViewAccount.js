@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { loadingStart, loadingDone } from '../../actions/AppActions.js';
+import { getOtherUser } from '../../actions/AppActions.js';
+import { isUsernameAvailable, isValidPassword, validateInputs } from '../../utils/AppUtils.js';
+import decode from 'jwt-decode';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
 import axios from 'axios';
@@ -9,21 +11,38 @@ import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 
-function Account(props) {
+function ViewAccount(props) {
+    const [loading, setLoading] = useState(true);
+    const [isAdmin] = useState(decode(sessionStorage.getItem('token')).admin)
     const [showEditForm, setShowEditForm] = useState(false);
-
     // state for when the user edits their account details
-    const [editUserName, setEditUserName] = useState(props.currentUser.username);
-    const [editName, setEditName] = useState(props.currentUser.name);
-    const [editEmail, setEditEmail] = useState(props.currentUser.email);
-    const [editCohort, setEditCohort] = useState(props.currentUser.cohort);
+    const [isAvailable, setIsAvailable] = useState('');
+    const [editUserName, setEditUserName] = useState(props.otherUser.username);
+    const [editName, setEditName] = useState(props.otherUser.name);
+    const [editEmail, setEditEmail] = useState(props.otherUser.email);
+    const [editCohort, setEditCohort] = useState(props.otherUser.cohort);
     const [newPassword, setNewPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [verifyPassword, setVerifyPassword] = useState('');
+// #region console logs
+    // console.log('Current User', props.currentUser.id, 'Other User: ', props.match.params.id)
+    // console.log('Decoded token', decode(sessionStorage.getItem('token')));
+// #endregion
+
+    useEffect(() => {
+        if (!props.otherUser){
+            setLoading(true);
+            props.getOtherUser(props.match.params.id);
+        }
+        else{
+            setLoading(false);
+        }
+      }, [props.otherUser])
 
     const handleChange = e => {
         if (e.target.name === 'username'){
             setEditUserName(e.target.value);
+            isUsernameAvailable(e.target.value).then(res => {console.log(res)})
         }
         else if (e.target.name === 'name'){
             setEditName(e.target.value);
@@ -65,93 +84,61 @@ function Account(props) {
         if (newPassword){
             userObj = {...userObj, newPassword: newPassword}
         }
+
         // console.log(editUserName)
         // console.log(userObj)
-        if (validateInputs()) {
-            props.loadingStart();
-           try{
-            promises.push(axiosWithAuth().put("https://ddq.herokuapp.com/api/users/user", userObj));
-        
-            if(profilePicture){
-                const formData = new FormData();
-                formData.append('image', profilePicture);
-                console.log(profilePicture);
-                console.log(formData);
 
-                if(props.currentUser.profile_picture){
-                    promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                }else{
-                    promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+        if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
+            console.log('passed validation');
+            props.loadingStart();
+        
+            //call admin code first in case admin has special edit powers that normal user doesn't, admin should be able to use said powers
+            //on themselves
+            if (isAdmin)
+            {
+                
+            }
+            else if (props.currentUser.id == props.match.params.id){
+                try{
+                    promises.push(axiosWithAuth().put(`/admin/users/${props.match.params.id}`, userObj));
+                
+                    if(profilePicture){
+                        const formData = new FormData();
+                        formData.append('image', profilePicture);
+                        console.log(profilePicture);
+                        console.log(formData);
+        
+                        if(props.currentUser.profile_picture){
+                            promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                        }else{
+                            promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                        }
+                    }
+                    const response = await axios.all(promises);
+                    if(response) { setLoading(false); }
+                    }catch(err){
+                        console.log("Edit Account Catch Error: ", err);
+                        alert(err.response.data);
+                        setLoading(false);
+                    }
                 }
             }
-            const response = await axios.all(promises);
-            props.loadingDone();
-            }catch(err){
-                console.log("Edit Account Catch Error: ", err.response.data.message);
-                alert(err.response.data.message);
-                props.loadingDone();
-            }
-        }
     }
-
-    const isValidPassword = password => {
-        if (password === "") {
-            alert("You must enter a password.");
-            return false;
-        }
-        if (password.length < 5 || password.length > 20) {
-            alert("Password cannot be less than 5 or greater than 20 characters");
-            return false;
-        }
-        if (!/(!|@|#|\$|&|\*|%|^)/.test(password)) {
-            alert("Password must contain at least one special character");
-            return false;
-        }
-        if (!/([A-Z])/.test(password)) {
-            alert("Password must contain at least one capitalized letter");
-            return false;
-        }
-        if (!/([0-9])/.test(password)) {
-            alert("Password must contain at least one number");
-            return false;
-        }
-        return true;
-    };
-      
-    const validateInputs = () => {
-        // if (editUserName === "") {
-        //     alert("Your username can't be empty.");
-        //     return false;
-        // }
-        if(!(/^[a-z][a-z0-9_]*$/i.test(editUserName))) {
-            alert("Username must start with a letter and may only contain a-z, _, or numbers.");
-            return false;
-        }
-        if (editName === "") {
-            alert("You must enter your name.");
-            return false;
-    }
-
-     // if (!isValidPassword(newPassword)) {
-     //     return false;
-     // }
-        return true;
-    };
 
     return (
         <OuterDiv>
         <Div className='card'> 
-        <StyledLoader active={props.loading} spinner text='Uploading...'> 
+        <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
                     <ProOuter>
                         <ProfileWrapper>
-                            {props.currentUser.profile_picture ? (
+                            {props.otherUser.profile_picture ? (
                             <ProfileFilter>
                                 <div className='editPicture'>
                                     Edit
                                     <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
                                 </div>
-                                <ProfileImg edit={false} style={{backgroundImage: `url('${props.currentUser.profile_picture}')`}}/>
+                                <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
                             </ProfileFilter>) : (
                             <ProfileFilter>
                                 <div className='editPicture'>
@@ -162,22 +149,22 @@ function Account(props) {
                             </ProfileFilter>)}
                         </ProfileWrapper>
                     </ProOuter>
-                <h3 className="bold">Username:</h3><p>{props.currentUser.username}</p>
-                <h3 className="bold">Name:</h3><p>{props.currentUser.name}</p>
-                <h3 className="bold">Email:</h3><p>{props.currentUser.email !== null ? props.currentUser.email : 'None'}</p>
-                <h3 className="bold">Cohort:</h3><p>{props.currentUser.cohort !== null ? props.currentUser.cohort : 'Unknown'}</p>
+                <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p>
+                <h3 className="bold">Name:</h3><p>{props.otherUser.name}</p>
+                <h3 className="bold">Email:</h3><p>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</p>
+                <h3 className="bold">Cohort:</h3><p>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</p>
             </>}
             {showEditForm && <form onSubmit={handleSubmit}>
             <ImageInput type='file' onChange={e => setProfilePicture(e.target.files[0])} id='imageInput'/>
             <ProOuter>
                 <ProfileWrapper>
-                    <label htmlFor='imageInput'>{props.currentUser.profile_picture ? (
+                    <label htmlFor='imageInput'>{props.otherUser.profile_picture ? (
                     <ProfileFilter>
                         <div className='editPicture'>
                             Edit
                             <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
                         </div>
-                        <ProfileImg  edit={true} style={{backgroundImage: `url('${props.currentUser.profile_picture}')`}}/>
+                        <ProfileImg  edit={true} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
                     </ProfileFilter>) : (
                     <ProfileFilter>
                         <div className='editPicture'>
@@ -189,34 +176,34 @@ function Account(props) {
                 </ProfileWrapper>
             </ProOuter>
             <label><h3 className="bold">Username:</h3>    
-                <input className="text-input" name="username" onChange={handleChange} placeholder={props.currentUser.username} type="text"/> 
+                <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
             </label>
             <div>
             </div>
             <label><h3 className="bold">Name:</h3>
-                <input className="text-input" name="name" onChange={handleChange} placeholder={props.currentUser.name} />
+                <input className="text-input" name="name" onChange={handleChange} placeholder={props.otherUser.name} />
             </label>
             <label><h3 className="bold">Email:</h3>
-                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.currentUser.email !== null ? props.currentUser.email : ''} />
+                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
             </label> 
             <label><h3 className="bold">Cohort:</h3>
-                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.currentUser.cohort !== null ? props.currentUser.cohort : ''} />
+                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
             </label>    
             <label><h3 className="bold">New password:</h3>
                     <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text"/> 
             </label>
            <PasswordDiv>
                 <label>
-                    <p>Enter current password to confirm changes:</p>
-                    <input className="text-input" type='password' name='password' onChange={passwordChange} required/>
+                    <p>Re-enter password to save changes:</p>
+                    <input className="text-input" type='password' name='password' onChange={passwordChange} />
                 </label>
             </PasswordDiv> 
                 <br /><br />
                 <button className="button" type="submit">Submit changes</button>
-
             </form> }
 
-            <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>
+            {(props.currentUser.id == props.match.params.id || isAdmin) && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
+            
             </StyledLoader>  
         </Div>
         </OuterDiv>
@@ -227,11 +214,11 @@ const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
     return {
         currentUser: state.AppReducer.currentUser,
-        loading: state.AppReducer.loading,
+        otherUser: state.AppReducer.otherUser,
     }
   }
 
-export default connect(mapStateToProps, { loadingStart, loadingDone })(Account)
+export default connect(mapStateToProps, { getOtherUser })(ViewAccount)
 
 
 const StyledLoader = styled(LoadingOverlay)`

@@ -39,6 +39,7 @@ body {
   font-size: 1.8rem;
   background-color: #F6F7FB;
   line-height: 1.6;
+  overflow: auto;
 }
 h1 {
   font-size: 4.5rem;
@@ -159,7 +160,7 @@ header {
   right: 0;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 9;
   background-color: #fff;
   height: 75px;
   display: flex;
@@ -433,127 +434,12 @@ header + section:first-of-type {
 .credits .card {
   margin-bottom: 4%;
 }
-.dashboard {
-  display: flex;
-}
-.sidebarDiv {
-  /* bg color colorpicked from whimsical template */
-  background-color: #c3cfd9;
-  border: 1px solid black;
-  border-top: none;
-  width: 25%;
-  min-height: 100vh;
-}
-.filterToolsDiv {
-  position: sticky;
-  top: 300px;
-}
-.sidebarNav {
-  /* border: 1px solid black; */
-  position: sticky;
-  top: 75px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding-top: 20px;
-  text-decoration: none;
-  /* flex-wrap: wrap; */
-}
-.sidebarNav a {
-  margin-bottom: 20px;
-}
-.navLink {
-  color: black;
-  text-decoration: none;
-  line-height: 24px;
-  font-size: 2rem;
-}
-.navLink:hover {
-  color: #BF0033;
-}
-.helperDashboard {
-  width: 85%;
-}
-.tickettable {
-  width: 100%;
-  text-align: left;
-  padding: 2%;
-  border-collapse: collapse;
-}
-.tickettable > thead {
-  color: #788896;
-}
-tbody td,
-thead th {
-  padding: 2%;
-}
-thead tr th:first-child {
-  width: 30%;
-}
-thead tr th:nth-child(2) {
-  width: 10%;
-}
-thead tr th:nth-child(3) {
-  width: 30%;
-}
-thead tr th:nth-child(4) {
-  width: 15%;
-}
-thead tr th:nth-child(5) {
-  width: 15%;
-}
-tbody tr {
-  border-bottom: 1px solid #788896;
-}
-td.boldrows {
-  font-weight: 600;
-}
-td a {
-  text-decoration: none;
-}
-th {
-  position: sticky;
-  top: 70px;
-  background: white;
-  z-index: 99999999;
-}
-.firstTh {
-  text-align: left;
-  padding-left: 10%;
-}
-td div {
-  text-align: center;
-}
-.App {
-  text-align: center;
-}
-.App-logo {
-  height: 40vmin;
-}
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-.App-link {
-  color: #09d3ac;
-}
-/* debugging classes */
-.initial {
-  border: 1px solid black;
-}
 .ticketContainer {
   width: 100%;
   display: flex;
   flex-flow: column wrap;
-  padding: 20px;
   text-align: left;
-  padding-left: 6%;
+  padding: 0 3%;
 }
 .ticketNav {
   display: flex;
@@ -564,21 +450,10 @@ td div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
-  height: 100px;
+  width: 100%;
 }
 .ticketNavLeft div {
   display: flex;
-}
-.ticketNavRight {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 40%;
-  height: 100px;
-}
-.ticketNavRight button {
-  height: 40px;
 }
 .topDiv {
   border: 1px solid #C3CFD9;
@@ -590,40 +465,51 @@ td div {
   padding-left: 3%;
   font-weight: 700;
 }
-.studentDiv {
+.authorDiv {
   border: 1px solid #C3CFD9;
   width: 100%;
-  min-height: 300px;
-  margin-top: 7%;
 }
-.studentDiv p {
+.authorDiv p {
   padding-left: 7%;
+}
+.authorDivHeader {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+.authorDivHeader div {
+  width: 50%;
+}
+.authorDivHeader .secondDiv {
+  width: 50%;
+  text-align: right;
+  margin-right: 5%;
 }
 .mediaDiv {
   display: flex;
   margin: 0 auto;
 }
 .uploadDiv {
+  margin-top: 0;
+  margin-left: 5%;
+  width: 95%;
   display: flex;
-  margin: 0 auto;
   justify-content: space-evenly;
   align-items: center;
 }
 .uploadDiv button {
   height: 40px;
 }
-.helperDiv {
-  border: 1px solid #C3CFD9;
-  width: 100%;
-  height: 300px;
+.uploadDiv2 {
+  margin-top: 0;
+  margin-left: 10%;
+  width: 90%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
-.helperDiv p {
-  padding-left: 7%;
-}
-.helperDiv div {
-  padding-left: 3%;
-  margin-top: 2%;
-  font-weight: 700;
+.uploadDiv2 button {
+  height: 40px;
 }
 .statusDiv {
   display: flex;
@@ -635,27 +521,62 @@ td div {
 .statusBox {
   width: 30%;
 }
-.studentDivHeader {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
+.statusBox2 {
+  margin-top: 12px;
+  width: 30%;
 }
-.studentDivHeader div {
-  width: 50%;
+.commentBox {
+  padding: 0;
+  margin-left: 5%;
+  margin-bottom: 0;
+  width: 95%;
 }
-.studentDivHeader .secondDiv {
-  width: 50%;
-  text-align: right;
-  margin-right: 5%;
+.commentBox h3 {
+  margin-top: 20px;
+  color: black;
 }
-.answerBox textarea {
+.commentBox textarea {
   width: 100%;
-  height: 200px;
+  height: 150px;
   border: 1px C3CFD9 solid;
-  margin-bottom: 20px;
+  margin: 0;
+  padding: 0;
+}
+.replyBox {
+  padding: 0;
+  margin-left: 10%;
+  margin-bottom: 0;
+  width: 90%;
+}
+.replyBox h3 {
+  margin-top: 20px;
+  color: black;
+}
+.replyBox textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px C3CFD9 solid;
+  margin: 0;
+  padding: 0;
+}
+.editTicketBox {
+  padding: 0;
+  margin-left: 5%;
+  width: 90%;
+}
+.editTicketBox h3 {
+  margin-top: 20px;
+  color: black;
+}
+.editTicketBox textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px C3CFD9 solid;
+  margin: 0;
+  padding: 0;
 }
 .photo {
-  height: 65px;
+  height: 80px;
   border-top-left-radius: 1px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 3px;
@@ -677,4 +598,318 @@ td div {
 }
 .stacked {
   margin-left: -20%;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+.tooltip:hover {
+  z-index: 200;
+}
+#testbox {
+  padding: 0;
+  text-align: center;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: #BF0033;
+  color: #fff;
+  text-align: center;
+  padding: 0;
+  border-radius: 6px;
+  width: 120px;
+  bottom: 105%;
+  left: 50%;
+  margin-left: -60px;
+  /* Use half of the width (120/2 = 60), to center the tooltip */
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 5;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  z-index: 20;
+}
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  /* At the top of the tooltip */
+  left: 50%;
+  margin-left: -8px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: #BF0033 transparent transparent transparent;
+}
+.ticketComment {
+  border: 1px solid #C3CFD9;
+  margin-top: 10px;
+  margin-left: 5%;
+  width: 95%;
+}
+.ticketComment p {
+  padding: 0 7%;
+}
+.ticketComment2 {
+  display: flex;
+  justify-content: space-between;
+}
+.ticketComment2 .secondDiv {
+  width: 20%;
+  text-align: right;
+  margin-right: 5%;
+  font-weight: 600;
+}
+.ticketCommentReply {
+  border: 1px solid #C3CFD9;
+  margin-left: 10%;
+  width: 90%;
+}
+.ticketCommentReply p {
+  padding-left: 7%;
+}
+.photo3 {
+  height: 100px;
+  border-radius: 5px;
+}
+.viewTicketPhoto {
+  height: 100px;
+  border-radius: 5px;
+  margin-top: 8%;
+  margin-left: 7%;
+}
+.commentFixer {
+  display: flex;
+  width: 80%;
+}
+.commentText {
+  width: 90%;
+  padding: 0;
+  margin-left: 15px;
+}
+.commentText h4 {
+  padding: 0;
+}
+.alignRight {
+  float: right;
+  margin: 10px;
+}
+.solution {
+  background-color: lightseagreen;
+  border: 2px solid black;
+}
+/* Style the Image Used to Trigger the Modal */
+.modalImg {
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.modalImghover {
+  opacity: 0.7;
+}
+/* The Modal (background) */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 100px;
+  /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: #000000;
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Black w/ opacity */
+}
+/* Modal Content (Image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+/* Add Animation - Zoom in the Modal */
+.modal-content,
+#caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+@keyframes zoom {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.closehoverfocus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+.dashboard {
+  display: flex;
+}
+.courseContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.courseBox {
+  color: white;
+  width: 300px;
+  height: 165px;
+  border-radius: 5px;
+  margin: 10px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 165px;
+}
+.courseBox:hover {
+  cursor: pointer;
+  opacity: 0.98;
+}
+.sidebarDiv {
+  background-color: #c3cfd9;
+  border: 1px solid black;
+  border-top: none;
+  width: 25%;
+  min-height: 100vh;
+}
+.filterToolsDiv {
+  position: sticky;
+  top: 310px;
+}
+.sidebarNav {
+  /* border: 1px solid black; */
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 20px;
+  text-decoration: none;
+}
+.sidebarNav a {
+  margin-bottom: 20px;
+}
+.navLink {
+  color: black;
+  text-decoration: none;
+  line-height: 24px;
+  font-size: 2rem;
+}
+.navLink:hover {
+  color: #BF0033;
+}
+.helperDashboard {
+  width: 85%;
+}
+.tickettable {
+  top: 150px;
+  width: 100%;
+  text-align: center;
+  padding: 2%;
+  border-collapse: collapse;
+}
+.tickettable > thead {
+  color: #788896;
+}
+tbody td,
+thead th {
+  padding: 2%;
+}
+tr th:first-child {
+  width: 20%;
+}
+tr th:nth-child(2) {
+  width: 10%;
+}
+tr th:nth-child(3) {
+  width: 30%;
+}
+tr th:nth-child(4) {
+  width: 15%;
+}
+tr th:nth-child(5) {
+  width: 15%;
+}
+tr td:first-child {
+  width: 20%;
+}
+tr td:nth-child(2) {
+  width: 10%;
+}
+tr td:nth-child(3) {
+  width: 30%;
+}
+tr td:nth-child(4) {
+  width: 15%;
+}
+tr td:nth-child(5) {
+  width: 15%;
+}
+tbody tr {
+  border: 1px solid #788896;
+  border-left: none;
+  border-right: none;
+}
+td.boldrows {
+  font-weight: 600;
+}
+td {
+  border: 1px solid red;
+}
+td a {
+  text-decoration: none;
+}
+td div {
+  text-align: center;
+}
+.firstTh {
+  text-align: center;
+}
+th:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  border-bottom: 2px solid #c3cfd9;
+}
+.pointer:hover {
+  cursor: pointer;
 }

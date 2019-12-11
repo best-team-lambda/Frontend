@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import styled from 'styled-components';
-import {axiosWithAuth} from '../../utils/axiosWithAuth';
+import axiosWithAuth from '../../utils/axiosWithAuth';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileVideo, faImages} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
@@ -68,32 +68,32 @@ const Button = styled.button `
 const MarginDiv = styled.div `
     margin-bottom: 10px;
 `
-const Label = styled.label `
-    input[type = 'file'] {
-    // background-color: red;  
+// const Label = styled.label `
+//     input[type = 'file'] {
+//     // background-color: red;  
 
-        &::-webkit-file-upload-button {
-            // margin-left: 3rem;
-            font-size: 1.8rem;
-            background-color: #BF0033;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            padding: 1rem 2.5rem;
-            text-decoration: none;
-            font-weight: @bold-font-weight;
-            transition: 0.3s;
-            border: 0;
+//         &::-webkit-file-upload-button {
+//             // margin-left: 3rem;
+//             font-size: 1.8rem;
+//             background-color: #BF0033;
+//             color: white;
+//             border: none;
+//             border-radius: 5px;
+//             text-decoration: none;
+//             padding: 1rem 2.5rem;
+//             text-decoration: none;
+//             font-weight: @bold-font-weight;
+//             transition: 0.3s;
+//             border: 0;
 
-            margin-bottom: 15px;
-            margin-top:15px;
-            &:hover {
-                background-color: #880C23;
-            }
-        }
-    }
-` 
+//             margin-bottom: 15px;
+//             margin-top:15px;
+//             &:hover {
+//                 background-color: #880C23;
+//             }
+//         }
+//     }
+// ` 
 const Fa = styled(FontAwesomeIcon)`
     width: 60px !important;
     height: 60px;
@@ -127,9 +127,9 @@ export default function CreateTicket(props) {
     const [loading, setLoading] = useState('');
     const [images, setImages] = useInput([]);
     const [video, setVideo] = useInput(null);
-    const [category, setCategory, handleCategory] = useInput('');
-    const [title, setTitle, handleTitle] = useInput('');
-    const [description, setDescription, handleDescription] = useInput('');
+    const [category, handleCategory] = useInput('');
+    const [title, handleTitle] = useInput('');
+    const [description, handleDescription] = useInput('');
 
     const handleSubmit = async e => {
         console.log(Array.from(images));
@@ -145,17 +145,17 @@ export default function CreateTicket(props) {
         
         try{
         setLoading(true);
-        const ticket = await axiosWithAuth().post('https://ddq.herokuapp.com/api/tickets', ticketDetails);
+        const ticket = await axiosWithAuth().post('/tickets', ticketDetails);
     
         if(images){
-          const urls  = await axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/${ticket.data.id}/pictures/open`, imagesData);
+          const urls  = await axiosWithAuth().post(`/tickets/${ticket.data.id}/pictures/open`, imagesData);
           console.log(urls);
         }
 
         if(video){
           const videoData = new FormData();
           videoData.append('video', video);
-          const url  = await axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/${ticket.data.id}/video/open`, videoData);
+          const url  = await axiosWithAuth().post(`/tickets/${ticket.data.id}/video/open`, videoData);
           console.log(url);  
         }
         setLoading(false);
@@ -204,131 +204,3 @@ export default function CreateTicket(props) {
         </OuterDiv>
     )
 }
-
-
-
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-                          //||||||||||||||
-            //v v v v v v v Raymond was here v v v v v v v v v v
-       // v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v 
-            // v v v v v v v Raymond was here v v v v v v v v v v
-                   //   v v v v v v v v v v v v v v v v 
-                       //  v Raymond was here v v v v
-                             //v v v v v v 
-                                // v v 
-
-
-// Formik does not currently support file input :(  :hotdog: :dog2:
-
-// function CreateTicket({ values, errors, touched, status }) {
-//   const [newticket, setNewTicket] = useState([]);
-//   // const [images, setImages] = useState([]);
-
-//   useEffect(() => {
-//     status && setNewTicket(newticket => [...newticket, status]);
-//   }, [status]);
-
-//   return (
-//     <div className="ticket-container">
-//       <Form>
-//         <Field type="text" name="category" placeholder="name" />
-//         {touched.name && errors.name && <p className="errors">{errors.name}</p>}
-//         <Field type="text" name="title" placeholder="subject" />
-//         {touched.subject && errors.subject && (
-//           <p className="errors">{errors.subject}</p>
-//         )}
-//         <Field
-//           as="textarea"
-//           type="text"
-//           name="description"
-//           placeholder="description"
-//         />
-//         <label>Images: <Field type='file' name='images' multiple /></label>
-//         <button type='submit'>Submit!</button>
-//       </Form>
-//     </div>
-//   );
-// }
-// const FormikCreateTicket = withFormik({
-//   mapPropsToValues({ category, title, description, images }) {
-//     return {
-//       name: category || "",
-//       subject: title || "",
-//       description: description || "",
-//       images: images || new Array()
-//     };
-//   },
-//   validationSchema: Yup.object().shape({
-//     name: Yup.string().required(),
-//     subject: Yup.string().required(),
-//      subject: Yup.string().required()
-//   }),
-//   handleSubmit(values, { setStatus }) {
-//     const {category, title, description, images} = values;
-//     const ImageData = new FormData();
-    
-//     if(images.length){
-//       for(let i = 1; i <= images.length; i++){
-//         ImageData.append('image' + i, images[i-1]);
-//       }
-//     }
-//     console.log(category, title, description, images)
-    
-//     // axiosWithAuth().post(`http://ddq.herokuapp.com/api/tickets/${id}/pictures`)
-
-
-//     // values is our object with all our data on it
-//     // axios
-//     //   .post("https://reqres.in/api/users/", values)
-//     //   .then(res => {
-//     //     setStatus(res.data);
-//     //     // console.log(res);
-//     //   })
-//     //   .catch(err => console.log(err.response));
-//   }
-// })(CreateTicket);
-// export default FormikCreateTicket;
-// // console.log("This is the HOC", FormikCreateTicket);
-
-
-// const FormikCreateTicket = withFormik({
-//   mapPropsToValues({ name, subject, description }) {
-//     return {
-//       name: name || "",
-//       subject: subject || "",
-//       description: description || ""
-//     };
-//   },
-//   validationSchema: Yup.object().shape({
-//     name: Yup.string().required(),
-//     subject: Yup.string().required(),
-//     description: Yup.string().required()
-//   }),
-//   handleSubmit(values, { setStatus }) {
-//     axios
-//       .post("https://ddq.herokuapp.com/api/auth/createticket", values)
-//       .then(res => {
-//         setStatus(res.data);
-//         console.log(res);
-//       })
-//       .catch(err => console.log(err.response));
-//   }
-// })(CreateTicket);
-// export default FormikCreateTicket;

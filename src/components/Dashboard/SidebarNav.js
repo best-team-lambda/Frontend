@@ -1,54 +1,50 @@
-import React, { useContext } from 'react'
+import React from 'react'
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { setSearchTerm, setSearchType, setAskedAnsweredBoth, setOpenClosedAll } from '../../actions/SearchActions.js';
 
-import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import unclaimed from '../../images/unclaimed.png'
 import mine from '../../images/mine.png'
 import closed from '../../images/closed.png'
 
-export default function SidebarNav(props) {
-    const { searchType, setSearchType, searchTerm, setSearchTerm, filterByHelperStudentBoth, setFilterByHelperStudentBoth, 
-        filterByOpenClosedAll, setFilterByOpenClosedAll } = useContext(CurrentUserContext);
-
+function SidebarNav(props) {
         // console.log('SideBarNav', props.props.location.pathname);
 
     const handleChange = e => {
-          setSearchTerm(e.target.value);
-        // console.log('SideBar Search Term:', searchTerm);
+        props.setSearchTerm(e.target.value)
       };
     
-      const toggleBool = e => {
-        if (filterByHelperStudentBoth === 'All') {
-            setFilterByHelperStudentBoth('Student');
-        }
-        else if (filterByHelperStudentBoth === 'Student') {
-            setFilterByHelperStudentBoth('Helper');
-        }
-        else if (filterByHelperStudentBoth === 'Helper') {
-            setFilterByHelperStudentBoth('All');
-        }
-      };
+    const clearSearchTerm = () => {
+        props.setSearchTerm('');
+    }
 
-      const handleSelect = e => {
-        //   console.log(e.target.value);
-          setSearchType(e.target.value);
-      }
+    const handleSelect = e => {
+        props.setSearchType(e.target.value);
+    }
 
-      const clearSearchTerm = () => {
-          setSearchTerm('');
-      };
+    const handleAskedAnswered = () => {
+        if (props.filterByAskedAnsweredBoth === 'All') {
+            props.setAskedAnsweredBoth('Asked');
+        }
+        else if (props.filterByAskedAnsweredBoth === 'Asked') {
+            props.setAskedAnsweredBoth('Answered');
+        }
+        else if (props.filterByAskedAnsweredBoth === 'Answered') {
+            props.setAskedAnsweredBoth('All');
+        }
+    }
 
-      const toggleButton = (e) => {
-        if (filterByOpenClosedAll === 'All') {
-            setFilterByOpenClosedAll('Open');
+    const handleOpenClosed = () => {
+        if (props.filterByOpenClosedAll === 'All') {
+            props.setOpenClosedAll('Open');
         }
-        else if (filterByOpenClosedAll === 'Open') {
-            setFilterByOpenClosedAll('Resolved');
+        else if (props.filterByOpenClosedAll === 'Open') {
+            props.setOpenClosedAll('Resolved');
         }
-        else if (filterByOpenClosedAll === 'Resolved') {
-            setFilterByOpenClosedAll('All');
+        else if (props.filterByOpenClosedAll === 'Resolved') {
+            props.setOpenClosedAll('All');
         }
-      }
+    }
 
 
     return (
@@ -56,7 +52,7 @@ export default function SidebarNav(props) {
             <nav className='sidebarNav'>
             <div>
                 <img src={unclaimed} alt="Unclaimed tickets" />
-                <NavLink className='navLink' to='/Dashboard/Unassigned'>Unassigned</NavLink> 
+                <NavLink className='navLink' to='/Dashboard/OpenTickets'>Open</NavLink> 
             </div>
             <div>
                 <img src={mine} alt="My tickets" />
@@ -66,13 +62,17 @@ export default function SidebarNav(props) {
                 <img src={closed} alt="Closed tickets" />
                 <NavLink className='navLink' to='/Dashboard/Resolved'>Resolved</NavLink>
             </div>
+            <div>
+                <img src={closed} alt="Closed tickets" />
+                <NavLink className='navLink' to='/Dashboard/Lambda'>Lambda</NavLink>
+            </div>
             </nav>
 
             
                 
             <div className='filterToolsDiv'>
                 {(()=>{ //immediately invoked function to allow javascript inside JSX. syntax: {(()=>{})()}
-                        if(props.props.location.pathname === '/Dashboard/Unassigned' | props.props.location.pathname === '/Dashboard/Mine' | props.props.location.pathname === '/Dashboard/Resolved')
+                        if(props.props.location.pathname === '/Dashboard/OpenTickets' | props.props.location.pathname === '/Dashboard/Mine' | props.props.location.pathname === '/Dashboard/Resolved')
                         {   //only if at any of the three above routes display filter tools.
                             return(
                                 <>
@@ -81,25 +81,25 @@ export default function SidebarNav(props) {
                                         {/* <label for="select-box"> */}
                                         <select id="select-box" onChange={handleSelect} name="searchBy">
                                             <option value="Category">Category</option>
-                                            <option value="Student">Student Name</option>
-                                            {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Helper">Helper Name</option>}
+                                            <option value="author">author Name</option>
+                                            {/* {props.props.location.pathname !== '/Dashboard/OpenTickets' && <option value="Helper">Helper Name</option>} */}
                                             <option value="Title">Title</option>
                                             <option value="Description">Description</option>
-                                            {props.props.location.pathname !== '/Dashboard/Unassigned' && <option value="Solution">Solution</option>}
+                                            {props.props.location.pathname !== '/Dashboard/OpenTickets' && <option value="Solution">Solution</option>}
                                         </select>
                                     </div>
-                                    <input  className='searchBox' name="searchTerm" type="text" onChange={handleChange} value={searchTerm} placeholder="Filter" />
+                                    <input  className='searchBox' name="searchTerm" type="text" onChange={handleChange} value={props.searchTerm} placeholder="Filter" />
                                     <br />
                                     <button className="button" onClick={clearSearchTerm}>Clear</button>
                                     <br />
                                     {props.props.location.pathname === '/Dashboard/Mine' &&
                                         <>
-                                        <label> Helper/Student:
-                                        <button className="button" onClick={toggleBool}>{filterByHelperStudentBoth}</button>
+                                        {/* <label> Asked/Answered:
+                                        <button className="button" onClick={handleAskedAnswered}>{props.filterByAskedAnsweredBoth}</button>
                                         </label>
-                                        <br />
+                                        <br /> */}
                                         <label> Status:
-                                        <button className="button" onClick={toggleButton}>{filterByOpenClosedAll}</button>
+                                        <button className="button" onClick={handleOpenClosed}>{props.filterByOpenClosedAll}</button>
                                         </label>
                                         </>
                                     }
@@ -111,3 +111,15 @@ export default function SidebarNav(props) {
         </div>  
     )
 }
+
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        searchType: state.SearchReducer.searchType,
+        searchTerm: state.SearchReducer.searchTerm,
+        filterByAskedAnsweredBoth: state.SearchReducer.filterByAskedAnsweredBoth,
+        filterByOpenClosedAll: state.SearchReducer.filterByOpenClosedAll,
+    }
+  }
+
+export default connect(mapStateToProps, { setSearchTerm, setSearchType, setAskedAnsweredBoth, setOpenClosedAll })(SidebarNav)

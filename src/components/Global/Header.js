@@ -1,16 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
+import { logout } from '../../actions/AppActions.js';
 import logo from '../../images/logo.png';
 
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-export default function Header(props) {
-    const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-    // console.log('Header Current User', currentUser);
+function Header(props) {
 
-    const logout = () => {
+    const logOut = () => {
         sessionStorage.removeItem('token');
-        setCurrentUser('');
+        props.logout();
         props.history.push('/');
     }
 
@@ -19,15 +18,16 @@ export default function Header(props) {
     <header>
         <Link to='/'><img className="logo" src={logo} alt='Lambda Logo'/></Link>
         {(()=>{ //immediately invoked function to allow javascript inside JSX. syntax: {(()=>{})()}
-            if (currentUser){
+            if (props.currentUser){
                 return (
                     <>
-                    <h4>Welcome {currentUser.name}!</h4>
+                    <h4>Welcome {props.currentUser.name}!</h4>
                         <nav className='loggedIn'>
+                            <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
                             <NavLink className='navLink' to='/Dashboard/Account'>Account</NavLink>
                             <NavLink className='navLink' to='/Dashboard/CreateTicket'>Create Ticket</NavLink>
-                            <NavLink className='navLink' to='/Dashboard/Unassigned'>Dashboard</NavLink>
-                            <Link className="navLink" exact to='/' onClick={logout}>Sign out</Link>
+                            <NavLink className='navLink' to='/Dashboard/OpenTickets'>Dashboard</NavLink>
+                            <Link className="navLink" to='/' onClick={logOut}>Sign out</Link>
                         </nav>
                     </>
                 );
@@ -48,3 +48,11 @@ export default function Header(props) {
   );
 }
 
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+        currentUser: state.AppReducer.currentUser,
+    }
+  }
+
+export default connect(mapStateToProps, { logout })(Header)

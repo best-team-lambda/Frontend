@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+// import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+
 import styled from 'styled-components';
 
 const Fa = styled(FontAwesomeIcon)`
@@ -16,10 +18,15 @@ const Names = styled.div `
 export default function ClosedTicket(props) {
     return (
         <>
-            {/* <td className='boldrows'>{props.student_name}</td>  */}
-            <td><div>{props.student_image ? <img className="photo" src={props.student_image} alt='Student image'/> : (
+            {/* <td className='boldrows'>{props.author_name}</td>  */}
+            <td><div>{props.author_image ? <img className="photo3" src={props.author_image} alt='ticket author'/> : (
                 <Fa icon={faUserCircle}/>
-            )}{props.helper_name && props.helper_image ? <img className="photo2" src={props.helper_image} alt='Student image'/> : <Fa icon={faUserCircle}/>}</div><Names>{props.student_name}{props.helper_name}</Names></td>
+            )}
+            {/* {props.helper_name && props.helper_image ? <img className="photo2" src={props.helper_image} alt='author'/> : <Fa icon={faUserCircle}/>} */}
+            </div>
+            <Names>{props.author_name}
+            {/* {props.helper_name} */}
+            </Names></td>
             <td className='boldrows'>{props.category}</td>
             <td>{props.title}</td>
             {/* <td>{props.description}</td> */}

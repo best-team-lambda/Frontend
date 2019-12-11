@@ -4,9 +4,9 @@
     width: 100%;
     display: flex;
     flex-flow: column wrap;
-    padding: 20px;
+    // padding: 20px;
     text-align: left;
-    padding-left: 6%;
+    padding: 0 3%;
   }
   .ticketNav{
     
@@ -15,30 +15,16 @@
     width: 100%;
   }
   .ticketNavLeft{
-    
+    // border: 1px solid black;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
-    width: 50%;
-    height: 100px;
+    width: 100%;
     div{
       display: flex;
     }
-   
   }
 
-  .ticketNavRight{
-    // border: 1px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 40%;
-    height: 100px;
-    button{
-      height: 40px;
-    }
-  }
   .topDiv{
     border: 1px solid #C3CFD9;
     width: 100%;
@@ -50,45 +36,57 @@
         font-weight: 700;
     }
   }
-  .studentDiv{
+  .authorDiv{
     border: 1px solid #C3CFD9;
     width: 100%;
-    min-height: 300px;
-    margin-top: 7%;
-
     p {
         padding-left: 7%;
     }
   }
+
+  .authorDivHeader {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      div {
+          width: 50%;
+      }
+      .secondDiv {
+          width: 50%;
+          text-align: right;
+          margin-right: 5%;
+      }
+  } 
+
   .mediaDiv{
     display: flex;
     margin: 0 auto;
   }
+
   .uploadDiv{
+    // border: 1px solid black;
+    margin-top: 0;
+    margin-left:5%;
+    width: 95%;
     display: flex;
-    margin: 0 auto;
     justify-content: space-evenly;
     align-items: center;
     button{
       height: 40px;
     }
-  }
+}
 
-  .helperDiv{
-    border: 1px solid #C3CFD9;
-    width: 100%;
-    height: 300px;
-    p {
-        padding-left: 7%;
-        
+  .uploadDiv2{
+    // border: 1px solid black;
+    margin-top: 0;
+    margin-left: 10%;
+    width: 90%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    button{
+      height: 40px;
     }
-
-    div {
-        padding-left: 3%;
-        margin-top: 2%;
-        font-weight: 700;
-    }
-
   }
 
   .statusDiv {
@@ -97,43 +95,79 @@
       div {
           align-items: baseline;
       }
-  
-
-
   }
   
 .statusBox {
     width: 30%;
 }
 
-.studentDivHeader {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-    div {
-        width: 50%;
-    }
-    .secondDiv {
-        width: 50%;
-        text-align: right;
-        margin-right: 5%;
-    }
-
+.statusBox2 {
+    margin-top: 12px;
+    width: 30%;
 }
 
-.answerBox {
+.commentBox {
+  // border: 1px solid black;
+  padding: 0;
+  margin-left: 5%;
+  margin-bottom: 0;
+  width: 95%;
+  h3{
+    margin-top: 20px;
+    color: black;
+  }
+  textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px C3CFD9 solid;
+  // margin-bottom: 20px;
+  margin: 0;
+  padding: 0;
+  }   
+}
+.replyBox {
+  // border: 1px solid black;
+  padding: 0;
+  margin-left: 10%;
+  margin-bottom: 0;
+  width: 90%;
+  h3{
+    margin-top: 20px;
+    color: black;
+  }
+  textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px C3CFD9 solid;
+  // margin-bottom: 20px;
+  margin: 0;
+  padding: 0;
+  }   
+}
 
-textarea {
-
- width: 100%;
-height: 200px;
-border: 1px C3CFD9 solid;
-margin-bottom: 20px;
-}   
+.editTicketBox {
+  // border: 1px solid black;
+  padding: 0;
+  margin-left: 5%;
+  // margin-bottom: 0;
+  width: 90%;
+  h3{
+    margin-top: 20px;
+    color: black;
+  }
+  textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px C3CFD9 solid;
+  // margin-bottom: 20px;
+  margin: 0;
+  padding: 0;
+  }   
 }
 
 .photo {
-  height: 65px;
+  // border: 1px solid black;
+  height: 80px;
   border-top-left-radius: 1px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 3px;
@@ -157,4 +191,120 @@ margin-bottom: 20px;
 
 .stacked {
   margin-left: -20%;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  &:hover{
+    // img{
+      z-index: 200;
+    // }
+  }
+}
+#testbox {
+  padding: 0;
+    text-align: center;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: @secondary-red;
+  color: #fff;
+  text-align: center;
+  padding: 0;
+  border-radius: 6px;
+  width: 120px;
+  bottom: 105%;
+  left: 50%;
+  margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+ 
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 5;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  z-index: 20;
+}
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 100%;  /* At the top of the tooltip */
+  left: 50%;
+  margin-left: -8px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: @secondary-red transparent transparent transparent; //arrow bit direction
+}
+
+.ticketComment{
+  border: 1px solid #C3CFD9;
+  margin-top: 10px;
+  margin-left: 5%;
+  width: 95%;
+  p {
+    padding: 0 7% 
+  }
+}
+.ticketComment2 {
+  display: flex;
+  justify-content: space-between;
+  .secondDiv {
+      width: 20%;
+      text-align: right;
+      margin-right: 5%;
+      font-weight: 600;
+  }
+}
+.ticketCommentReply{
+  border: 1px solid #C3CFD9;
+  margin-left: 10%;
+  width: 90%;
+  p {
+      padding-left: 7%;
+  }
+}
+
+.photo3 {
+  height: 100px;
+  border-radius: 5px;
+}
+.viewTicketPhoto {
+  height: 100px;
+  border-radius: 5px;
+  margin-top: 8%;
+  margin-left: 7%;
+}
+
+.commentFixer{
+  display: flex;
+  width: 80%;
+}
+
+.commentText{
+  // border: 1px solid black;
+  width: 90%;
+  padding: 0;
+  // margin: 0;
+  // margin-top: 2px;
+  margin-left: 15px;
+  h4{
+    // margin: 0;
+    padding: 0;
+  }
+}
+
+.alignRight{
+  float: right;
+  margin: 10px;
+}
+
+.solution{
+  background-color: lightseagreen;
+  border: 2px solid black;
 }

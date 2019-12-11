@@ -1,0 +1,28 @@
+HOW TO CALCULATE WINDOW HEIGHT/MANIPULATE OFFSET Y TO MEET TABLE NEEDS
+
+offsetY = totalPageLength - window.innerHeight.
+if you have fixed elements like a fixed header and footer, add the length of the header 
+(because it pushes the footer down) and footer (because its flexboxxed after everything else add its height)
+as the minimum offset. if the total height is less than the minimum offset and screen height, 
+you will still have a scrollbar but only to show the footer.
+
+DevDesk/ViewAccount:
+fixed = header footer and buttondiv-> 75+150+61(buttondiv can resize) -> 286
+1287-286 = 1001
+
+TableHeight = (ref1+ref2+ref3+ref4) + (ref1body+ref2body+ref3body+ref4body)
+totalpixelheight = Header + ButtonDiv + TableHeight + Footer
+ie -< 75 + 61 + 911 + 150 = 1197
+1512-1197 = 315 (this is when table height passes the min and offsetY starts to increase.)
+
+MINIMUM OFFSET Y IS 225.
+
+if tablelength+fixed < 1512 (windowHeight+MINOFFSETY) 
+-> offsety == 225 (fixed header of 75 + flexboxed appended footer of 150.)
+
+else if table + fixed + 
+
+if OFFSETY === 1287 + offset +- 75 + 150 + buttondiv + tablelength
+
+goal is to get offset to equal tablebodylength?
+goal is :: 1287 + offset === totalpixelsused + tablebody +- bullshitfactor
