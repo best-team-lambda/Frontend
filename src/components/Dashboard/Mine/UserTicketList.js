@@ -25,6 +25,7 @@ function UserTicketList(props) {
     const [dimensions, setDimensions] = useState(0);
     const [scroll, setScroll] = useState(0);
     const [triggered, setTriggered] = useState(false);
+    const [clickedOn, setClickedOn] = useState(null);
 
     const [openCollapsed, setOpenCollapsed] = useState(false);
     const [resolvedCollapsed, setResolvedCollapsed] = useState(false);
@@ -52,11 +53,6 @@ function UserTicketList(props) {
     const ref3body = useRef(null);
     const ref4 = useRef(null);
     const ref4body = useRef(null);
-
-    const [height1bodyCache, setHeight1bodyCache] = useState(0);
-    const [height2bodyCache, setHeight2bodyCache] = useState(0);
-    const [height3bodyCache, setHeight3bodyCache] = useState(0);
-    const [height4bodyCache, setHeight4bodyCache] = useState(0);
 
     const Sdiv = styled.div`
     position: sticky;
@@ -162,10 +158,10 @@ function UserTicketList(props) {
         let gap; 
 
         //set body lengths based off collapsed or not (and length)
-        openCollapsed ? setHeight1body(0) : (ref1body.current &&  setHeight1body(ref1body.current.clientHeight, setHeight1bodyCache(ref1body.current.clientHeight)));
-        resolvedCollapsed ? setHeight2body(0) : (ref2body.current &&  setHeight2body(ref2body.current.clientHeight, setHeight2bodyCache(ref2body.current.clientHeight)));
-        commentsCollapsed ? setHeight3body(0) : (ref3body.current &&  setHeight3body(ref3body.current.clientHeight, setHeight3bodyCache(ref3body.current.clientHeight)));
-        repliesCollapsed ? setHeight4body(0) : (ref4body.current &&  setHeight4body(ref4body.current.clientHeight, setHeight4bodyCache(ref4body.current.clientHeight)));
+        openCollapsed ? setHeight1body(0) : (ref1body.current &&  setHeight1body(ref1body.current.clientHeight));
+        resolvedCollapsed ? setHeight2body(0) : (ref2body.current &&  setHeight2body(ref2body.current.clientHeight));
+        commentsCollapsed ? setHeight3body(0) : (ref3body.current &&  setHeight3body(ref3body.current.clientHeight));
+        repliesCollapsed ? setHeight4body(0) : (ref4body.current &&  setHeight4body(ref4body.current.clientHeight));
         
         //set totalbody to all body lengths added
         ref4.current && (tableBody = height1body + height2body + height3body + height4body);
@@ -194,59 +190,94 @@ function UserTicketList(props) {
             window.removeEventListener('scroll', handleScroll)
           };
       }, []);
+
+      useEffect(() => {
+          //if a section is partially hidden when it was collapsed this useeffect makes sure that it expands to full height when expanded.
+          if(triggered){        
+            if (clickedOn === 'open' && !openCollapsed){
+                // console.log('bodytop, header bottom', ref1body.current.getBoundingClientRect().top, ref1.current.getBoundingClientRect().bottom)
+                if(ref1body.current.getBoundingClientRect().top < ref1.current.getBoundingClientRect().bottom){
+                    // console.log('offset before: ', window.pageYOffset)
+                    // console.log('difference', (ref1.current.getBoundingClientRect().bottom - ref1body.current.getBoundingClientRect().top), 'bodyheight', ref1body.current.clientHeight)
+                    window.scrollBy(0, ((ref1.current.getBoundingClientRect().bottom - ref1body.current.getBoundingClientRect().top)*-1))
+                    // console.log('offset after: ', window.pageYOffset)
+                }
+            }
+            else if (clickedOn === 'closed' && !resolvedCollapsed){
+                if(ref2body.current.getBoundingClientRect().top < ref2.current.getBoundingClientRect().bottom){
+                    window.scrollBy(0, ((ref2.current.getBoundingClientRect().bottom - ref2body.current.getBoundingClientRect().top)*-1))
+                }
+            }
+            else if (clickedOn === 'comments' && !commentsCollapsed){
+                if(ref3body.current.getBoundingClientRect().top < ref3.current.getBoundingClientRect().bottom){
+                    window.scrollBy(0, ((ref3.current.getBoundingClientRect().bottom - ref3body.current.getBoundingClientRect().top)*-1))
+                }
+            }
+            else if (clickedOn === 'replies' && !repliesCollapsed){
+                if(ref4body.current.getBoundingClientRect().top < ref4.current.getBoundingClientRect().bottom){
+                    window.scrollBy(0, ((ref4.current.getBoundingClientRect().bottom - ref4body.current.getBoundingClientRect().top)*-1))
+                }
+            }
+        setTriggered(false);
+          }
+      }, [triggered])
     // #endregion
     
     const handleCollapse = (name) => {
         let oldOffset = window.pageYOffset;
-        // console.log(name);
-        // console.log(height1bodyCache);
-        // console.log(height2bodyCache);
-        // console.log(height3bodyCache);
-        // console.log(height4bodyCache);
-        // console.log('old offset: ', oldOffset)
-
         //Toggle collapse and adjust the window position by toggle status and list body size
         if (name === 'open' && openTickets.length > 0){
+            //Keep window in same spot
             if(openCollapsed){
-                // window.scrollBy(0, (height1bodyCache * -1))
-                window.scrollTo(0, oldOffset);;
+                window.scrollTo(0, oldOffset);
+                setOpenCollapsed(!openCollapsed);
             }
-            // else{
-            //     window.scrollBy(0, height1bodyCache);
-            // }
-            setOpenCollapsed(!openCollapsed);
+            //if section was fully hidden by scroll, instead of collapsing expand to full height.
+            else if (ref1.current.getBoundingClientRect().top - ref1body.current.getBoundingClientRect().bottom >= (ref1body.current.clientHeight*-1)){
+                window.scrollTo(0, ref1.current.getBoundingClientRect().bottom+ref1body.current.clientHeight);
+            }
+            else{
+                setOpenCollapsed(!openCollapsed);
+            }
         }
         else if (name === 'closed' && resolvedTickets.length > 0){
             if(resolvedCollapsed){
-                // window.scrollBy(0, (height2bodyCache * -1));
                 window.scrollTo(0, oldOffset);
+                setResolvedCollapsed(!resolvedCollapsed);
             }
-            // else{
-            //     window.scrollBy(0, height2bodyCache);
-            // }
-            setResolvedCollapsed(!resolvedCollapsed);
+            else if ((ref2.current.getBoundingClientRect().top - ref2body.current.getBoundingClientRect().bottom) >= (ref2body.current.clientHeight*-1)){
+                window.scrollTo(0, ref2.current.getBoundingClientRect().bottom+ref2body.current.clientHeight);
+            }
+            else{
+                setRepliesCollapsed(!repliesCollapsed);
+            }
         }
         else if (name === 'comments' && commentedTickets.length > 0){
             if(commentsCollapsed){
-                // window.scrollBy(0, (height3bodyCache * -1));
                 window.scrollTo(0, oldOffset);
+                setCommentsCollapsed(!commentsCollapsed);
             }
-            // else{
-            //     window.scrollBy(0, height3bodyCache);
-            // }
-            setCommentsCollapsed(!commentsCollapsed);
+            else if ((ref3.current.getBoundingClientRect().top - ref3body.current.getBoundingClientRect().bottom) >= (ref3body.current.clientHeight*-1)){
+                window.scrollTo(0, ref3.current.getBoundingClientRect().bottom+ref3body.current.clientHeight);
+            }
+            else{
+                setCommentsCollapsed(!commentsCollapsed);
+            }
         }
         else if (name === 'replies' && repliedTickets.length > 0){
             if(repliesCollapsed){
-                // window.scrollBy(0, (height4bodyCache * -1));
                 window.scrollTo(0, oldOffset);
-
+                setRepliesCollapsed(!repliesCollapsed);
             }
-            // else{
-            //     window.scrollBy(0, height4bodyCache);
-            // }
-            setRepliesCollapsed(!repliesCollapsed);
+            else if ((ref4.current.getBoundingClientRect().top - ref4body.current.getBoundingClientRect().bottom) >= (ref4body.current.clientHeight*-1)){
+                window.scrollTo(0, ref4.current.getBoundingClientRect().bottom+ref4body.current.clientHeight);
+            }
+            else{
+                setRepliesCollapsed(!repliesCollapsed);
+            }
         }
+        setTriggered(true);
+        setClickedOn(name);
     }
 
     const collapseAll = () => {
