@@ -218,7 +218,7 @@ function UserTicketList(props) {
                     window.scrollBy(0, ((ref4.current.getBoundingClientRect().bottom - ref4body.current.getBoundingClientRect().top)*-1))
                 }
             }
-        setTriggered(false);
+            setTriggered(false);
           }
       }, [triggered])
     // #endregion
@@ -226,6 +226,7 @@ function UserTicketList(props) {
     const handleCollapse = (name) => {
         let oldOffset = window.pageYOffset;
         //Toggle collapse and adjust the window position by toggle status and list body size
+        
         if (name === 'open' && openTickets.length > 0){
             //Keep window in same spot
             if(openCollapsed){
@@ -249,7 +250,7 @@ function UserTicketList(props) {
                 window.scrollTo(0, ref2.current.getBoundingClientRect().bottom+ref2body.current.clientHeight);
             }
             else{
-                setRepliesCollapsed(!repliesCollapsed);
+                setResolvedCollapsed(!resolvedCollapsed);
             }
         }
         else if (name === 'comments' && commentedTickets.length > 0){
