@@ -226,7 +226,6 @@ function UserTicketList(props) {
     const handleCollapse = (name) => {
         let oldOffset = window.pageYOffset;
         //Toggle collapse and adjust the window position by toggle status and list body size
-        
         if (name === 'open' && openTickets.length > 0){
             //Keep window in same spot
             if(openCollapsed){
