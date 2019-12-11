@@ -11,7 +11,7 @@ const initialState = {
 
 export const AppReducer = (state = initialState, action) => {
     // console.log('AppReducer initialState: ', initialState);
-    console.log('AppReducer firing: ', action);
+    // console.log('AppReducer firing: ', action);
     switch(action.type) {
         case LOADING_START:
             // console.log('LOADING_START FIRING', state);

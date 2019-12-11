@@ -24,6 +24,7 @@ function UserTicketList(props) {
 
     const [dimensions, setDimensions] = useState(0);
     const [scroll, setScroll] = useState(0);
+    const [triggered, setTriggered] = useState(false);
 
     const [openCollapsed, setOpenCollapsed] = useState(false);
     const [resolvedCollapsed, setResolvedCollapsed] = useState(false);
@@ -51,6 +52,11 @@ function UserTicketList(props) {
     const ref3body = useRef(null);
     const ref4 = useRef(null);
     const ref4body = useRef(null);
+
+    const [height1bodyCache, setHeight1bodyCache] = useState(0);
+    const [height2bodyCache, setHeight2bodyCache] = useState(0);
+    const [height3bodyCache, setHeight3bodyCache] = useState(0);
+    const [height4bodyCache, setHeight4bodyCache] = useState(0);
 
     const Sdiv = styled.div`
     position: sticky;
@@ -110,10 +116,8 @@ function UserTicketList(props) {
     }, [])
 
     // #region setHeights/resize and scroll event listeners
-
     useEffect(() => {
         // #region auto collapse if length is 0
-
         if (loading === false){
             if (openTickets.length === 0){
                 setOpenCollapsed(true);
@@ -158,10 +162,10 @@ function UserTicketList(props) {
         let gap; 
 
         //set body lengths based off collapsed or not (and length)
-        openCollapsed ? setHeight1body(0) : (ref1body.current &&  setHeight1body(ref1body.current.clientHeight));
-        resolvedCollapsed ? setHeight2body(0) : (ref2body.current &&  setHeight2body(ref2body.current.clientHeight));
-        commentsCollapsed ? setHeight3body(0) : (ref3body.current &&  setHeight3body(ref3body.current.clientHeight));
-        repliesCollapsed ? setHeight4body(0) : (ref4body.current &&  setHeight4body(ref4body.current.clientHeight));
+        openCollapsed ? setHeight1body(0) : (ref1body.current &&  setHeight1body(ref1body.current.clientHeight, setHeight1bodyCache(ref1body.current.clientHeight)));
+        resolvedCollapsed ? setHeight2body(0) : (ref2body.current &&  setHeight2body(ref2body.current.clientHeight, setHeight2bodyCache(ref2body.current.clientHeight)));
+        commentsCollapsed ? setHeight3body(0) : (ref3body.current &&  setHeight3body(ref3body.current.clientHeight, setHeight3bodyCache(ref3body.current.clientHeight)));
+        repliesCollapsed ? setHeight4body(0) : (ref4body.current &&  setHeight4body(ref4body.current.clientHeight, setHeight4bodyCache(ref4body.current.clientHeight)));
         
         //set totalbody to all body lengths added
         ref4.current && (tableBody = height1body + height2body + height3body + height4body);
@@ -190,58 +194,80 @@ function UserTicketList(props) {
             window.removeEventListener('scroll', handleScroll)
           };
       }, []);
-
     // #endregion
     
-      const handleCollapse = (name) => {
+    const handleCollapse = (name) => {
+        let oldOffset = window.pageYOffset;
         // console.log(name);
+        // console.log(height1bodyCache);
+        // console.log(height2bodyCache);
+        // console.log(height3bodyCache);
+        // console.log(height4bodyCache);
+        // console.log('old offset: ', oldOffset)
+
+        //Toggle collapse and adjust the window position by toggle status and list body size
         if (name === 'open' && openTickets.length > 0){
+            if(openCollapsed){
+                // window.scrollBy(0, (height1bodyCache * -1))
+                window.scrollTo(0, oldOffset);;
+            }
+            // else{
+            //     window.scrollBy(0, height1bodyCache);
+            // }
             setOpenCollapsed(!openCollapsed);
-            window.scrollTo(0, (height1-height1body));
-            // console.log('height1body', height1body);
-            // set height1body
-            // window.scrollTo(0, height1 - he1ght1body); 
         }
         else if (name === 'closed' && resolvedTickets.length > 0){
+            if(resolvedCollapsed){
+                // window.scrollBy(0, (height2bodyCache * -1));
+                window.scrollTo(0, oldOffset);
+            }
+            // else{
+            //     window.scrollBy(0, height2bodyCache);
+            // }
             setResolvedCollapsed(!resolvedCollapsed);
-            window.scrollTo(0, (height2-height2body));
         }
         else if (name === 'comments' && commentedTickets.length > 0){
+            if(commentsCollapsed){
+                // window.scrollBy(0, (height3bodyCache * -1));
+                window.scrollTo(0, oldOffset);
+            }
+            // else{
+            //     window.scrollBy(0, height3bodyCache);
+            // }
             setCommentsCollapsed(!commentsCollapsed);
-            window.scrollTo(0, (height3-height3body));
         }
         else if (name === 'replies' && repliedTickets.length > 0){
-            console.log(height4body);
             if(repliesCollapsed){
-                // console.log('h4b-1', height4body*-1);
-                window.scrollBy(0, (height4body));
+                // window.scrollBy(0, (height4bodyCache * -1));
+                window.scrollTo(0, oldOffset);
+
             }
-            else{
-                window.scrollBy(0, height4body);
-            }
+            // else{
+            //     window.scrollBy(0, height4bodyCache);
+            // }
             setRepliesCollapsed(!repliesCollapsed);
         }
-      }
+    }
 
-      const collapseAll = () => {
-          setOpenCollapsed(true);
-          setResolvedCollapsed(true);
-          setCommentsCollapsed(true);
-          setRepliesCollapsed(true);
-          if(window.pageYOffset == 0){
-            window.scrollBy(0, 1);
-          }
-          else{
-            window.scrollTo(0, 0);
-          }
-      }
-      const expandAll = () => {
-          setOpenCollapsed(false);
-          setResolvedCollapsed(false);
-          setCommentsCollapsed(false);
-          setRepliesCollapsed(false);
-          window.scrollTo(0, 0);
-      }
+    const collapseAll = () => {
+        setOpenCollapsed(true);
+        setResolvedCollapsed(true);
+        setCommentsCollapsed(true);
+        setRepliesCollapsed(true);
+        if(window.pageYOffset == 0){
+        window.scrollBy(0, 1);
+        }
+        else{
+        window.scrollTo(0, 0);
+        }
+    }
+    const expandAll = () => {
+        setOpenCollapsed(false);
+        setResolvedCollapsed(false);
+        setCommentsCollapsed(false);
+        setRepliesCollapsed(false);
+        window.scrollTo(0, 0);
+    }
 
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
