@@ -13,10 +13,11 @@ import LoadingOverlay from "react-loading-overlay";
 
 function ViewAccount(props) {
     const [loading, setLoading] = useState(true);
+    // const [loadingName, setLoadingName] = useState(false); //loading spinner to the right of username if server is checking if avail
+    const [usernameAvailable, setUsernameAvailable] = useState(true);
     const [isAdmin] = useState(decode(sessionStorage.getItem('token')).admin)
     const [showEditForm, setShowEditForm] = useState(false);
     // state for when the user edits their account details
-    const [isAvailable, setIsAvailable] = useState('');
     const [editUserName, setEditUserName] = useState(props.otherUser.username);
     const [editName, setEditName] = useState(props.otherUser.name);
     const [editEmail, setEditEmail] = useState(props.otherUser.email);
@@ -42,7 +43,10 @@ function ViewAccount(props) {
     const handleChange = e => {
         if (e.target.name === 'username'){
             setEditUserName(e.target.value);
-            isUsernameAvailable(e.target.value).then(res => {console.log(res)})
+            isUsernameAvailable(e.target.value)
+            .then(res => {
+              setUsernameAvailable(res);
+            })
         }
         else if (e.target.name === 'name'){
             setEditName(e.target.value);
@@ -176,7 +180,10 @@ function ViewAccount(props) {
                 </ProfileWrapper>
             </ProOuter>
             <label><h3 className="bold">Username:</h3>    
-                <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
+                <div className='tooltip2'>
+                 <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
+                 <span className={editUserName ? (usernameAvailable ? 'available' : 'taken') : null}>{editUserName ? (usernameAvailable ? 'available' : 'taken') : null}</span>
+                </div>
             </label>
             <div>
             </div>
