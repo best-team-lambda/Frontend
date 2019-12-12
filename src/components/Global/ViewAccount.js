@@ -30,7 +30,7 @@ function ViewAccount(props) {
 // #endregion
 
     useEffect(() => {
-        if (!props.otherUser){
+        if (!props.otherUser || props.match.params.id != props.otherUser.id){
             setLoading(true);
             props.getOtherUser(props.match.params.id);
         }

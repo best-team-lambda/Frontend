@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { loadingStart, loadingDone, getTicket, toggleCollapse, collapseAll, expandAll, markAsAnswer, removeAnswer, 
+import { getTicket, toggleCollapse, collapseAll, expandAll, markAsAnswer, removeAnswer, 
 addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket } from '../../actions/TicketActions';
-import axios from 'axios';
-import axiosWithAuth from "../../utils/axiosWithAuth";
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +14,7 @@ import LoadingOverlay from "react-loading-overlay";
 
 function ViewTicket(props) {
 // #region local state
+  const [loading, setLoading] = useState(true);
   const [commentInputText, setCommentInputText] = useState('');
   const [replyInputText, setReplyInputText] = useState(''); //inputted text into reply box
   const [replyToComment, setReplyToComment] = useState(''); //set which comment has reply box active by comment ID.
@@ -41,11 +40,14 @@ function ViewTicket(props) {
 
   //load ticket on start
   useEffect(() => {
-    if (!props.ticket || props.ticket.id != ticketID){
-      props.loadingStart();
+    if (!props.ticket || props.ticket.id != props.match.params.id){
+      setLoading(true);
       props.getTicket(props);
     }
-  }, [])
+    else {
+      setLoading(false);
+    }
+  }, [props.ticket])
 
 //#region toggle funcs
   const toggleReplies = (e) => {
@@ -325,7 +327,7 @@ const modalExpand = () => {
 // #endregion
 
   return (
-    <StyledLoader active={props.loading} spinner text='Loading...'>
+    <StyledLoader active={loading} spinner text='Loading...'>
     <section className="ticketContainer">
       {(()=>{
         if (props.ticket){
@@ -621,7 +623,6 @@ const mapStateToProps = state => {
   // console.log('mapstatetoprops: ', state);
   return {
       currentUser: state.AppReducer.currentUser,
-      loading: state.TicketReducer.loading,
       ticket: state.TicketReducer.ticket,
       comments: state.TicketReducer.comments,
       openPictures: state.TicketReducer.openPictures,
@@ -631,7 +632,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { loadingStart, loadingDone, getTicket, toggleCollapse, collapseAll, expandAll, 
+export default connect(mapStateToProps, { getTicket, toggleCollapse, collapseAll, expandAll, 
   markAsAnswer, removeAnswer, addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket })(ViewTicket)
 
 
