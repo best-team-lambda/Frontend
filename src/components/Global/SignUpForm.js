@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { connect } from 'react-redux';
 import axios from "axios";
-import { login, loadingStart, loadingDone } from '../../actions/AppActions.js';
+import { login } from '../../actions/AppActions.js';
 import { isValidPassword , validateInputs } from '../../utils/AppUtils.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
 function SignUpForm(props) {
+  const [loading, setLoading] = useState(false);
   const [newUser, setNewUser] = useState({
     username: "",
     password: "",
@@ -53,7 +54,7 @@ function SignUpForm(props) {
 
     console.log('newUser: ', newUser);
     if (validateInputs(newUser) && isValidPassword(newUser.password)) {
-      props.loadingStart();
+      setLoading(true);
       axios
         .post("https://ddq.herokuapp.com/api/auth/register", newUser)
         .then(res => {
@@ -72,18 +73,18 @@ function SignUpForm(props) {
               // console.log('Decoded token', decode(res.data.token));
 
               //redirect to open queue
-              props.loadingDone();
+              setLoading(false);
               props.history.push('/Dashboard/OpenTickets');
             })
             .catch(err => {
               console.log("SignUp Login Catch Error: ", err.response.data.message);
-              props.loadingDone();
+              setLoading(false);
               alert(err.response.data.message);
             });
         })
         .catch(err => {
           console.log("SignUp Catch Error: ", err.response.data.message);
-          props.loadingDone();
+          setLoading(false);
           alert(err.response.data.message);
         });
     // console.log(newUser);
@@ -93,7 +94,7 @@ function SignUpForm(props) {
   };
 
   return (
-    <StyledLoader active={props.loading} spinner text='Loading...'>
+    <StyledLoader active={loading} spinner text='Loading...'>
       <SignUpWrap className="sign-up-form">
         <div className="card">
           <h1>Sign up</h1>
@@ -115,12 +116,11 @@ const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
     return {
         currentUser: state.AppReducer.currentUser,
-        loading: state.AppReducer.loading,
         loginFailed: state.AppReducer.loginFailed,
     }
   }
 
-export default connect(mapStateToProps, { login, loadingStart, loadingDone })(SignUpForm)
+export default connect(mapStateToProps, { login, })(SignUpForm)
 
 //Styled Components
 
