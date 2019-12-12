@@ -1,2 +1,116 @@
 
+
+.tooltip2 {
+    // background-color: pink;
+    position: relative;
+    display: inline-block;
+  }
+/* Tooltip text */
+.tooltip2 .tooltiptext2 {
+    visibility: visible;
+    width: 120px;
+    background-color: @secondary-red;
+    border: 1px solid white;
+    border-left: none;
+    color: #fff;
+    text-align: center;
+    padding: 0;
+    border-radius: 6px;
+    width: 120px;
+    top: 10px;
+    left: 100%;
+    margin-left: -50px; /* Use half of the width (120/2 = 60), to center the tooltip */
+   
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 5;
+  }
   
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip2:hover .tooltiptext2 {
+    visibility: visible;
+    z-index: 20;
+  }
+  .tooltip2 .tooltiptext2::after {
+    content: " ";
+    position: absolute;
+    top: 50%;  /* At the top of the tooltip */
+    right: 100%;
+    margin-top: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent @secondary-red transparent  transparent; //arrow bit direction
+  }
+.tooltip2 .taken {
+    visibility: visible;
+    width: 120px;
+    background-color: @secondary-red;
+    border: 1px solid white;
+    border-left: none;
+    color: #fff;
+    text-align: center;
+    padding: 0;
+    border-radius: 6px;
+    width: 120px;
+    top: 10px;
+    left: 100%;
+    margin-left: -50px; /* Use half of the width (120/2 = 60), to center the tooltip */
+   
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 5;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip2:hover .taken {
+    visibility: visible;
+    z-index: 20;
+  }
+  .tooltip2 .taken::after {
+    content: " ";
+    position: absolute;
+    top: 50%;  /* At the top of the tooltip */
+    right: 100%;
+    margin-top: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent @secondary-red transparent  transparent; //arrow bit direction
+  }
+
+//Available
+
+.tooltip2 .available {
+    visibility: visible;
+    width: 120px;
+    background-color: green;
+    border: 1px solid white;
+    border-left: none;
+    color: #fff;
+    text-align: center;
+    padding: 0;
+    border-radius: 6px;
+    width: 120px;
+    top: 10px;
+    left: 100%;
+    margin-left: -50px; /* Use half of the width (120/2 = 60), to center the tooltip */
+   
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 5;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip2:hover .available {
+    visibility: visible;
+    z-index: 20;
+  }
+  .tooltip2 .available::after {
+    content: " ";
+    position: absolute;
+    top: 50%;  /* At the top of the tooltip */
+    right: 100%;
+    margin-top: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent green transparent  transparent; //arrow bit direction
+  }
