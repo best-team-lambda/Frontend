@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getOtherUser } from '../../actions/AppActions.js';
-import { isUsernameAvailable, isValidPassword, validateInputs } from '../../utils/AppUtils.js';
+import { isUsernameAvailable, isValidPassword, isValidUsername, validateInputs } from '../../utils/AppUtils.js';
 import decode from 'jwt-decode';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
@@ -13,12 +13,13 @@ import LoadingOverlay from "react-loading-overlay";
 
 function ViewAccount(props) {
     const [loading, setLoading] = useState(true);
-    // const [loadingName, setLoadingName] = useState(false); //loading spinner to the right of username if server is checking if avail
     const [usernameAvailable, setUsernameAvailable] = useState(true);
+    const [usernameInvalid, setUsernameInvalid] = useState(false);
+    // const [usernameLoading, setUsernameLoading] = useState(false);
     const [isAdmin] = useState(decode(sessionStorage.getItem('token')).admin)
     const [showEditForm, setShowEditForm] = useState(false);
     // state for when the user edits their account details
-    const [editUserName, setEditUserName] = useState(props.otherUser.username);
+    const [editUserName, setEditUserName] = useState('');
     const [editName, setEditName] = useState(props.otherUser.name);
     const [editEmail, setEditEmail] = useState(props.otherUser.email);
     const [editCohort, setEditCohort] = useState(props.otherUser.cohort);
@@ -42,11 +43,19 @@ function ViewAccount(props) {
 
     const handleChange = e => {
         if (e.target.name === 'username'){
+            if(isValidUsername(e.target.value))
+            {
+                setUsernameInvalid(false);
+                isUsernameAvailable(e.target.value)
+                .then(res => {
+                setUsernameAvailable(res);
+                })
+            }
+            else
+            {
+              setUsernameInvalid(true);
+            }
             setEditUserName(e.target.value);
-            isUsernameAvailable(e.target.value)
-            .then(res => {
-              setUsernameAvailable(res);
-            })
         }
         else if (e.target.name === 'name'){
             setEditName(e.target.value);
@@ -93,7 +102,7 @@ function ViewAccount(props) {
         // console.log(userObj)
 
         if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
-            console.log('passed validation');
+            // console.log('passed validation');
             props.loadingStart();
         
             //call admin code first in case admin has special edit powers that normal user doesn't, admin should be able to use said powers
@@ -182,7 +191,7 @@ function ViewAccount(props) {
             <label><h3 className="bold">Username:</h3>    
                 <div className='tooltip2'>
                  <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
-                 <span className={editUserName ? (usernameAvailable ? 'available' : 'taken') : null}>{editUserName ? (usernameAvailable ? 'available' : 'taken') : null}</span>
+                 <span className={editUserName ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{editUserName ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
                 </div>
             </label>
             <div>
