@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { connect } from 'react-redux';
 import axios from "axios";
 import { login } from '../../actions/AppActions.js';
-import { isValidPassword , validateInputs, isUsernameAvailable } from '../../utils/AppUtils.js';
+import { isValidPassword, isValidUsername, validateInputs, isUsernameAvailable } from '../../utils/AppUtils.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 
 function SignUpForm(props) {
   const [loading, setLoading] = useState(false);
-  // const [loadingName, setLoadingName] = useState(false); //loading spinner to the right of username if server is checking if avail
   const [usernameAvailable, setUsernameAvailable] = useState(true);
+  const [usernameInvalid, setUsernameInvalid] = useState(false);
+  // const [usernameLoading, setUsernameLoading] = useState(false);
   const [newUser, setNewUser] = useState({
     username: "",
     password: "",
@@ -31,10 +32,16 @@ function SignUpForm(props) {
     else{
       setNewUser({ ...newUser, [e.target.name]: e.target.value });
       if(e.target.name === 'username'){
-        isUsernameAvailable(e.target.value)
-        .then(res => {
-          setUsernameAvailable(res);
-        })
+        if(isValidUsername(e.target.value))
+        {
+          setUsernameInvalid(false);
+          isUsernameAvailable(e.target.value)
+          .then(res => { setUsernameAvailable(res); })
+        }
+        else
+        {
+          setUsernameInvalid(true);
+        }
       }
     }
   };
@@ -109,7 +116,7 @@ function SignUpForm(props) {
           <form onSubmit={handleSubmit}>
             <div className='tooltip2'>
               <input className="text-input" name="username" onChange={handleChange} placeholder="username" />
-              <span className={newUser.username ? (usernameAvailable ? 'available' : 'taken') : null}>{newUser.username ? (usernameAvailable ? 'available' : 'taken') : null}</span>
+              <span className={newUser.username ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{newUser.username ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
             </div>
             <input className="text-input" name="password" type="password" onChange={handleChange} placeholder="password" />
             <input className="text-input" name="name" onChange={handleChange} placeholder="name" />

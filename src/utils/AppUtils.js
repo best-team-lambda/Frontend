@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 
-
 export const isUsernameAvailable = async (name) => {
     try{
         const result = await axios.post('https://ddq.herokuapp.com/api/util/username', {username: name});
@@ -13,6 +12,12 @@ export const isUsernameAvailable = async (name) => {
         return true;
     }
 }
+export const isValidUsername = (username) => {
+    if(!(/^[a-z][a-z0-9_]*$/i.test(username))) {
+      return false;
+    }
+    return true;
+  };
 
 //move full user object validator here- send object in, return true/false. 
 //can use to update, just send current values on fields that are not being updated.
