@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getOtherUser, updateUser, adminUpdateUser } from '../../actions/AppActions.js';
+import { getOtherUser, updateUser, adminUpdateUser, addProfilePicture, updateProfilePicture, deleteProfilePicture,
+adminUpdateProfilePicture, adminDeleteProfilePicture,  } from '../../actions/AppActions.js';
 import { isUsernameAvailable, isValidPassword, isValidUsername, validateInputs } from '../../utils/AppUtils.js';
 import decode from 'jwt-decode';
 import styled from 'styled-components';
@@ -11,6 +12,7 @@ import LoadingOverlay from "react-loading-overlay";
 
 function ViewAccount(props) {
     const [loading, setLoading] = useState(true);
+    const [pictureLoading, setPictureLoading] = useState(false);
     const [usernameAvailable, setUsernameAvailable] = useState(true);
     const [usernameInvalid, setUsernameInvalid] = useState(false);
     // const [usernameLoading, setUsernameLoading] = useState(false);
@@ -22,12 +24,15 @@ function ViewAccount(props) {
     const [editEmail, setEditEmail] = useState('');
     const [editCohort, setEditCohort] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    const [profilePicture, setProfilePicture] = useState(null);
-    const [verifyPassword, setVerifyPassword] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
+    // const [profilePicture, setProfilePicture] = useState(null);
+
 // #region console logs
     // console.log('Current User', props.currentUser.id, 'Other User: ', props.match.params.id)
     // console.log('Decoded token', decode(sessionStorage.getItem('token')));
 // #endregion
+
+
 
     useEffect(() => {
         if (!props.otherUser || props.match.params.id != props.otherUser.id){
@@ -68,7 +73,7 @@ function ViewAccount(props) {
             setNewPassword(e.target.value);
         }
         else if (e.target.name === 'oldPassword'){
-            setVerifyPassword(e.target.value);
+            setCurrentPassword(e.target.value);
         }
       };
     
@@ -79,7 +84,7 @@ function ViewAccount(props) {
         setEditName('');
         setEditEmail('');
         setNewPassword('');
-        setVerifyPassword('');
+        setCurrentPassword('');
     }
 
     const handleSubmit = e => {
@@ -87,7 +92,7 @@ function ViewAccount(props) {
         e.target.reset();
         // console.log(JSON.stringify(props.currentUser));
         // console.log(props.currentUser.profile_picture)
-        let userObj = { password: verifyPassword }
+        let userObj = { password: currentPassword }
         if (editUserName){
             userObj = {...userObj, username: editUserName}
         }
@@ -106,31 +111,18 @@ function ViewAccount(props) {
 
         // console.log(editUserName)
         // console.log(userObj)
-        if (verifyPassword === ''){
+        if (currentPassword === ''){
             alert('You must enter your current password to make changes.');
             resetInputs();
         }
         else if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
             // console.log('passed validation');
             // props.loadingStart();
-        
             if (props.currentUser.id == props.match.params.id)
             {
                 setLoading(true);
                 // CHECK IF NEEDED AND DO THIS FIRST, THEN UPDATE THE USER AND SPREAD THIS IN. USER UPDATER SHOULD ALWAYS SPREAD FULL OBJ IN AND
                 //ONLY UPDATE VARS RETURNED IN THE SERVER RES.
-                if(profilePicture){
-                    const formData = new FormData();
-                    formData.append('image', profilePicture);
-                    console.log(profilePicture);
-                    console.log(formData);
-    
-                    if(props.currentUser.profile_picture){
-                        // promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                    }else{
-                        // promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                    }
-                }
                 props.updateUser(userObj, setLoading);
             }
             //putting other first for now because its easier to set actions up that way
@@ -142,22 +134,59 @@ function ViewAccount(props) {
                 // CHECK IF NEEDED AND DO THIS FIRST, THEN UPDATE THE USER AND SPREAD THIS IN. USER UPDATER SHOULD ALWAYS SPREAD FULL OBJ IN AND
                 //ONLY UPDATE VARS RETURNED IN THE SERVER RES.
                 //USE ADMIN ENDPOINT FOR ADMIN BLOCK
-                if(profilePicture){
-                    const formData = new FormData();
-                    formData.append('image', profilePicture);
-                    console.log(profilePicture);
-                    console.log(formData);
-    
-                    if(props.currentUser.profile_picture){
-                        // promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                    }else{
-                        // promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                    }
-                }
                 props.adminUpdateUser(props.otherUser.id, userObj);
             }
         }
     }
+
+    const changeProfilePic = (picture) => {
+        if(picture){
+            const formData = new FormData();
+            formData.append('image', picture);
+            // console.log(picture);
+            // console.log(formData);
+            setPictureLoading(true);
+            if (props.currentUser.id == props.match.params.id){
+                if(props.currentUser.profile_picture){
+                    //put
+                    props.updateProfilePicture(formData, setPictureLoading);
+                }else{
+                    //post
+                    props.addProfilePicture(formData, setPictureLoading);
+                }
+            }
+            else if (isAdmin){
+                if(props.otherUser.profile_picture){
+                    console.log('made it');
+                    //put
+                    props.adminUpdateProfilePicture(props.match.params.id, formData, setPictureLoading);
+                }else{
+                    //post
+                    //WRITE THIS ENDPOINT/TEST IF PUT OVER NULL WORKS
+                }
+            }
+        }
+    }
+
+    const deleteProfilePic = () => {
+        //add loading
+        if (props.currentUser.id == props.match.params.id){
+            if(props.currentUser.profile_picture){
+                //put
+            }else{
+                //post
+            }
+        }
+        else if (props.isAdmin){
+            if(props.otherUser.profile_picture){
+                //put
+            }else{
+                //post
+                //WRITE THIS ENDPOINT/TEST IF PUT OVER NULL WORKS
+            }
+        }
+    }
+    
 
     return (
         <OuterDiv>
@@ -189,7 +218,11 @@ function ViewAccount(props) {
                 <h3 className="bold">Cohort:</h3><p>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</p>
             </>}
             {showEditForm && <form onSubmit={handleSubmit}>
-            <ImageInput type='file' onChange={e => setProfilePicture(e.target.files[0])} id='imageInput'/>
+            <OuterDiv2>
+            <StyledLoader active={pictureLoading} spinner text='Uploading...'> 
+                <ImageInput type='file' onChange={(e)=>{changeProfilePic(e.target.files[0])}} id='imageInput'/>
+            </StyledLoader>
+            </OuterDiv2>
             <ProOuter>
                 <ProfileWrapper>
                     <label htmlFor='imageInput'>{props.otherUser.profile_picture ? (
@@ -255,13 +288,15 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { getOtherUser, updateUser, adminUpdateUser })(ViewAccount)
+export default connect(mapStateToProps, { getOtherUser, updateUser, adminUpdateUser, addProfilePicture, updateProfilePicture, deleteProfilePicture,
+    adminUpdateProfilePicture, adminDeleteProfilePicture, })(ViewAccount)
 
 
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
     z-index: 2;
 `;
+
 const OuterDiv = styled.div `
     width: 100%;
     flex-direction: column;
@@ -269,6 +304,18 @@ const OuterDiv = styled.div `
     background: #383651;
     justify-content: center;
 `;
+const OuterDiv2 = styled.div `
+    width: 100%;
+    ._loading_overlay_overlay{
+        background: rgba(0, 0, 0, 0.5);
+        margin-top: 23px;
+    }
+    ._loading_overlay_content{
+        background: rgba(0, 0, 0, 0.5);
+        padding: 50px;
+    }
+`;
+
 const Div = styled.div `
     width: 60%;
     flex-direction: column;
@@ -307,8 +354,8 @@ const DefaultProfile = styled(FontAwesomeIcon) `
     background: white;
     ${props => props.edit && `
         &:hover {
-                cursor: pointer;
-                opacity: 0.2;
+            cursor: pointer;
+            opacity: 0.2;
         }
     `
     }
@@ -323,8 +370,8 @@ const ProfileImg = styled.div`
     background-position: 50% 50%; 
     ${props => props.edit && `
         &:hover {
-                cursor: pointer;
-                opacity: 0.2;
+            cursor: pointer;
+            opacity: 0.2;
         }
     `
     }

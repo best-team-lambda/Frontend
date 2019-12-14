@@ -21,7 +21,7 @@ const StyledLoader = styled(LoadingOverlay)`
 `;
 
 function App(props) {
-  // console.log('App Props.CurrentUser', props.currentUser)
+  console.log('App Props.CurrentUser', props.currentUser)
   // console.log('App Props.Loading', props.loading)
   
   useEffect(() => {
