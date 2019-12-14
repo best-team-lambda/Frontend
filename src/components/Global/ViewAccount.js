@@ -35,15 +35,9 @@ function ViewAccount(props) {
             props.getOtherUser(props.match.params.id);
         }
         else{
-            setLoading(false);
-            setShowEditForm(false);
-            setEditUserName('');
-            setEditName('');
-            setEditEmail('');
-            setNewPassword('');
-            setVerifyPassword('');
+            resetInputs();
         }
-      }, [props.otherUser])
+      }, [props.otherUser, props.currentUser])
 
     const handleChange = e => {
         if (e.target.name === 'username'){
@@ -73,14 +67,22 @@ function ViewAccount(props) {
         else if (e.target.name === 'newPassword'){
             setNewPassword(e.target.value);
         }
+        else if (e.target.name === 'oldPassword'){
+            setVerifyPassword(e.target.value);
+        }
       };
-
-    const passwordChange = (e) => {
-        setVerifyPassword(e.target.value)
+    
+    const resetInputs = () => {
+        setLoading(false);
+        setShowEditForm(false);
+        setEditUserName('');
+        setEditName('');
+        setEditEmail('');
+        setNewPassword('');
+        setVerifyPassword('');
     }
 
-    const handleSubmit = async e => {
-        const promises = [];
+    const handleSubmit = e => {
         e.preventDefault();
         e.target.reset();
         // console.log(JSON.stringify(props.currentUser));
@@ -104,37 +106,32 @@ function ViewAccount(props) {
 
         // console.log(editUserName)
         // console.log(userObj)
-
-        if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
+        if (verifyPassword === ''){
+            alert('You must enter your current password to make changes.');
+            resetInputs();
+        }
+        else if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
             // console.log('passed validation');
             // props.loadingStart();
         
             if (props.currentUser.id == props.match.params.id)
             {
                 setLoading(true);
-                props.updateUser(userObj);
-                // try{
-                //  promises.push(axiosWithAuth().put("https://ddq.herokuapp.com/api/users/user", userObj));
-             
-                //  if(profilePicture){
-                //      const formData = new FormData();
-                //      formData.append('image', profilePicture);
-                //      console.log(profilePicture);
-                //      console.log(formData);
-     
-                //      if(props.currentUser.profile_picture){
-                //          promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                //      }else{
-                //          promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                //      }
-                //  }
-                //  const response = await axios.all(promises);
-                //  props.loadingDone();
-                //  }catch(err){
-                //      console.log("Edit Account Catch Error: ", err.response.data.message);
-                //      alert(err.response.data.message);
-                //      props.loadingDone();
-                //  }
+                // CHECK IF NEEDED AND DO THIS FIRST, THEN UPDATE THE USER AND SPREAD THIS IN. USER UPDATER SHOULD ALWAYS SPREAD FULL OBJ IN AND
+                //ONLY UPDATE VARS RETURNED IN THE SERVER RES.
+                if(profilePicture){
+                    const formData = new FormData();
+                    formData.append('image', profilePicture);
+                    console.log(profilePicture);
+                    console.log(formData);
+    
+                    if(props.currentUser.profile_picture){
+                        // promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                    }else{
+                        // promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                    }
+                }
+                props.updateUser(userObj, setLoading);
             }
             //putting other first for now because its easier to set actions up that way
             //call admin code first in case admin has special edit powers that normal user doesn't, admin should be able to use said powers
@@ -142,30 +139,22 @@ function ViewAccount(props) {
             else if (isAdmin)
             {
                 setLoading(true);
+                // CHECK IF NEEDED AND DO THIS FIRST, THEN UPDATE THE USER AND SPREAD THIS IN. USER UPDATER SHOULD ALWAYS SPREAD FULL OBJ IN AND
+                //ONLY UPDATE VARS RETURNED IN THE SERVER RES.
+                //USE ADMIN ENDPOINT FOR ADMIN BLOCK
+                if(profilePicture){
+                    const formData = new FormData();
+                    formData.append('image', profilePicture);
+                    console.log(profilePicture);
+                    console.log(formData);
+    
+                    if(props.currentUser.profile_picture){
+                        // promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                    }else{
+                        // promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                    }
+                }
                 props.adminUpdateUser(props.otherUser.id, userObj);
-                // try{
-                //     promises.push(axiosWithAuth().put(`/admin/users/${props.match.params.id}`, userObj));
-                
-                //     if(profilePicture){
-                //         const formData = new FormData();
-                //         formData.append('image', profilePicture);
-                //         console.log(profilePicture);
-                //         console.log(formData);
-        
-                //         if(props.currentUser.profile_picture){
-                //             promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                //         }else{
-                //             promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                //         }
-                //     }
-                //     const response = await axios.all(promises);
-                //     if(response) { setLoading(false); }
-                //     }catch(err){
-                //         console.log("Edit Account Catch Error: ", err);
-                //         alert(err.response.data);
-                //         setLoading(false);
-                //     }
-                // }
             }
         }
     }
@@ -238,12 +227,12 @@ function ViewAccount(props) {
                 <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
             </label>    
             <label><h3 className="bold">New password:</h3>
-                    <input className="text-input" name="newPassword" onChange={handleChange} placeholder='' type="text"/> 
+                    <input className="text-input" type='password' name="newPassword" onChange={handleChange} placeholder='New Password'/> 
             </label>
            <PasswordDiv>
                 <label>
                     <p>Re-enter password to save changes:</p>
-                    <input className="text-input" type='password' name='password' onChange={passwordChange} />
+                    <input className="text-input" type='password' name='oldPassword' onChange={handleChange} placeholder='Current Password' />
                 </label>
             </PasswordDiv> 
                 <br /><br />
