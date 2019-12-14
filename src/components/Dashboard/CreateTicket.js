@@ -7,6 +7,7 @@ import LoadingOverlay from "react-loading-overlay";
 
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
+    z-index: 2;
 `;
 
 const OuterDiv = styled.div `

@@ -19,7 +19,7 @@ export default function Dashboard(props) {
     return (
         <div className='dashboard'>
                 <SidebarNav props={props} />
-                <Route exact path='/Dashboard/Account' component={Account} />
+                {/* <Route exact path='/Dashboard/Account' component={Account} /> */}
                 <Route exact path='/Dashboard/Account/:id' component={ViewAccount} />
                 <Route exact path='/Dashboard/CreateTicket' component={CreateTicket} />
                 <Route exact path='/Dashboard/OpenTickets' component={OpenTicketList} />

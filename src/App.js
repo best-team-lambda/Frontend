@@ -17,6 +17,7 @@ import { getCurrentUser, loadingDone } from './actions/AppActions.js';
 
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
+    z-index: 2;
 `;
 
 function App(props) {

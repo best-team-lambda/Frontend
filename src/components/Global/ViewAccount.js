@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getOtherUser } from '../../actions/AppActions.js';
+import { getOtherUser, updateUser, adminUpdateUser } from '../../actions/AppActions.js';
 import { isUsernameAvailable, isValidPassword, isValidUsername, validateInputs } from '../../utils/AppUtils.js';
 import decode from 'jwt-decode';
 import styled from 'styled-components';
-import axiosWithAuth from '../../utils/axiosWithAuth';
-import axios from 'axios';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
@@ -20,9 +18,9 @@ function ViewAccount(props) {
     const [showEditForm, setShowEditForm] = useState(false);
     // state for when the user edits their account details
     const [editUserName, setEditUserName] = useState('');
-    const [editName, setEditName] = useState(props.otherUser.name);
-    const [editEmail, setEditEmail] = useState(props.otherUser.email);
-    const [editCohort, setEditCohort] = useState(props.otherUser.cohort);
+    const [editName, setEditName] = useState('');
+    const [editEmail, setEditEmail] = useState('');
+    const [editCohort, setEditCohort] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [verifyPassword, setVerifyPassword] = useState('');
@@ -38,6 +36,12 @@ function ViewAccount(props) {
         }
         else{
             setLoading(false);
+            setShowEditForm(false);
+            setEditUserName('');
+            setEditName('');
+            setEditEmail('');
+            setNewPassword('');
+            setVerifyPassword('');
         }
       }, [props.otherUser])
 
@@ -103,39 +107,67 @@ function ViewAccount(props) {
 
         if (validateInputs(userObj) && (newPassword === '' || isValidPassword(newPassword))) {
             // console.log('passed validation');
-            props.loadingStart();
+            // props.loadingStart();
         
+            if (props.currentUser.id == props.match.params.id)
+            {
+                setLoading(true);
+                props.updateUser(userObj);
+                // try{
+                //  promises.push(axiosWithAuth().put("https://ddq.herokuapp.com/api/users/user", userObj));
+             
+                //  if(profilePicture){
+                //      const formData = new FormData();
+                //      formData.append('image', profilePicture);
+                //      console.log(profilePicture);
+                //      console.log(formData);
+     
+                //      if(props.currentUser.profile_picture){
+                //          promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                //      }else{
+                //          promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                //      }
+                //  }
+                //  const response = await axios.all(promises);
+                //  props.loadingDone();
+                //  }catch(err){
+                //      console.log("Edit Account Catch Error: ", err.response.data.message);
+                //      alert(err.response.data.message);
+                //      props.loadingDone();
+                //  }
+            }
+            //putting other first for now because its easier to set actions up that way
             //call admin code first in case admin has special edit powers that normal user doesn't, admin should be able to use said powers
             //on themselves
-            if (isAdmin)
+            else if (isAdmin)
             {
+                setLoading(true);
+                props.adminUpdateUser(props.otherUser.id, userObj);
+                // try{
+                //     promises.push(axiosWithAuth().put(`/admin/users/${props.match.params.id}`, userObj));
                 
-            }
-            else if (props.currentUser.id == props.match.params.id){
-                try{
-                    promises.push(axiosWithAuth().put(`/admin/users/${props.match.params.id}`, userObj));
-                
-                    if(profilePicture){
-                        const formData = new FormData();
-                        formData.append('image', profilePicture);
-                        console.log(profilePicture);
-                        console.log(formData);
+                //     if(profilePicture){
+                //         const formData = new FormData();
+                //         formData.append('image', profilePicture);
+                //         console.log(profilePicture);
+                //         console.log(formData);
         
-                        if(props.currentUser.profile_picture){
-                            promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                        }else{
-                            promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
-                        }
-                    }
-                    const response = await axios.all(promises);
-                    if(response) { setLoading(false); }
-                    }catch(err){
-                        console.log("Edit Account Catch Error: ", err);
-                        alert(err.response.data);
-                        setLoading(false);
-                    }
-                }
+                //         if(props.currentUser.profile_picture){
+                //             promises.push(axiosWithAuth().put('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                //         }else{
+                //             promises.push(axiosWithAuth().post('https://ddq.herokuapp.com/api/users/user/picture', formData));
+                //         }
+                //     }
+                //     const response = await axios.all(promises);
+                //     if(response) { setLoading(false); }
+                //     }catch(err){
+                //         console.log("Edit Account Catch Error: ", err);
+                //         alert(err.response.data);
+                //         setLoading(false);
+                //     }
+                // }
             }
+        }
     }
 
     return (
@@ -234,11 +266,12 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { getOtherUser })(ViewAccount)
+export default connect(mapStateToProps, { getOtherUser, updateUser, adminUpdateUser })(ViewAccount)
 
 
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
+    z-index: 2;
 `;
 const OuterDiv = styled.div `
     width: 100%;

@@ -639,6 +639,7 @@ export default connect(mapStateToProps, { getTicket, toggleCollapse, collapseAll
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
     width:100%;
+    z-index: 2;
 `;
 
 // const InputDiv = styled.div `
