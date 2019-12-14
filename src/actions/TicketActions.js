@@ -29,7 +29,7 @@ export const getTicket = (props) => dispatch => {
     axiosWithAuth()
       .get(`/tickets/${props.match.params.id}`)
       .then(res => {
-        // console.log('GetTicket Res', res.data);
+        console.log('GetTicket Res', res.data);
         // console.log('GetTicket TicketDetails:', res.data.ticket_details);
         // console.log('GetTicket Comments:', res.data.ticket_comments);
         dispatch({ type: SET_TICKET, payload: res.data });

@@ -381,7 +381,7 @@ const modalExpand = () => {
 
 
               <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
-              <div className='mediaDiv'>{props.openVideo && <iframe src={props.openVideo}/>}</div>
+              <div className='mediaDiv'>{props.ticket.open_video && <iframe allowfullscreen="true" src={props.ticket.open_video}/>}</div>
 
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={collapseAll}>Collapse All</button>}
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={expandAll}>Expand All</button>}
