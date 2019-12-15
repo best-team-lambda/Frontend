@@ -11,6 +11,7 @@ import process2 from '../../images/process2.jpg';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
+import ImageModal from "../ImageModal";
 
 function ViewTicket(props) {
 // #region local state
@@ -27,15 +28,17 @@ function ViewTicket(props) {
   const [modalToggle, setModalToggle] = useState('none');
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
+  const [activeImage, setActiveImage] = useState('');
   const ticketID = props.match.params.id;
   const Fragment = React.Fragment;
-// #endregion
+  // #endregion
 // #region console logs
   // console.log('ViewTicket Props',props)
   // console.log('props.currentUser: ', props.currentUser);
   console.log('props.ticket: ', props.ticket)
   console.log('props.comments: ', props.comments)
   // console.log('edit question obj: ', editQuestionObj);
+  console.log('activeImage', activeImage);
 //#endregion
 
   //load ticket on start
@@ -363,25 +366,16 @@ const modalExpand = () => {
               </div>
               <p><b>Description:{'\xa0\xa0'}</b> {props.ticket.description}</p>
 
-              {/* <!-- Trigger the Modal --> */}
-              <img className="modalImg" onClick={modalExpand} src={process2} alt="process 2" />
+              <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map((image, index) => { 
+                // console.log(image); 
 
-              {/* <!-- The Modal --> */}
-              <div id='myModal' className="modal" onClick={modalExpand} style={{display: modalToggle}}>
+// @@@@@@@@@@@@@@@@@@@@@@ if image.url === activeimage, render with style: block. add onclicks to wipe activeimage. 
 
-                {/* <!-- The Close Button --> */}
-                <span className="close">&times;</span>
+                return (
+                <ImageModal key={image.url} setActiveImage={setActiveImage} modalExpand={modalExpand} modalToggle={modalToggle} src={image.url} alt={`Uploaded by: ${props.ticket.author_name}`}/>  
+              )})}</div>
 
-                {/* <!-- Modal Content (The Image) --> */}
-                <img className="modal-content" id="img01" src={process2}/>
-
-                {/* <!-- Modal Caption (Image Text) --> */}
-                <div id="caption">process 2</div>
-              </div>
-
-
-              <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map(image => <Image key={image} src={image.url}/>)}</div>
-              <div className='mediaDiv'>{props.ticket.open_video && <iframe allowfullscreen="true" src={props.ticket.open_video}/>}</div>
+              <div className='mediaDiv'>{props.ticket.open_video && <iframe allowFullScreen="true" src={props.ticket.open_video}/>}</div>
 
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={collapseAll}>Collapse All</button>}
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={expandAll}>Expand All</button>}
@@ -415,8 +409,8 @@ const modalExpand = () => {
                 </label>
               </div>
               <div className='uploadDiv2'>
-                <FileInput id='imageInput' className='input' type='file' onChange={e => setImages(e.target.files)} multiple/>
-                <FileInput id='videoInput' className='input' type='file' onChange={e => setVideo(e.target.files[0])}/>
+                <FileInput id='imageInput' className='input' type='file' accept={props.imageFileTypes} onChange={e => setImages(e.target.files)} multiple/>
+                <FileInput id='videoInput' className='input' type='file' accept={props.videoFileTypes} onChange={e => setVideo(e.target.files[0])}/>
                 <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
                     <FileDiv>
                         <Fa icon={faImages}/><p>Add images</p>
@@ -456,8 +450,10 @@ const modalExpand = () => {
                       </div>
                       <div className='secondDiv'><p>{timeago.format(comment.created_at)}</p></div>
                     </div>                
+
+        {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
-                    <div className='mediaDiv'>{comment.comment_video && <iframe src={comment.comment_video} />}</div>
+                    <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={comment.comment_video} />)}</div>
                     
                     {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
                     {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
@@ -479,8 +475,8 @@ const modalExpand = () => {
                         <textarea onChange={handleEditCommentInput} placeholder={comment.description}></textarea>
                       </div>
                       <div className='uploadDiv2'>
-                        <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
-                        <FileInput id='videoInput' className='input' type='file' accept=".avi,.mov,.mp4" onChange={e => setVideo(e.target.files[0])}/>
+                        <FileInput id='imageInput' className='input' type='file' accept={props.imageFileTypes} onChange={e => setImages(e.target.files)} multiple/>
+                        <FileInput id='videoInput' className='input' type='file' accept={props.videoFileTypes} onChange={e => setVideo(e.target.files[0])}/>
                         <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
                             <FileDiv>
                                 <Fa icon={faImages}/><p>Add images</p>
@@ -532,8 +528,8 @@ const modalExpand = () => {
                         <textarea onChange={handleEditReplyInput} placeholder={reply.description}></textarea>
                       </div>
                       <div className='uploadDiv2'>
-                        <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
-                        <FileInput id='videoInput' className='input' type='file' accept=".avi,.mov,.mp4" onChange={e => setVideo(e.target.files[0])}/>
+                        <FileInput id='imageInput' className='input' type='file' accept={props.imageFileTypes} onChange={e => setImages(e.target.files)} multiple/>
+                        <FileInput id='videoInput' className='input' type='file' accept={props.videoFileTypes} onChange={e => setVideo(e.target.files[0])}/>
                         <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
                             <FileDiv>
                                 <Fa icon={faImages}/><p>Add images</p>
@@ -564,8 +560,8 @@ const modalExpand = () => {
                         <textarea onChange={handleReplyInput} value={replyInputText}></textarea>
                       </div>
                       <div className='uploadDiv2'>
-                        <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
-                        <FileInput id='videoInput' className='input' type='file' accept=".avi,.mov,.mp4" onChange={e => setVideo(e.target.files[0])}/>
+                        <FileInput id='imageInput' className='input' type='file' accept={props.imageFileTypes} onChange={e => setImages(e.target.files)} multiple/>
+                        <FileInput id='videoInput' className='input' type='file' accept={props.videoFileTypes} onChange={e => setVideo(e.target.files[0])}/>
                         <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
                             <FileDiv>
                                 <Fa icon={faImages}/><p>Add images</p>
@@ -592,8 +588,8 @@ const modalExpand = () => {
                   <textarea onChange={handleCommentInput} value={commentInputText}></textarea>
                 </div>
                 <div className='uploadDiv'>
-                      <FileInput id='imageInput' className='input' type='file'  accept=".tiff,.jpeg,.gif,.png" onChange={e => setImages(e.target.files)} multiple/>
-                      <FileInput id='videoInput' className='input' type='file' accept=".avi,.mov,.mp4" onChange={e => setVideo(e.target.files[0])}/>
+                      <FileInput id='imageInput' className='input' type='file' accept={props.imageFileTypes} onChange={e => setImages(e.target.files)} multiple/>
+                      <FileInput id='videoInput' className='input' type='file' accept={props.videoFileTypes} onChange={e => setVideo(e.target.files[0])}/>
                       <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
                           <FileDiv>
                               <Fa icon={faImages}/><p>Add images</p>
@@ -613,7 +609,6 @@ const modalExpand = () => {
 
           </>
           );}})()}
-   
     </section>
     </StyledLoader>
   );
@@ -623,6 +618,8 @@ const mapStateToProps = state => {
   // console.log('mapstatetoprops: ', state);
   return {
       currentUser: state.AppReducer.currentUser,
+      imageFileTypes: state.AppReducer.imageFileTypes,
+      videoFileTypes: state.AppReducer.videoFileTypes,
       ticket: state.TicketReducer.ticket,
       comments: state.TicketReducer.comments,
       openPictures: state.TicketReducer.openPictures,
@@ -681,24 +678,3 @@ const FileDiv = styled.div `
     align-items: center;
     margin-top: 2rem;
 `
-
-// {
-//   "ticket_details": {
-//     "id": 14,
-//     "title": "How do I style a select dropdown with only CSS?",
-//     "category": "CSS",
-//     "description": "Is tari",
-//     "created_at": "2019-11-22T09:08:28.189Z",
-//     "open_video": null,
-//     "author_image": null,
-//     "helper_image": null,
-//     "resolved_video": null,
-//     "solution": null,
-//     "author_name": "Chelsea Wetzel",
-//     "helper_name": null,
-//     "status": "open",
-//     "resolved_at": null
-//   },
-//   "open_pictures": [],
-//   "resolved_pictures": []
-// }

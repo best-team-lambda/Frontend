@@ -5,6 +5,8 @@ const initialState = {
     otherUser: '',
     loading: true,
     loginFailed: false,
+    imageFileTypes:".tiff, .jpeg, .jpg, .gif, .png",
+    videoFileTypes: ".avi,.mov,.mp4",
   };
 
 
