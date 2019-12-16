@@ -145,6 +145,7 @@ export default connect(mapStateToProps, { login, })(SignUpForm)
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
     width:100%;
+    z-index: 2;
 `;
 const SignUpWrap = styled.div `
         width: 100%;

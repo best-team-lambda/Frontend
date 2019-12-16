@@ -1,11 +1,12 @@
-import { SET_CURRENT_USER, LOADING_START, LOADING_DONE, LOGIN_FAILED, LOGOUT, SET_OTHER_USER,  } from '../actions/AppActions.js';
+import { SET_CURRENT_USER, LOADING_START, LOADING_DONE, LOGIN_FAILED, LOGOUT, SET_OTHER_USER, } from '../actions/AppActions.js';
 
 const initialState = {
     currentUser: '',
     otherUser: '',
     loading: true,
     loginFailed: false,
-    usernameAvail: '',
+    imageFileTypes:".tiff, .jpeg, .jpg, .gif, .png",
+    videoFileTypes: ".avi,.mov,.mp4",
   };
 
 
@@ -26,17 +27,17 @@ export const AppReducer = (state = initialState, action) => {
                     loading: false,
                 };
         case SET_CURRENT_USER:
-            // console.log('SET_CURRENT_USER FIRING', state);
+            console.log('SET_CURRENT_USER FIRING', state, action.payload);
             return {
                 ...state,
-                currentUser: action.payload,
+                currentUser: {...state.currentUser, ...action.payload},
                 loading: false,
             };
         case SET_OTHER_USER:
-            // console.log('SET_OTHER_USER FIRING', state);
+            console.log('SET_OTHER_USER FIRING', state, action.payload);
             return {
                 ...state,
-                otherUser: action.payload,
+                otherUser: {...state.otherUser, ...action.payload},
                 loading: false,
             };
         case LOGIN_FAILED:

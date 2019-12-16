@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { loadingStart, loadingDone } from '../../actions/AppActions.js';
 import styled from 'styled-components';
 import axiosWithAuth from '../../utils/axiosWithAuth';
 import axios from 'axios';
@@ -10,6 +9,7 @@ import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 
 function Account(props) {
+    // const [loading, setLoading] = useState(true);
     const [showEditForm, setShowEditForm] = useState(false);
 
     // state for when the user edits their account details
@@ -141,7 +141,7 @@ function Account(props) {
     return (
         <OuterDiv>
         <Div className='card'> 
-        <StyledLoader active={props.loading} spinner text='Uploading...'> 
+        <StyledLoader active={''} spinner text='Uploading...'> 
             {!showEditForm && <>
                     <ProOuter>
                         <ProfileWrapper>
@@ -227,15 +227,15 @@ const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
     return {
         currentUser: state.AppReducer.currentUser,
-        loading: state.AppReducer.loading,
     }
   }
 
-export default connect(mapStateToProps, { loadingStart, loadingDone })(Account)
+export default connect(mapStateToProps, {  })(Account)
 
 
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
+    z-index: 2;
 `;
 const OuterDiv = styled.div `
     width: 100%;

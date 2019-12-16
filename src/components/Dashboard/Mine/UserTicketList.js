@@ -9,6 +9,7 @@ import LoadingOverlay from "react-loading-overlay";
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
     width:100%;
+    z-index: 2;
 `;
 
 function UserTicketList(props) {

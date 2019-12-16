@@ -2,34 +2,35 @@ import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import axiosWithAuth from '../../../utils/axiosWithAuth';
 import OpenTicket from './OpenTicket';
-import { loadingStart, loadingDone } from '../../../actions/AppActions.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
     width:100%;
+    z-index: 2;
 `;
 
 function OpenTicketList(props) {
+    const [loading, setLoading] = useState(true);
     const [openTickets, setOpenTickets] = useState([]);
 
     useEffect(() => {
-        props.loadingStart()
+        // setLoading(true);
         axiosWithAuth().get('/tickets/open')
         .then(res => {
-            console.log(res.data)
-            setOpenTickets(res.data)
-            props.loadingDone();
+            console.log(res.data);
+            setOpenTickets(res.data);
+            setLoading(false);
         })
         .catch(err => {console.log('CATCH ERROR: ', err.response.data.message);
-        props.loadingDone();
+        setLoading(false);
         alert(err.response.data.message)});
     }, []);
 
     return (
          <div className='helperDashboard'>
-        <StyledLoader active={props.loading} spinner text='Loading...'>
+        <StyledLoader active={loading} spinner text='Loading...'>
             <table className='tickettable'>
                 <thead>
                     <tr >
@@ -82,8 +83,7 @@ const mapStateToProps = state => {
     return {
         searchType: state.SearchReducer.searchType,
         searchTerm: state.SearchReducer.searchTerm,
-        loading: state.AppReducer.loading,
     }
   }
 
-export default connect(mapStateToProps, { loadingStart, loadingDone })(OpenTicketList)
+export default connect(mapStateToProps, { })(OpenTicketList)

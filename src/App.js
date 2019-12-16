@@ -17,10 +17,11 @@ import { getCurrentUser, loadingDone } from './actions/AppActions.js';
 
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
+    z-index: 2;
 `;
 
 function App(props) {
-  // console.log('App Props.CurrentUser', props.currentUser)
+  console.log('App Props.CurrentUser', props.currentUser)
   // console.log('App Props.Loading', props.loading)
   
   useEffect(() => {

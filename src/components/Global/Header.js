@@ -16,17 +16,18 @@ function Header(props) {
   return (
     <>
     <header>
-        <Link to='/'><img className="logo" src={logo} alt='Lambda Logo'/></Link>
+        <Link to='/Dashboard/OpenTickets'><img className="logo" src={logo} alt='Lambda Logo'/></Link>
         {(()=>{ //immediately invoked function to allow javascript inside JSX. syntax: {(()=>{})()}
             if (props.currentUser){
                 return (
                     <>
-                    <h4>Welcome {props.currentUser.name}!</h4>
+                    {/* <h4>Welcome {props.currentUser.name}!</h4> */}
                         <nav className='loggedIn'>
-                            <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
-                            <NavLink className='navLink' to='/Dashboard/Account'>Account</NavLink>
+                            {/* <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink> */}
+          
                             <NavLink className='navLink' to='/Dashboard/CreateTicket'>Create Ticket</NavLink>
-                            <NavLink className='navLink' to='/Dashboard/OpenTickets'>Dashboard</NavLink>
+                            {/* <NavLink className='navLink' to='/Dashboard/OpenTickets'>Dashboard</NavLink> */}
+                            <NavLink className='navLink' to={`/Dashboard/Account/${props.currentUser.id}`}> My Account</NavLink>
                             <Link className="navLink" to='/' onClick={logOut}>Sign out</Link>
                         </nav>
                     </>

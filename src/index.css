@@ -280,6 +280,7 @@ footer {
   box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
   border: 0;
   border: 1px solid #e2eded;
+  height: 5vh;
 }
 .filterToolsDiv .searchBox {
   border: 1px solid black;
@@ -486,8 +487,14 @@ header + section:first-of-type {
   margin-right: 5%;
 }
 .mediaDiv {
+  width: 100%;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   margin: 0 auto;
+}
+.modalDiv {
+  max-width: 30%;
 }
 .uploadDiv {
   margin-top: 0;
@@ -845,8 +852,7 @@ header + section:first-of-type {
 .modal-content {
   margin: auto;
   display: block;
-  width: 80%;
-  max-width: 700px;
+  width: 95%;
 }
 /* Caption of Modal Image (Image Text) - Same Width as the Image */
 #caption {
