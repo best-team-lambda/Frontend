@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getOtherUser, updateUser, adminUpdateUser, addProfilePicture, updateProfilePicture, deleteProfilePicture,
-adminUpdateProfilePicture, adminDeleteProfilePicture,  } from '../../actions/AppActions.js';
+adminAddProfilePicture, adminUpdateProfilePicture, adminDeleteProfilePicture,  } from '../../actions/AppActions.js';
 import { isUsernameAvailable, isValidPassword, isValidUsername, validateInputs } from '../../utils/AppUtils.js';
 import decode from 'jwt-decode';
 import styled from 'styled-components';
@@ -157,12 +157,11 @@ function ViewAccount(props) {
             }
             else if (isAdmin){
                 if(props.otherUser.profile_picture){
-                    console.log('made it');
                     //put
                     props.adminUpdateProfilePicture(props.match.params.id, formData, setPictureLoading);
                 }else{
                     //post
-                    //WRITE THIS ENDPOINT/TEST IF PUT OVER NULL WORKS
+                    props.adminAddProfilePicture(props.match.params.id, formData, setPictureLoading);
                 }
             }
         }
@@ -241,6 +240,7 @@ function ViewAccount(props) {
                         <DefaultProfile edit={true} icon={faUserCircle}/>
                     </ProfileFilter>)}</label>
                 </ProfileWrapper>
+                <button>delete</button>
             </ProOuter>
             <label><h3 className="bold">Username:</h3>    
                 <div className='tooltip2'>
@@ -289,7 +289,7 @@ const mapStateToProps = state => {
   }
 
 export default connect(mapStateToProps, { getOtherUser, updateUser, adminUpdateUser, addProfilePicture, updateProfilePicture, deleteProfilePicture,
-    adminUpdateProfilePicture, adminDeleteProfilePicture, })(ViewAccount)
+    adminAddProfilePicture, adminUpdateProfilePicture, adminDeleteProfilePicture, })(ViewAccount)
 
 
 const StyledLoader = styled(LoadingOverlay)`

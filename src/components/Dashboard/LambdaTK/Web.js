@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import axiosWithAuth from "../../../utils/axiosWithAuth"
 
 import SearchForm from "./SearchForm"
+import Unit from "./Unit"
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -16,6 +17,7 @@ const StyledLoader = styled(LoadingOverlay)`
 const Web = () => {
     const [loading, setLoading] = useState('');
     const [course, setCourse] = useState(null);
+    const [toggle, setToggle] = useState(false);
 
     useEffect(() => {
       setLoading(true);
@@ -32,21 +34,29 @@ const Web = () => {
       })
     }, []);
 
-    if (course === null) {
-        return (
-            <div>
-                 <StyledLoader active={loading} spinner text='Loading...'/>
-            </div>
-        );
+    const handleToggle = ()=> {
+        setToggle(!toggle);
     }
+
+
+    // if (course === null) {
+    //     return (
+    //     );
+    // }
     return (
-        <div> 
-            <h2>List of all Web Development Course Questions(when endpoint)</h2>
-            <div>
-                <p>{course.name}</p>
-                <p>{course.description}</p>
+        <StyledLoader active={loading} spinner text='Loading...'>
+            <div> 
+                <button onClick={handleToggle}>Show/Hide</button>
+                {toggle && <div>
+                    <h2>List of all Web Development Course Questions(when endpoint)</h2>
+                    <div>
+                        <p>{course.name}</p>
+                        <p>{course.description}</p>
+                    </div>
+                    <Unit course={course} toggle={toggle}/>
+                </div>}
             </div>
-        </div>
+        </StyledLoader>
     )
 }
 

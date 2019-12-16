@@ -103,6 +103,20 @@ export const deleteProfilePicture = (setPictureLoading) => dispatch => {
         setPictureLoading(false);});
     return null;
 }
+export const adminAddProfilePicture = (id, formData, setPictureLoading) => dispatch => {
+    console.log('adminAddProfilePicture firing');
+    console.log(id, formData)
+    axiosWithAuth().post(`/admin/user/${id}/picture`, formData)
+    .then(res =>{
+        console.log('adminAddProfilePicture res: ', res);
+        dispatch({ type: SET_OTHER_USER, payload: res.data });
+        setPictureLoading(false);
+    })
+    .catch(err => { console.log('adminAddProfilePicture CATCH ERROR: ', err.response.data.message) 
+        alert(err.response.data.message); 
+        setPictureLoading(false);});
+    return null;
+}
 export const adminUpdateProfilePicture = (id, formData, setPictureLoading) => dispatch => {
     console.log('adminUpdateProfilePicture firing');
     console.log(id, formData)

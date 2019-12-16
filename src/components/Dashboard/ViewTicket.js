@@ -35,10 +35,10 @@ function ViewTicket(props) {
 // #region console logs
   // console.log('ViewTicket Props',props)
   // console.log('props.currentUser: ', props.currentUser);
-  console.log('props.ticket: ', props.ticket)
-  console.log('props.comments: ', props.comments)
+  // console.log('props.ticket: ', props.ticket)
+  // console.log('props.comments: ', props.comments)
   // console.log('edit question obj: ', editQuestionObj);
-  console.log('activeImage', activeImage);
+  // console.log('activeImage', activeImage);
 //#endregion
 
   //load ticket on start
@@ -229,16 +229,6 @@ function ViewTicket(props) {
   }
 // #endregion
 
-const modalExpand = () => {
-  if (modalToggle === 'none'){
-    setModalToggle('block');
-  }
-  else if (modalToggle === 'block')
-  {
-    setModalToggle('none');
-  }
-}
-
 //#region oldfuncs
   const updateQuestion = () => {
     // console.log('updateQuestion() firing. ')
@@ -367,13 +357,18 @@ const modalExpand = () => {
               <p><b>Description:{'\xa0\xa0'}</b> {props.ticket.description}</p>
 
               <div className='mediaDiv'>{props.openPictures.length > 0 && props.openPictures.map((image, index) => { 
-                // console.log(image); 
-
-// @@@@@@@@@@@@@@@@@@@@@@ if image.url === activeimage, render with style: block. add onclicks to wipe activeimage. 
-
-                return (
-                <ImageModal key={image.url} setActiveImage={setActiveImage} modalExpand={modalExpand} modalToggle={modalToggle} src={image.url} alt={`Uploaded by: ${props.ticket.author_name}`}/>  
-              )})}</div>
+                // console.log('image: ', image)
+                if (image.url === activeImage){
+                  return (
+                  <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                )}
+                else {
+                  return (
+                  <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                )}
+              })}</div>
 
               <div className='mediaDiv'>{props.ticket.open_video && <iframe allowFullScreen="true" src={props.ticket.open_video}/>}</div>
 
@@ -451,8 +446,18 @@ const modalExpand = () => {
                       <div className='secondDiv'><p>{timeago.format(comment.created_at)}</p></div>
                     </div>                
 
-        {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
-                    <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
+                    <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => {
+                      if (image.url === activeImage){
+                        return (
+                        <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                      )}
+                      else {
+                        return (
+                        <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                      )}
+                    })}</div>
                     <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={comment.comment_video} />)}</div>
                     
                     {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
@@ -518,7 +523,18 @@ const modalExpand = () => {
                       
                       {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && reply.id != editReplyID && <button className='button alignRight' value={JSON.stringify(reply)} onClick={markAsAnswer}>Mark as Answer</button>}
                       
-                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => <Image key={image} src={image.url}/>)}</div>
+                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => {
+                        if (image.url === activeImage){
+                          return (
+                          <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                        )}
+                        else {
+                          return (
+                          <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                        )}
+                      })}</div>
                       <div className='mediaDiv'>{reply.reply_video && <iframe src={reply.reply_video} />}</div>
                   </div> 
           {/* Edit Reply Box */}
@@ -548,7 +564,7 @@ const modalExpand = () => {
           {/* End Edit Reply Box */}
                   </Fragment> })} 
 {/* New Reply Box Here */}
-  {/* if no repliess have add reply button on comment, else show answer box at bottom of replies if comment is expanded */}
+  {/* if no replies have add reply button on comment, else show answer box at bottom of replies if comment is expanded */}
                     <div className='replyBox'>
                       {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id != replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={pickReplyToComment}>Add Reply</button>}
                       {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id == replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={cancelReplyToComment}>Cancel Reply</button>}
