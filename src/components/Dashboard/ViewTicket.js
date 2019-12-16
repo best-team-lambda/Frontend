@@ -25,7 +25,6 @@ function ViewTicket(props) {
   const [editCommentID, setEditCommentID] = useState('');
   const [editReplyText, setEditReplyText] = useState('');
   const [editReplyID, setEditReplyID] = useState('');
-  const [modalToggle, setModalToggle] = useState('none');
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
   const [activeImage, setActiveImage] = useState('');
@@ -360,12 +359,12 @@ function ViewTicket(props) {
                 // console.log('image: ', image)
                 if (image.url === activeImage){
                   return (
-                  <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                  <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
                   alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
                 )}
                 else {
                   return (
-                  <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                  <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
                   alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
                 )}
               })}</div>

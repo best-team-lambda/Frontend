@@ -91,11 +91,11 @@ export const updateProfilePicture = (formData, setPictureLoading) => dispatch =>
 }
 export const deleteProfilePicture = (setPictureLoading) => dispatch => {
     console.log('deleteProfilePicture firing');
-    axiosWithAuth().del('/users/user/picture')
+    axiosWithAuth().delete('/users/user/picture')
     .then(res =>{
         console.log('deleteProfilePicture res: ', res);
-        dispatch({ type: SET_CURRENT_USER, payload: '' });
-        dispatch({ type: SET_OTHER_USER, payload: '' });
+        dispatch({ type: SET_CURRENT_USER, payload: {profile_picture: ''} });
+        dispatch({ type: SET_OTHER_USER, payload: {profile_picture: ''} });
         setPictureLoading(false);
     })
     .catch(err => { console.log('deleteProfilePicture CATCH ERROR: ', err.response.data.message) 
@@ -133,10 +133,10 @@ export const adminUpdateProfilePicture = (id, formData, setPictureLoading) => di
 }
 export const adminDeleteProfilePicture = (id, setPictureLoading) => dispatch => {
     console.log('adminDeleteProfilePicture firing');
-    axiosWithAuth().del(`/admin/user/${id}/picture`)
+    axiosWithAuth().delete(`/admin/user/${id}/picture`)
     .then(res =>{
         // console.log('adminDeleteProfilePicture res: ', res);
-        // dispatch({ type: SET_OTHER_USER, payload: '' });
+        dispatch({ type: SET_OTHER_USER, payload: {profile_picture: ''} });
         setPictureLoading(false);
     })
     .catch(err => { console.log('adminDeleteProfilePicture CATCH ERROR: ', err) 

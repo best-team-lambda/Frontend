@@ -32,7 +32,7 @@ function ViewAccount(props) {
     // console.log('Decoded token', decode(sessionStorage.getItem('token')));
 // #endregion
 
-
+console.log(props.otherUser);
 
     useEffect(() => {
         if (!props.otherUser || props.match.params.id != props.otherUser.id){
@@ -170,19 +170,10 @@ function ViewAccount(props) {
     const deleteProfilePic = () => {
         //add loading
         if (props.currentUser.id == props.match.params.id){
-            if(props.currentUser.profile_picture){
-                //put
-            }else{
-                //post
-            }
+            props.deleteProfilePicture(setPictureLoading);
         }
-        else if (props.isAdmin){
-            if(props.otherUser.profile_picture){
-                //put
-            }else{
-                //post
-                //WRITE THIS ENDPOINT/TEST IF PUT OVER NULL WORKS
-            }
+        else if (isAdmin){
+            props.adminDeleteProfilePicture(props.match.params.id, setPictureLoading);
         }
     }
     
@@ -216,7 +207,7 @@ function ViewAccount(props) {
                 <h3 className="bold">Email:</h3><p>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</p>
                 <h3 className="bold">Cohort:</h3><p>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</p>
             </>}
-            {showEditForm && <form onSubmit={handleSubmit}>
+            {showEditForm && <>
             <OuterDiv2>
             <StyledLoader active={pictureLoading} spinner text='Uploading...'> 
                 <ImageInput type='file' onChange={(e)=>{changeProfilePic(e.target.files[0])}} id='imageInput'/>
@@ -240,8 +231,9 @@ function ViewAccount(props) {
                         <DefaultProfile edit={true} icon={faUserCircle}/>
                     </ProfileFilter>)}</label>
                 </ProfileWrapper>
-                <button>delete</button>
+                {props.otherUser.profile_picture && <button className='button' onClick={deleteProfilePic}>Remove</button>}
             </ProOuter>
+            <form onSubmit={handleSubmit}>
             <label><h3 className="bold">Username:</h3>    
                 <div className='tooltip2'>
                  <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
@@ -270,7 +262,7 @@ function ViewAccount(props) {
             </PasswordDiv> 
                 <br /><br />
                 <button className="button" type="submit">Submit changes</button>
-            </form> }
+            </form> </>}
 
             {(props.currentUser.id == props.match.params.id || isAdmin) && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
             

@@ -15,7 +15,7 @@ export default function ImageModal(props) {
                 {/* <!-- Modal Caption (Image Text) --> */}
                 <div id="caption">{props.filename}</div>
             </div>
-            <span className='tooltiptext' style={{bottom: '102%'}}>Expand</span>
+            {!props.active && <span className='tooltiptext' style={{bottom: '102%'}}>Expand</span>}
         </div>
     )
 }

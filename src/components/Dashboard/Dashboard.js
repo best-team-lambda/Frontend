@@ -12,7 +12,7 @@ import ViewTicket from './ViewTicket.js';
 
 import CourseBuilder from '../CourseBuilder.js';
 import LambdaTK from './LambdaTK/LambdaTK.js';
-import Web from "./LambdaTK/Web"
+import Course from "./LambdaTK/Course"
 
 
 export default function Dashboard(props) {
@@ -29,7 +29,7 @@ export default function Dashboard(props) {
                 <Route exact path='/Dashboard/Tickets/:id' component={ViewTicket} />
                 <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} />
                 <Route exact path='/Dashboard/Lambda' component={LambdaTK} />
-                <Route exact path='/Dashboard/Lambda/Web' component={Web} />
+                <Route exact path='/Dashboard/Lambda/:course' component={Course} />
         </div>
     )
 }
