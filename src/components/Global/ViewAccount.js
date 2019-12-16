@@ -32,17 +32,22 @@ function ViewAccount(props) {
     // console.log('Decoded token', decode(sessionStorage.getItem('token')));
 // #endregion
 
-console.log(props.otherUser);
+// console.log(props.otherUser);
 
     useEffect(() => {
+        console.log(props.match.params.id, props.otherUser.id, props.currentUser.id)
         if (!props.otherUser || props.match.params.id != props.otherUser.id){
+            setLoading(true);
+            props.getOtherUser(props.match.params.id);
+        }
+        else if (props.otherUser.id != props.currentUser.id && props.currentUser.id === props.match.params.id){
             setLoading(true);
             props.getOtherUser(props.match.params.id);
         }
         else{
             resetInputs();
         }
-      }, [props.otherUser, props.currentUser])
+      }, [props.otherUser, props.currentUser, props.match.params.id])
 
     const handleChange = e => {
         if (e.target.name === 'username'){
@@ -75,7 +80,7 @@ console.log(props.otherUser);
         else if (e.target.name === 'oldPassword'){
             setCurrentPassword(e.target.value);
         }
-      };
+    };
     
     const resetInputs = () => {
         setLoading(false);
@@ -177,7 +182,6 @@ console.log(props.otherUser);
         }
     }
     
-
     return (
         <OuterDiv>
         <Div className='card'> 

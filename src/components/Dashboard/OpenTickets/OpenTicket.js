@@ -12,6 +12,7 @@ const Fa = styled(FontAwesomeIcon)`
 `
 
 
+
 export default function OpenTicket(props) {
     return (
         <>
@@ -34,4 +35,3 @@ export default function OpenTicket(props) {
         </>
     )
 }
-

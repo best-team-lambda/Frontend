@@ -23,7 +23,7 @@ function Header(props) {
                     <>
                     {/* <h4>Welcome {props.currentUser.name}!</h4> */}
                         <nav className='loggedIn'>
-                            {/* <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink> */}
+                            <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
           
                             <NavLink className='navLink' to='/Dashboard/CreateTicket'>Create Ticket</NavLink>
                             {/* <NavLink className='navLink' to='/Dashboard/OpenTickets'>Dashboard</NavLink> */}
