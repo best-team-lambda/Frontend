@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import axiosWithAuth from '../../../utils/axiosWithAuth';
+import { scrollToTop, scrollToBottom } from '../../../utils/AppUtils.js';
 import OpenTicket from '../OpenTickets/OpenTicket.js';
 import MyTicket from './MyTicket';
 import styled from "styled-components";
@@ -309,6 +310,8 @@ function UserTicketList(props) {
             {/* <div style={{height: '200px', backgroundColor: 'blue'}}></div> */}
             <Sdiv ref={buttonDivRef}>
                 {/* <button className='button alignRight'>asdeafa</button> */}
+                <button className='button alignRight' onClick={scrollToTop}>Top</button>
+                <button className='button alignRight' onClick={scrollToBottom}>Bottom</button>
                 <button className='button alignRight' onClick={expandAll}>Expand All</button>
                 <button ref={ref} className='button alignRight' onClick={collapseAll}>Collapse All</button>
             </Sdiv>

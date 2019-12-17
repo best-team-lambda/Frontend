@@ -32,10 +32,10 @@ function ViewTicket(props) {
   const Fragment = React.Fragment;
   // #endregion
 // #region console logs
-  // console.log('ViewTicket Props',props)
+  console.log('ViewTicket Props',props)
   // console.log('props.currentUser: ', props.currentUser);
-  console.log('props.ticket: ', props.ticket)
-  console.log('props.comments: ', props.comments)
+  // console.log('props.ticket: ', props.ticket)
+  // console.log('props.comments: ', props.comments)
   // console.log('edit question obj: ', editQuestionObj);
   // console.log('activeImage', activeImage);
 //#endregion
@@ -390,12 +390,14 @@ function ViewTicket(props) {
                 if (image.url === activeImage){
                   return (
                   <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
-                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width} 
+                  id={image.id} type={'open'} parentId={props.ticket.id} editing={editingQuestion ? true : false}/>  
                 )}
                 else {
                   return (
                   <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
-                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width} 
+                  id={image.id} type={'open'} parentId={props.ticket.id} editing={editingQuestion ? true : false}/>  
                 )}
               })}</div>
 
@@ -477,13 +479,15 @@ function ViewTicket(props) {
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => {
                       if (image.url === activeImage){
                         return (
-                        <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
-                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                        <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                        id={image.id} type={'comment'} parentId={comment.id} editing={editCommentID ? true : false}/>  
                       )}
                       else {
                         return (
-                        <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
-                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                        <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                        id={image.id} type={'comment'} parentId={comment.id} editing={editCommentID ? true : false}/>  
                       )}
                     })}</div>
                     <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={video.url} />)}</div>
@@ -543,27 +547,30 @@ function ViewTicket(props) {
                         </div>
                         <div className='secondDiv'><p>{timeago.format(reply.created_at)}</p></div>
                       </div>           
-                      
+                                        
+                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => {
+                        if (image.url === activeImage){
+                          return (
+                          <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                          id={image.id} type={'reply'} parentId={reply.id} editing={editReplyID ? true : false}/>  
+                        )}
+                        else {
+                          return (
+                          <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                          id={image.id} type={'reply'} parentId={reply.id} editing={editReplyID ? true : false}/>  
+                        )}
+                      })}</div>
+                      <div className='mediaDiv'>{reply.reply_videos && reply.reply_videos.map(video => <iframe allowFullScreen="true" src={video.url} />) }</div>
+
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={pickReplyToEdit}>Edit</button>}
                       {props.currentUser.id === reply.author_id && reply.id == editReplyID && <button className='button alignRight' value={reply.id} onClick={cancelReplyEdit}>Cancel Edit</button>}
                       
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={deleteReply}>Delete</button>}
                       
                       {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && reply.id != editReplyID && <button className='button alignRight' value={JSON.stringify(reply)} onClick={markAsAnswer}>Mark as Answer</button>}
-                      
-                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => {
-                        if (image.url === activeImage){
-                          return (
-                          <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
-                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
-                        )}
-                        else {
-                          return (
-                          <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
-                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
-                        )}
-                      })}</div>
-                      <div className='mediaDiv'>{reply.reply_videos && reply.reply_videos.map(video => <iframe allowFullScreen="true" src={video.url} />) }</div>
+    
                   </div> 
   {/* Edit Reply Box */}
                   {reply.id == editReplyID && <div>
@@ -597,7 +604,6 @@ function ViewTicket(props) {
                       {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id != replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={pickReplyToComment}>Add Reply</button>}
                       {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id == replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={cancelReplyToComment}>Cancel Reply</button>}
                     </div>
-
                     {comment.id == replyToComment && !comment.collapsed && <div>
                       <div className='replyBox'>
                         <h3>Reply to thread:</h3>

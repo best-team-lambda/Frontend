@@ -17,6 +17,7 @@ export const DELETE_REPLY = 'DELETE_REPLY';
 export const MARK_ANSWER = 'MARK_ANSWER';
 export const REMOVE_ANSWER = 'REMOVE_ANSWER';
 export const WIPE_TICKET = 'WIPE_TICKET';
+export const DELETE_PICTURE = "DELETE_PICTURE";
 
 
 export const loadingStart = () =>{
@@ -267,4 +268,67 @@ export const collapseAll = () => {
 export const expandAll = () => {
     return { type: EXPAND_ALL, payload: null };
 }
-
+export const deletePicture = (type, parentID ,id) => dispatch => {
+    console.log('deletePic firing: ', type, id)
+    if (type === 'open'){
+        axiosWithAuth().delete(`/tickets/picture/open/${id}`)
+        .then((res) =>{
+            console.log(res);
+            dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteOpenTicketPic CATCH ERROR: ', err) });
+    }
+    else if (type === 'resolved'){
+        axiosWithAuth().delete(`/tickets/picture/resolved/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteResolveTicketPic CATCH ERROR: ', err) });
+    }
+    else if (type === 'comment'){
+        axiosWithAuth().delete(`/tickets/comments/picture/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteCommentPic CATCH ERROR: ', err) });
+    }
+    else if (type === 'reply'){
+        axiosWithAuth().delete(`/tickets/comments/replies/picture/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteReplyPic CATCH ERROR: ', err) });
+    }
+}
+export const deleteVideo = (type, parentID ,id) => dispatch => {
+    // console.log('deletePic firing: ', type, id)
+    // if (type === 'open'){
+    //     axiosWithAuth().delete(`/tickets/picture/open/${id}`)
+    //     .then((res) =>{
+    //         console.log(res);
+    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+    //     })
+    //     .catch(err => { console.log('deleteOpenTicketPic CATCH ERROR: ', err) });
+    // }
+    // else if (type === 'resolved'){
+    //     axiosWithAuth().delete(`/tickets/picture/resolved/${id}`)
+    //     .then((res) =>{
+    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+    //     })
+    //     .catch(err => { console.log('deleteResolveTicketPic CATCH ERROR: ', err) });
+    // }
+    // else if (type === 'comment'){
+    //     axiosWithAuth().delete(`/tickets/comments/picture/${id}`)
+    //     .then((res) =>{
+    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+    //     })
+    //     .catch(err => { console.log('deleteCommentPic CATCH ERROR: ', err) });
+    // }
+    // else if (type === 'reply'){
+    //     axiosWithAuth().delete(`/tickets/comments/replies/picture/${id}`)
+    //     .then((res) =>{
+    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
+    //     })
+    //     .catch(err => { console.log('deleteReplyPic CATCH ERROR: ', err) });
+    // }
+}

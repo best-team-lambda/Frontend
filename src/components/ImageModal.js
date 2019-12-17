@@ -1,9 +1,11 @@
 import React from 'react'
+import { connect } from 'react-redux';
+import { deletePicture } from '../actions/TicketActions.js';
 
-export default function ImageModal(props) {
+function ImageModal(props) {
     // console.log('Image Modal Props: ', props);
     return (
-        <div className='modalDiv tooltip'>
+        <div className='modalDiv tooltip' style={{border: '1px solid red'}}>
             {/* <!-- Trigger the Modal --> */}
             <img className="modalImg" onClick={()=>{props.setActiveImage(props.src)}} src={props.src} alt={props.alt} />
             {/* <!-- The Modal --> */}
@@ -15,7 +17,17 @@ export default function ImageModal(props) {
                 {/* <!-- Modal Caption (Image Text) --> */}
                 <div id="caption">{props.filename}</div>
             </div>
-            {!props.active && <span className='tooltiptext' style={{bottom: '102%'}}>Expand</span>}
+            {props.editing && <button className='button' style={{marginLeft: '25.5%'}} onClick={()=>{props.deletePicture(props.type, props.parentId, props.id)}}>Delete</button>}
+            {!props.active && !props.editing && <span className='tooltiptext' style={{bottom: '102%'}}>Expand</span>}
         </div>
     )
 }
+
+const mapStateToProps = state => {
+    // console.log('mapstatetoprops: ', state);
+    return {
+    }
+  }
+  
+  export default connect(mapStateToProps, { deletePicture })(ImageModal)
+  

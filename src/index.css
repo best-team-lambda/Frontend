@@ -704,6 +704,10 @@ header + section:first-of-type {
   float: right;
   margin: 10px;
 }
+.alignLeft {
+  float: left;
+  margin: 10px;
+}
 .solution {
   background-color: lightseagreen;
   border: 2px solid black;

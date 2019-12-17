@@ -1,5 +1,5 @@
 import { LOADING_START, LOADING_DONE, ADD_COMMENT, ADD_REPLY, SET_TICKET, TOGGLE_COLLAPSE, UPDATE_COMMENT, COLLAPSE_ALL, 
-  EXPAND_ALL, MARK_ANSWER, REMOVE_ANSWER, DELETE_COMMENT, UPDATE_REPLY, DELETE_REPLY, UPDATE_TICKET, WIPE_TICKET } from '../actions/TicketActions.js';
+  EXPAND_ALL, MARK_ANSWER, REMOVE_ANSWER, DELETE_COMMENT, UPDATE_REPLY, DELETE_REPLY, UPDATE_TICKET, WIPE_TICKET, DELETE_PICTURE } from '../actions/TicketActions.js';
 
 const initialState = {
     loading: true,
@@ -195,7 +195,71 @@ export const TicketReducer = (state = initialState, action) => {
             ...state,
             ticket: {...state.ticket, solution: '', status: 'open'}
           }
-        default: //console.log('REDUCER DEFAULT'); 
+          case DELETE_PICTURE:
+            // console.log('DELETE_PICTURE FIRING', action.payload)
+            let newArray;
+            let newPicArray;
+            if (action.payload.type === 'open'){
+              newPicArray = state.openPictures.filter(picture => {
+                if (picture.id !== action.payload.id){
+                  return picture;
+                }
+              })
+              return{
+                ...state,
+                openPictures: [...newPicArray],
+              }
+            }
+            else if (action.payload.type === 'resolved'){
+              console.log('delete_pic resolved is not currently implemented');
+            }
+            else if (action.payload.type === 'comment'){
+              newArray = state.comments.map(comment => {
+                if (comment.id === action.payload.parentID){
+                  let newPicArray = comment.comment_pictures.filter(picture => {
+                    if (picture.id !== action.payload.id){
+                      return picture;
+                    }
+                  })
+                  return {...comment, comment_pictures: [...newPicArray] }
+                }
+                else {
+                  return comment;
+                }
+              })  
+              return{
+                ...state,
+                comments: [...newArray],
+              }
+            }
+            else if (action.payload.type === 'reply'){
+              newArray = state.comments.map(comment => {
+                let newReplies = comment.comment_replies.map(reply => {
+                  if (reply.id === action.payload.parentID){
+                    newPicArray = reply.reply_pictures.filter(picture => {
+                      if (picture.id !== action.payload.id){
+                        return picture;
+                      }
+                    })
+                    return {...reply, reply_pictures: [...newPicArray] }
+                  }
+                  else {
+                    return reply;
+                  }
+                })
+                return {...comment, comment_replies: [...newReplies]}
+              }) 
+              return{
+                ...state,
+                comments: [...newArray],
+              }
+            }
+            console.log('DELETE_PICTURE error: Default return reached');
+            return{
+              ...state,
+            }
+        default: 
+        console.log('REDUCER DEFAULT- how did you get here?'); 
         return state;
   }
 }

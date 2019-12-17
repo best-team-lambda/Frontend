@@ -189,6 +189,7 @@ function ViewAccount(props) {
         <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
                     <ProfileWrapper>
+                  
                             {props.otherUser.profile_picture ? (
                             <ProfileFilter>
                                 <div >
@@ -204,14 +205,15 @@ function ViewAccount(props) {
                                 </div>
                                 <DefaultProfile edit={false} icon={faUserCircle}/>
                             </ProfileFilter>)}
+                            <Info>
+                        <Text1>{props.otherUser.name}</Text1>
+                        <Text2>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</Text2>
+                        <Text2>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</Text2>
+                    </Info>
                         </ProfileWrapper>
                 {/* <ProfileInfo> */}
                     {/* <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p> */}
-                    <Info>
-                        <Text1>Name: {props.otherUser.name}</Text1>
-                        <Text1>Email: {props.otherUser.email !== null ? props.otherUser.email : 'None'}</Text1>
-                        <Text1>Cohort: {props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</Text1>
-                    </Info>
+               
             </>}
             {showEditForm && <>
             <OuterDiv2>
@@ -357,8 +359,8 @@ const DefaultProfile = styled(FontAwesomeIcon) `
 const ProfileImg = styled.div`
     position: absolute;
     /* border-radius: 50%; */
-    width: 200px;
-    height: 200px;
+    width: 30%;
+    height: 50%;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%; 
@@ -403,27 +405,38 @@ align-items:center;
 
 `
 
-const Text1 = styled.h4 `
-max-width: 100%;
+const Text1 = styled.h3 `
+
+`
+const Text2 =styled.h5`
+
 `
 const Info = styled.div`
 
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+margin-left: 10%;
 padding: 5%;
-margin: 5%;
 
 `
 
 const Main = styled.div`
-border: 1px solid black;
 width: 100%;
 display: flex;
 justify-content: center;
 align-items: center;
+background: #383651;
 
 `
 
 const MainChild = styled.div`
-border: 1px solid red;
+background: #fff;
+width: 50%;
+
+
+
 
 
 `

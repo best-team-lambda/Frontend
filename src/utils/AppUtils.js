@@ -67,3 +67,12 @@ export const isValidPassword = (password) => {
     }
     return true;
   };
+
+
+export const scrollToTop = () => {
+  window.scrollTo(0, 0);
+}
+export const scrollToBottom = () => {
+  window.scrollTo(0, 30000);
+  // window.scrollBy(0, -200);
+}
