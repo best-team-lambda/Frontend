@@ -680,6 +680,7 @@ header + section:first-of-type {
 .photo3 {
   height: 100px;
   border-radius: 5px;
+  width: 110px;
 }
 .viewTicketPhoto {
   height: 100px;
@@ -949,7 +950,7 @@ header + section:first-of-type {
   color: #BF0033;
 }
 .helperDashboard {
-  width: 85%;
+  width: 100%;
 }
 .tickettable {
   top: 150px;
@@ -1002,9 +1003,6 @@ tbody tr {
 }
 td.boldrows {
   font-weight: 600;
-}
-td {
-  border: 1px solid red;
 }
 td a {
   text-decoration: none;

@@ -6,6 +6,7 @@ export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT = 'LOGOUT';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const SET_OTHER_USER = 'SET_OTHER_USER';
+export const WIPE_OTHER_USER = 'WIPE_OTHER_USER';
 
 
 // export const loadingStart = () =>{
@@ -36,6 +37,10 @@ export const getOtherUser = (id) => dispatch => {
         dispatch({ type: SET_OTHER_USER, payload: res.data })
     })
     .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetOtherUser CATCH ERROR: ', err.response.data.message) });
+    return null;
+}
+export const wipeOtherUser = () => dispatch => {
+    dispatch({ type: WIPE_OTHER_USER, payload: '' });
     return null;
 }
 export const updateUser = (userObj, setLoading) => dispatch => {

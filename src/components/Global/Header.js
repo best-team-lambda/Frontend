@@ -21,7 +21,7 @@ function Header(props) {
             if (props.currentUser){
                 return (
                     <>
-                    {/* <h4>Welcome {props.currentUser.name}!</h4> */}
+                    <h4>Welcome {props.currentUser.name}!</h4>
                         <nav className='loggedIn'>
                             <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
           

@@ -2,7 +2,6 @@ import React from 'react'
 import { Route } from 'react-router-dom';
 import SidebarNav from './SidebarNav.js';
 
-import Account from '../Global/Account.js';
 import ViewAccount from '../Global/ViewAccount.js';
 import CreateTicket from './CreateTicket.js';
 import OpenTicketList from './OpenTickets/OpenTicketList.js';

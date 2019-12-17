@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, useLocation } from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -13,7 +13,8 @@ import Footer from './components/Global/Footer';
 import Credits from './components/Global/Credits';
 import Dashboard from './components/Dashboard/Dashboard.js'
 
-import { getCurrentUser, loadingDone } from './actions/AppActions.js';
+import { getCurrentUser, wipeOtherUser, loadingDone } from './actions/AppActions.js';
+import { wipeTicket } from './actions/TicketActions.js'
 
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
@@ -21,7 +22,8 @@ const StyledLoader = styled(LoadingOverlay)`
 `;
 
 function App(props) {
-  console.log('App Props.CurrentUser', props.currentUser)
+  const location = useLocation();
+  // console.log('App Props.CurrentUser', props.currentUser)
   // console.log('App Props.Loading', props.loading)
   
   useEffect(() => {
@@ -34,6 +36,16 @@ function App(props) {
         props.loadingDone();
       }
   }, [props.currentUser, props.loading])
+
+  useEffect(() => {
+    // Wipe other user so that no data is carried through when clicking a different user to view. This way it will look blank every time.
+    if(props.otherUser && location.pathname !== `/Dashboard/Account/${props.otherUser.id}`){
+      props.wipeOtherUser();
+    }
+    if(props.ticket.id && location.pathname !== `/Dashboard/Tickets/${props.ticket.id}`){
+      props.wipeTicket();
+    }
+  }, [props.otherUser, location, props.ticket])
 
   return (
       <StyledLoader active={props.loading} spinner text='Loading...'>
@@ -59,12 +71,14 @@ const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
     return {
         currentUser: state.AppReducer.currentUser,
+        otherUser: state.AppReducer.otherUser,
+        ticket: state.TicketReducer.ticket,
         loading: state.AppReducer.loading,
         loginFailed: state.AppReducer.loginFailed,
     }
   }
 
-export default connect(mapStateToProps, { getCurrentUser, loadingDone })(App)
+export default connect(mapStateToProps, { getCurrentUser, wipeOtherUser, wipeTicket, loadingDone })(App)
 
 // import {useSelector, useDispatch} from 'react-redux';
 // import {getCurrentUser, loadingDone} from './actions/AppActions.js';

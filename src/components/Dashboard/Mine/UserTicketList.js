@@ -15,7 +15,7 @@ const StyledLoader = styled(LoadingOverlay)`
 function UserTicketList(props) {
     //unsed, remove. its in for search box atm
     const [allUserTickets, setAllUserTickets] = useState([]);
-
+// #region local state vars
     const [loading, setLoading] = useState(true);
 
     const [openTickets, setOpenTickets] = useState([]);
@@ -33,6 +33,7 @@ function UserTicketList(props) {
     const [commentsCollapsed, setCommentsCollapsed] = useState(false);
     const [repliesCollapsed, setRepliesCollapsed] = useState(false);
     const [tableOffset, setTableOffset] = useState(0);
+//#endregion
 
 // #region Th styles. just don't open it it's bad
     const [height, setHeight] = useState(75);
@@ -99,7 +100,7 @@ function UserTicketList(props) {
         axiosWithAuth()
         .get(`/tickets/mine`)
         .then(res => {
-            console.log(res);
+            // console.log(res.data.resolvedTickets, res.data.commentedOn );
             setOpenTickets(res.data.openTickets);
             setResolvedTickets(res.data.resolvedTickets);
             setCommentedTickets(res.data.commentedOn);
@@ -112,7 +113,7 @@ function UserTicketList(props) {
         });
     }, [])
 
-    // #region setHeights/resize and scroll event listeners
+// #region setHeights/resize and scroll event listeners
     useEffect(() => {
         // #region auto collapse if length is 0
         if (loading === false){
@@ -224,6 +225,7 @@ function UserTicketList(props) {
       }, [triggered])
     // #endregion
     
+// #region local funcs
     const handleCollapse = (name) => {
         let oldOffset = window.pageYOffset;
         //Toggle collapse and adjust the window position by toggle status and list body size
@@ -280,7 +282,6 @@ function UserTicketList(props) {
         setTriggered(true);
         setClickedOn(name);
     }
-
     const collapseAll = () => {
         setOpenCollapsed(true);
         setResolvedCollapsed(true);
@@ -300,6 +301,7 @@ function UserTicketList(props) {
         setRepliesCollapsed(false);
         window.scrollTo(0, 0);
     }
+// #endregion
 
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}

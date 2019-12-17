@@ -1,4 +1,5 @@
-import { LOADING_START, LOADING_DONE, ADD_COMMENT, ADD_REPLY, SET_TICKET, TOGGLE_COLLAPSE, UPDATE_COMMENT, COLLAPSE_ALL, EXPAND_ALL, MARK_ANSWER, REMOVE_ANSWER, DELETE_COMMENT, UPDATE_REPLY, DELETE_REPLY, UPDATE_TICKET } from '../actions/TicketActions.js';
+import { LOADING_START, LOADING_DONE, ADD_COMMENT, ADD_REPLY, SET_TICKET, TOGGLE_COLLAPSE, UPDATE_COMMENT, COLLAPSE_ALL, 
+  EXPAND_ALL, MARK_ANSWER, REMOVE_ANSWER, DELETE_COMMENT, UPDATE_REPLY, DELETE_REPLY, UPDATE_TICKET, WIPE_TICKET } from '../actions/TicketActions.js';
 
 const initialState = {
     loading: true,
@@ -44,6 +45,12 @@ export const TicketReducer = (state = initialState, action) => {
           ...state, 
           ticket: {...state.ticket, category: action.payload.category, title: action.payload.title, description: action.payload.description },
         }
+        case WIPE_TICKET: 
+          // console.log('WIPE_TICKET FIRING', state, action.payload);
+          return{
+              ...state,
+              ticket: '',
+          }
         case TOGGLE_COLLAPSE:
           // console.log('TOGGLE_COLLAPSE FIRING', action.payload)
           let newComments = state.comments.map((comment)=>{

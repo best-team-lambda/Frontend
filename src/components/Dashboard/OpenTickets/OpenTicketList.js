@@ -19,7 +19,7 @@ function OpenTicketList(props) {
         // setLoading(true);
         axiosWithAuth().get('/tickets/open')
         .then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             setOpenTickets(res.data);
             setLoading(false);
         })

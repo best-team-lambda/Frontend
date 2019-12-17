@@ -34,8 +34,8 @@ function ViewTicket(props) {
 // #region console logs
   // console.log('ViewTicket Props',props)
   // console.log('props.currentUser: ', props.currentUser);
-  // console.log('props.ticket: ', props.ticket)
-  // console.log('props.comments: ', props.comments)
+  console.log('props.ticket: ', props.ticket)
+  console.log('props.comments: ', props.comments)
   // console.log('edit question obj: ', editQuestionObj);
   // console.log('activeImage', activeImage);
 //#endregion
@@ -74,18 +74,48 @@ function ViewTicket(props) {
   }
   const addComment = () => {
     if(commentInputText !== ''){
-      props.addComment(ticketID, commentInputText);
+      let commentPictures = '';
+      let commentVideo = '';
+
+      if(images.length){
+        commentPictures = new FormData();
+        for(let i = 1; i <= images.length; i++) {
+          commentPictures.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        commentVideo = new FormData();
+        commentVideo.append('video', video);
+      }
+      props.addComment(ticketID, commentInputText, setLoading, commentPictures, commentVideo);
       setCommentInputText('');
+      setImages('');
+      setVideo('');
     }
     else{
       alert('Comment cannot be empty! Add an answer.');
     }
   }
-  const submitReply = () => {
+  const addReply = () => {
     if(replyInputText !== ''){
-      props.addReply(replyToComment, replyInputText);
+      let replyPictures = '';
+      let replyVideo = '';
+
+      if(images.length){
+        replyPictures = new FormData();
+        for(let i = 1; i <= images.length; i++) {
+          replyPictures.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        replyVideo = new FormData();
+        replyVideo.append('video', video);
+      }
+      props.addReply(replyToComment, replyInputText, setLoading, replyPictures, replyVideo);
       setReplyInputText('');
       setReplyToComment('');
+      setImages('');
+      setVideo('');
     }
     else{
       alert('Reply cannot be empty! Add an answer.');
@@ -381,7 +411,6 @@ function ViewTicket(props) {
 
               {props.ticket.status == 'resolved' && props.currentUser.id === props.ticket.author_id && !editingQuestion && <button className='button alignRight' onClick={removeAnswer}>Re-open ticket</button>}
             </div>
-            
 {/* //#endregion End author question div  */}
 
 {/* Edit Question box */}
@@ -457,7 +486,7 @@ function ViewTicket(props) {
                         alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
                       )}
                     })}</div>
-                    <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={comment.comment_video} />)}</div>
+                    <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={video.url} />)}</div>
                     
                     {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
                     {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
@@ -472,7 +501,7 @@ function ViewTicket(props) {
                     
                     {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && comment.id != editCommentID && <button className='button alignRight' value={JSON.stringify(comment)} onClick={markAsAnswer}>Mark as Answer</button>}
                   </div>
-          {/* Edit comment box */}
+  {/* Edit comment box */}
                   {comment.id == editCommentID && <div>
                       <div className='replyBox'>
                         <h3>Edit Comment:</h3>
@@ -496,7 +525,7 @@ function ViewTicket(props) {
                         <button className="button" onClick={editComment}>Submit Changes</button>
                       </div>
                     </div>}
-          {/* End Edit comment box */}
+  {/* End Edit comment box */}
                   </>
                   {!comment.collapsed && comment.comment_replies.length > 0 && comment.comment_replies.map((reply)=>{
                     return <Fragment key={reply.id}>
@@ -534,9 +563,9 @@ function ViewTicket(props) {
                           alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
                         )}
                       })}</div>
-                      <div className='mediaDiv'>{reply.reply_video && <iframe src={reply.reply_video} />}</div>
+                      <div className='mediaDiv'>{reply.reply_videos && reply.reply_videos.map(video => <iframe allowFullScreen="true" src={video.url} />) }</div>
                   </div> 
-          {/* Edit Reply Box */}
+  {/* Edit Reply Box */}
                   {reply.id == editReplyID && <div>
                       <div className='replyBox'>
                         <h3>Edit Reply:</h3>
@@ -560,7 +589,7 @@ function ViewTicket(props) {
                         <button className="button" onClick={editReply}>Submit Changes</button>
                       </div>
                     </div>}
-          {/* End Edit Reply Box */}
+  {/* End Edit Reply Box */}
                   </Fragment> })} 
 {/* New Reply Box Here */}
   {/* if no replies have add reply button on comment, else show answer box at bottom of replies if comment is expanded */}
@@ -589,7 +618,7 @@ function ViewTicket(props) {
                             </FileDiv>
                         </label>
                         {video && <p>{video.name}</p>}
-                        <button className="button" onClick={submitReply}>Submit Reply</button>
+                        <button className="button" onClick={addReply}>Submit Reply</button>
                       </div>
                     </div>}
   {/* End New Reply Box */}</Fragment>  })}  </>}
@@ -648,6 +677,8 @@ export default connect(mapStateToProps, { getTicket, toggleCollapse, collapseAll
   markAsAnswer, removeAnswer, addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket })(ViewTicket)
 
 
+
+// #region Styled Components
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
     width:100%;
@@ -693,3 +724,4 @@ const FileDiv = styled.div `
     align-items: center;
     margin-top: 2rem;
 `
+// #endregion

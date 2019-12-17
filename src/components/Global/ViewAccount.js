@@ -35,7 +35,7 @@ function ViewAccount(props) {
 // console.log(props.otherUser);
 
     useEffect(() => {
-        console.log(props.match.params.id, props.otherUser.id, props.currentUser.id)
+        // console.log(props.match.params.id, props.otherUser.id, props.currentUser.id)
         if (!props.otherUser || props.match.params.id != props.otherUser.id){
             setLoading(true);
             props.getOtherUser(props.match.params.id);
@@ -183,15 +183,15 @@ function ViewAccount(props) {
     }
     
     return (
-        <OuterDiv>
-        <Div className='card'> 
+        //
+        <Main>
+            <MainChild>
         <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
-                    <ProOuter>
-                        <ProfileWrapper>
+                    <ProfileWrapper>
                             {props.otherUser.profile_picture ? (
                             <ProfileFilter>
-                                <div className='editPicture'>
+                                <div >
                                     Edit
                                     <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
                                 </div>
@@ -205,11 +205,13 @@ function ViewAccount(props) {
                                 <DefaultProfile edit={false} icon={faUserCircle}/>
                             </ProfileFilter>)}
                         </ProfileWrapper>
-                    </ProOuter>
-                <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p>
-                <h3 className="bold">Name:</h3><p>{props.otherUser.name}</p>
-                <h3 className="bold">Email:</h3><p>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</p>
-                <h3 className="bold">Cohort:</h3><p>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</p>
+                {/* <ProfileInfo> */}
+                    {/* <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p> */}
+                    <Info>
+                        <Text1>Name: {props.otherUser.name}</Text1>
+                        <Text1>Email: {props.otherUser.email !== null ? props.otherUser.email : 'None'}</Text1>
+                        <Text1>Cohort: {props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</Text1>
+                    </Info>
             </>}
             {showEditForm && <>
             <OuterDiv2>
@@ -271,8 +273,8 @@ function ViewAccount(props) {
             {(props.currentUser.id == props.match.params.id || isAdmin) && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
             
             </StyledLoader>  
-        </Div>
-        </OuterDiv>
+            </MainChild>
+        </Main>
     )
 }
 
@@ -295,10 +297,9 @@ const StyledLoader = styled(LoadingOverlay)`
 
 const OuterDiv = styled.div `
     width: 100%;
-    flex-direction: column;
-    align-items: center;
-    background: #383651;
-    justify-content: center;
+    border: 1px solid blue;
+    background: #fff;
+    
 `;
 const OuterDiv2 = styled.div `
     width: 100%;
@@ -313,19 +314,16 @@ const OuterDiv2 = styled.div `
 `;
 
 const Div = styled.div `
-    width: 60%;
-    flex-direction: column;
-    align-items: center;
-    background: white;
-    margin: 10rem auto;
-    padding: 3rem;
-    text-align: center;
+    width: 100%;
 `;
 const ProOuter = styled.div `
     width: 100%;
+    border:1px solid red;
+    background: #fff;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+
 `;
 const MarginButton = styled.button `
     margin-top: 25px;
@@ -373,15 +371,16 @@ const ProfileImg = styled.div`
     }
 `;
 const ProfileWrapper = styled.div `
-    width: 200px;
-    height: 200px;
-    margin: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    padding: 5%;
+
 `;
 const ProfileFilter = styled.div `
     font-family: 'Patua One', sans-serif;
     width: 200px;
     height: 200px;
-    /* border-radius: 50%; */
     display: flex;
     font-size: 3.5rem;
     align-items: center;
@@ -392,3 +391,39 @@ const ProfileFilter = styled.div `
         align-items: center;
     }
 `;
+
+const ProfileInfo = styled.div`
+border: 1px solid orange;
+background: #fff;
+display: flex;
+justify-content: space-evenly;
+align-items:center;
+
+
+
+`
+
+const Text1 = styled.h4 `
+max-width: 100%;
+`
+const Info = styled.div`
+
+padding: 5%;
+margin: 5%;
+
+`
+
+const Main = styled.div`
+border: 1px solid black;
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+
+`
+
+const MainChild = styled.div`
+border: 1px solid red;
+
+
+`
