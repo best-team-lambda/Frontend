@@ -16,7 +16,7 @@ export const getCourses = () => dispatch => {
                 dispatch({ type: SET_COURSES, payload: res.data });
           })
           .catch(err => {
-            console.log("CATCH ERROR: ", err.response.data.message);
+            console.log("CATCH ERROR: ", err);
           });
     }
 export const selectCourse = (courseID) => {

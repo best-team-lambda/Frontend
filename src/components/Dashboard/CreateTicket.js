@@ -66,7 +66,7 @@ function CreateTicket(props) {
         <OuterDiv>
             <Div>
     <StyledLoader active={loading} spinner text='Uploading...'>
-                <h1> Create a Ticket</h1>
+                <Create> Create a Ticket</Create>
                 <Form onSubmit={handleSubmit}>
                 <MarginDiv>
                     <InputDiv><input className='text-input' placeholder='Category' onChange={e => handleCategory(e.target.value)} type='text' required/></InputDiv>
@@ -77,17 +77,19 @@ function CreateTicket(props) {
                     <InputDiv> <textarea className='text-input' placeholder='Description' onChange={e => handleDescription(e.target.value)} required/></InputDiv>
                     <FileInput id='imageInput' className='input' type='file' accept={props.imageFileTypes} onChange={e => setImages(e.target.files)} multiple/>
                     <FileInput id='videoInput' className='input' type='file' accept={props.videoFileTypes} onChange={e => setVideo(e.target.files[0])}/>
-                    <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
-                        <FileDiv>
-                            <Fa icon={faImages}/><p>Add images</p>
-                        </FileDiv>
-                    </label>
-                    {images && Array.from(images).map(image => <p key={image.name}>{image.name}</p>)}
-                    <label style={{cursor: 'pointer'}} htmlFor='videoInput'>
-                        <FileDiv>
-                            <Fa icon={faFileVideo}/><p>Add a video</p>
-                        </FileDiv>
-                    </label>
+                    <Media>
+                        <label style={{cursor: 'pointer'}} htmlFor='imageInput'>
+                            <FileDiv>
+                                <Fa icon={faImages}/><p>Add images</p>
+                            </FileDiv>
+                        </label>
+                        {images && Array.from(images).map(image => <p key={image.name}>{image.name}</p>)}
+                        <label style={{cursor: 'pointer'}} htmlFor='videoInput'>
+                            <FileDiv>
+                                <Fa icon={faFileVideo}/><p>Add a video</p>
+                            </FileDiv>
+                        </label>
+                    </Media>
                     {video && <p>{video.name}</p>}
                 <MarginDiv>
                     <Button className='input' type='submit'>Submit</Button>
@@ -109,11 +111,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {  })(CreateTicket)
 
-
-
-
-
-
+// #region styled components
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
     z-index: 2;
@@ -121,6 +119,7 @@ const StyledLoader = styled(LoadingOverlay)`
 
 const OuterDiv = styled.div `
     width: 100%;
+    display: flex;
     flex-direction: column;
     align-items: center;
     background: #383651;
@@ -128,11 +127,11 @@ const OuterDiv = styled.div `
 `
 
 const Div = styled.div `
-    width: 60%;
+    width: 50%;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     background: white;
-    margin: 10rem auto;
     padding: 3rem;
 `
 const InputDiv = styled.div `
@@ -195,3 +194,12 @@ const FileDiv = styled.div `
     align-items: center;
     margin-top: 2rem;
 `
+const Create = styled.h1`
+text-align: center;
+`
+
+const Media = styled.div`
+
+
+`
+// #endregion

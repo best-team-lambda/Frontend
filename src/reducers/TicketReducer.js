@@ -210,7 +210,7 @@ export const TicketReducer = (state = initialState, action) => {
               }
             }
             else if (action.payload.type === 'resolved'){
-              console.log('delete_pic resolved is not currently implemented');
+              console.log('DELETE_PICTURE resolved is not currently implemented');
             }
             else if (action.payload.type === 'comment'){
               newArray = state.comments.map(comment => {
@@ -257,11 +257,65 @@ export const TicketReducer = (state = initialState, action) => {
             return{
               ...state,
             }
-        case DELETE_VIDEO:
-          console.log('DELETE_VIDEO FIRING', action.payload)
-        return {
-          ...state,
-        }
+          case DELETE_VIDEO:
+            console.log('DELETE_VIDEO FIRING', action.payload)
+            let DeletedVideoArray;
+            let newVideoArray;
+            if (action.payload.type === 'open'){
+              return {
+                ...state,
+                ticket: {...state.ticket, open_video: '', open_video_id: ''}
+              }
+            }
+            else if (action.payload.type === 'resolved'){
+              console.log('DELETE_VIDEO resolved is not currently implemented');
+            }
+            else if (action.payload.type === 'comment'){
+              DeletedVideoArray = state.comments.map(comment => {
+                if (comment.id === action.payload.parentID){
+                  newVideoArray = comment.comment_videos.filter(video => {
+                    if (video.id !== action.payload.id){
+                      return video;
+                    }
+                  })
+                  return {...comment, comment_videos: [...newVideoArray] }
+                }
+                else {
+                  return comment;
+                }
+              });
+
+              return {
+                ...state,
+                comments: [...DeletedVideoArray]
+              }
+            }
+            else if (action.payload.type === 'reply'){
+              DeletedVideoArray = state.comments.map(comment => {
+                let newRepliesVideo = comment.comment_replies.map(reply => {
+                  if (reply.id === action.payload.parentID){
+                    newVideoArray = reply.reply_videos.filter(picture => {
+                      if (picture.id !== action.payload.id){
+                        return picture;
+                      }
+                    })
+                    return {...reply, reply_videos: [...newVideoArray] }
+                  }
+                  else {
+                    return reply;
+                  }
+                })
+                return {...comment, comment_replies: [...newRepliesVideo]}
+              }) 
+              return{
+                ...state,
+                comments: [...DeletedVideoArray],
+              }
+            }
+          console.log('DELETE_VIDEO error: Default return reached');
+          return {
+            ...state,
+          }
 
         default: 
         return state;

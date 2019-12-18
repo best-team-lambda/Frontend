@@ -6,7 +6,7 @@ addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, up
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
-// import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+import axiosWithAuth from '../../utils/axiosWithAuth.js';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
@@ -140,6 +140,41 @@ function ViewTicket(props) {
       props.updateTicket(ticketID, editedTicket);
       setEditingQuestion(false);
       setEditQuestionObj({title: '', category: '', description: ''});
+    }
+    else if (images.length || video){
+      console.log('pictureeeeee');
+      setLoading(true);
+      if (images.length){
+        const imagesData = new FormData();
+        for(let i = 1; i <= images.length; i++) {
+          imagesData.append('image' + i, images[i-1]);
+      }
+        axiosWithAuth().post(`/tickets/${ticketID}/pictures/open`, imagesData)
+        .then(res =>{
+          setLoading(false);
+            console.log('EditCommentPostVideo res: ', res);
+        })
+        .catch(err => {console.log('EditCommentPostVideo CATCH ERROR: ', err.response.data.message) 
+        setLoading(false);})
+      }
+      // below works if no video posted to ticket already and nothing else edited
+      if (video){
+        if (props.ticket.open_video_id){
+          setLoading(false);
+          alert('Only one video is allowed per ticket. Delete the current video before adding another.');
+        }
+        else{
+          const videoData = new FormData();
+          videoData.append('video', video);
+          axiosWithAuth().post(`/tickets/${ticketID}/video/open`, videoData)
+          .then(res =>{
+            setLoading(false);
+              console.log('EditCommentPostVideo res: ', res);
+          })
+          .catch(err => {console.log('EditCommentPostVideo CATCH ERROR: ', err.response.data.message) 
+          setLoading(false);})
+        }
+      }
     }
     else{
       alert('No changes have been made. Modify the ticket before submitting');
@@ -367,12 +402,12 @@ function ViewTicket(props) {
                 <div className='commentFixer'>
                   {props.ticket.author_image && 
                     <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="viewTicketPhoto" src={props.ticket.author_image} alt='author'/></Link>
-                      <span className='tooltiptext'>View Profile</span>
+                      <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                     </div>
                   }
                   {!props.ticket.author_image && 
                     <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><Fa icon={faUserCircle}/></Link>
-                    <span className='tooltiptext'>View Profile</span>
+                    <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                     </div>
                     } 
                   <div className='commentText'>
@@ -468,7 +503,7 @@ function ViewTicket(props) {
                       <div className='commentFixer'>
                         <div className='tooltip'>
                           <Link to={`/Dashboard/Account/${comment.author_id}`}><img className="viewTicketPhoto" src={comment.author_image} alt='comment author'/></Link>
-                          <span className='tooltiptext'>View Profile</span>
+                          <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                         </div>
                         <div className='commentText'>
                           <h4>{comment.author_name} replied:</h4>
@@ -545,7 +580,7 @@ function ViewTicket(props) {
                         <div className='commentFixer'>
                           <div className='tooltip'>
                             <Link to={`/Dashboard/Account/${reply.author_id}`}><img className="viewTicketPhoto" src={reply.author_image} alt='reply author'/></Link>
-                            <span className='tooltiptext'>View Profile</span>
+                            <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                           </div>
                           <div className='commentText'>
                             <h4>{reply.author_name} replied:</h4>

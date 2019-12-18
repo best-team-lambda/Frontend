@@ -11,8 +11,6 @@ const Fa = styled(FontAwesomeIcon)`
     height: 60px;
 `
 
-
-
 export default function OpenTicket(props) {
     return (
         <>

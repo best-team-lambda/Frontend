@@ -5,8 +5,9 @@ import { deletePicture } from '../actions/TicketActions.js';
 function ImageModal(props) {
     // console.log('Image Modal Props: ', props);
     return (
-        <div className='modalDiv tooltip' style={{border: '1px solid red'}}>
+        <div className='modalDiv tooltip' >
             {/* <!-- Trigger the Modal --> */}
+            {/* style={{border: '1px solid red'}} */}
             <img className="modalImg" onClick={()=>{props.setActiveImage(props.src)}} src={props.src} alt={props.alt} />
             {/* <!-- The Modal --> */}
             <div id='myModal' className="modal" onClick={()=>{props.setActiveImage('')}} style={{display: props.modalToggle}}>
@@ -22,7 +23,6 @@ function ImageModal(props) {
         </div>
     )
 }
-
 const mapStateToProps = state => {
     // console.log('mapstatetoprops: ', state);
     return {

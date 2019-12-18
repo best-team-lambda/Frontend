@@ -303,31 +303,31 @@ export const deletePicture = (type, parentID ,id) => dispatch => {
 export const deleteVideo = (type, parentID ,id) => dispatch => {
     console.log('deleteVid firing: ', type, parentID, id)
     if (type === 'open'){
-        // axiosWithAuth().delete(`/tickets/video/open/${id}`)
-        // .then((res) =>{
-        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
-        // })
-        // .catch(err => { console.log('deleteOpenTicketVid CATCH ERROR: ', err.response.data.message) });
+        axiosWithAuth().delete(`/tickets/video/open/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteOpenTicketVid CATCH ERROR: ', err.response.data.message) });
     }
     else if (type === 'resolved'){
-        // axiosWithAuth().delete(`/tickets/video/resolved/${id}`)
-        // .then((res) =>{
-        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
-        // })
-        // .catch(err => { console.log('deleteResolveTicketVid CATCH ERROR: ', err.response.data.message) });
+        axiosWithAuth().delete(`/tickets/video/resolved/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteResolveTicketVid CATCH ERROR: ', err.response.data.message) });
     }
     else if (type === 'comment'){
-        // axiosWithAuth().delete(`/tickets/comments/video/${id}`)
-        // .then((res) =>{
-        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
-        // })
-        // .catch(err => { console.log('deleteCommentVid CATCH ERROR: ', err.response.data.message) });
+        axiosWithAuth().delete(`/tickets/comments/video/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteCommentVid CATCH ERROR: ', err.response.data.message) });
     }
     else if (type === 'reply'){
-        // axiosWithAuth().delete(`/tickets/comments/replies/video/${id}`)
-        // .then((res) =>{
-        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
-        // })
-        // .catch(err => { console.log('deleteReplyVid CATCH ERROR: ', err.response.data.message) });
+        axiosWithAuth().delete(`/tickets/comments/replies/video/${id}`)
+        .then((res) =>{
+            dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        })
+        .catch(err => { console.log('deleteReplyVid CATCH ERROR: ', err.response.data.message) });
     }
 }
