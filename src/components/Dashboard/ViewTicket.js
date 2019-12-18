@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getTicket, toggleCollapse, collapseAll, expandAll, markAsAnswer, removeAnswer, 
-addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket } from '../../actions/TicketActions';
+addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket, deleteVideo } from '../../actions/TicketActions';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
-import process2 from '../../images/process2.jpg';
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 
 import styled from "styled-components";
@@ -401,7 +400,10 @@ function ViewTicket(props) {
                 )}
               })}</div>
 
-              <div className='mediaDiv'>{props.ticket.open_video && <iframe allowFullScreen="true" src={props.ticket.open_video}/>}</div>
+              {props.ticket.open_video && <div className='mediaDiv' style={{width: '320px'}}>
+                <iframe allowFullScreen="true" src={props.ticket.open_video} style={{width: '100%', height: '180px'}}/>
+                {editingQuestion && <button className='button' style={{margin: '0 auto'}} onClick={()=>{props.deleteVideo('open', props.ticket.id, props.ticket.open_video_id)}}>Delete</button>}
+              </div>}
 
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={collapseAll}>Collapse All</button>}
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={expandAll}>Expand All</button>}
@@ -490,8 +492,13 @@ function ViewTicket(props) {
                         id={image.id} type={'comment'} parentId={comment.id} editing={editCommentID ? true : false}/>  
                       )}
                     })}</div>
-                    <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={video.url} />)}</div>
                     
+                    {comment.comment_videos && comment.comment_videos.map(video => 
+                      <div className='mediaDiv' style={{width: '320px'}}>
+                        <iframe allowFullScreen="true" src={video.url} style={{width: '100%', height: '180px'}} />
+                        {editCommentID && <button className='button' style={{margin: '0 auto'}} onClick={()=>{props.deleteVideo('comment', video.comment_id, video.id)}}>Delete</button>}
+                    </div>)}
+
                     {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
                     {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
 
@@ -562,7 +569,11 @@ function ViewTicket(props) {
                           id={image.id} type={'reply'} parentId={reply.id} editing={editReplyID ? true : false}/>  
                         )}
                       })}</div>
-                      <div className='mediaDiv'>{reply.reply_videos && reply.reply_videos.map(video => <iframe allowFullScreen="true" src={video.url} />) }</div>
+                      {reply.reply_videos && reply.reply_videos.map(video => 
+                        <div className='mediaDiv' style={{width: '320px'}}>
+                          <iframe allowFullScreen="true" src={video.url} style={{width: '100%', height: '180px'}} />
+                          {editReplyID && <button className='button' style={{margin: '0 auto'}} onClick={()=>{props.deleteVideo('reply', video.reply_id, video.id)}}>Delete</button>}
+                      </div>)}
 
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={pickReplyToEdit}>Edit</button>}
                       {props.currentUser.id === reply.author_id && reply.id == editReplyID && <button className='button alignRight' value={reply.id} onClick={cancelReplyEdit}>Cancel Edit</button>}
@@ -652,7 +663,7 @@ function ViewTicket(props) {
                           </FileDiv>
                       </label>
                       {video && <p>{video.name}</p>}
-                  <button className="button" onClick={addComment}>Submit Reply</button>
+                  <button className="button" onClick={addComment}>Submit Thread</button>
                 </div>
               </div>
 {/* End New Comment div */}
@@ -674,13 +685,12 @@ const mapStateToProps = state => {
       comments: state.TicketReducer.comments,
       openPictures: state.TicketReducer.openPictures,
       resolvedPictures: state.TicketReducer.resolvedPictures,
-      openVideo: state.TicketReducer.openVideo,
       resolvedVideo: state.TicketReducer.resolvedVideo,
   }
 }
 
 export default connect(mapStateToProps, { getTicket, toggleCollapse, collapseAll, expandAll, 
-  markAsAnswer, removeAnswer, addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket })(ViewTicket)
+  markAsAnswer, removeAnswer, addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket, deleteVideo })(ViewTicket)
 
 
 

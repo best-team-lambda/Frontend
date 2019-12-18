@@ -18,6 +18,7 @@ export const MARK_ANSWER = 'MARK_ANSWER';
 export const REMOVE_ANSWER = 'REMOVE_ANSWER';
 export const WIPE_TICKET = 'WIPE_TICKET';
 export const DELETE_PICTURE = "DELETE_PICTURE";
+export const DELETE_VIDEO = "DELETE_VIDEO";
 
 
 export const loadingStart = () =>{
@@ -75,32 +76,32 @@ export const addComment = (ticketID, newCommentText, setLoading, pictures, video
     setLoading(true);
     axiosWithAuth().post(`/tickets/${ticketID}/comments`, {description: newCommentText})
     .then((res) =>{
-        console.log("comment response", res.data);
+        // console.log("comment response", res.data);
         newCommentID = res.data.id;
-        console.log('pictures', pictures)
+        // console.log('pictures', pictures)
         if (pictures){
-            console.log('pictures true')
+            // console.log('pictures true')
             axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/comments/${newCommentID}/pictures`, pictures)
             .then(res => {
-                console.log('pictures success, res: ', res)
+                // console.log('pictures success, res: ', res)
                 if (video){
-                    console.log('video')
+                    // console.log('video')
                     axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/comments/${newCommentID}/video`, video)
                     .then(()=>{
-                        console.log('picture and video comment');
+                        // console.log('picture and video comment');
                         axiosWithAuth().get(`/tickets/comments/${newCommentID}`)
                         .then(res => {
-                            console.log('comment axios res: ', res)
+                            // console.log('comment axios res: ', res)
                             dispatch({ type: ADD_COMMENT, payload: res.data });
                             setLoading(false);
                         })}
                     );
                 }
                 else{
-                    console.log('picture but no video comment')
+                    // console.log('picture but no video comment')
                     axiosWithAuth().get(`/tickets/comments/${newCommentID}`)
                     .then(res => {
-                        console.log('comment axios res: ', res)
+                        // console.log('comment axios res: ', res)
                         dispatch({ type: ADD_COMMENT, payload: res.data });
                         setLoading(false);
                     })
@@ -108,13 +109,13 @@ export const addComment = (ticketID, newCommentText, setLoading, pictures, video
             })
         }
         else if (video){
-            console.log('else if video')
+            // console.log('else if video')
             axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/comments/${newCommentID}/video`, video)
             .then(()=>{
-                console.log('no picture, video true comment')
+                // console.log('no picture, video true comment')
                 axiosWithAuth().get(`/tickets/comments/${newCommentID}`)
                 .then(res => {
-                    console.log('comment axios res: ', res)
+                    // console.log('comment axios res: ', res)
                     dispatch({ type: ADD_COMMENT, payload: res.data });
                     setLoading(false);
                 })
@@ -269,66 +270,64 @@ export const expandAll = () => {
     return { type: EXPAND_ALL, payload: null };
 }
 export const deletePicture = (type, parentID ,id) => dispatch => {
-    console.log('deletePic firing: ', type, id)
+    // console.log('deletePic firing: ', type, id)
     if (type === 'open'){
         axiosWithAuth().delete(`/tickets/picture/open/${id}`)
         .then((res) =>{
-            console.log(res);
             dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
         })
-        .catch(err => { console.log('deleteOpenTicketPic CATCH ERROR: ', err) });
+        .catch(err => { console.log('deleteOpenTicketPic CATCH ERROR: ', err.response.data.message) });
     }
     else if (type === 'resolved'){
         axiosWithAuth().delete(`/tickets/picture/resolved/${id}`)
         .then((res) =>{
             dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
         })
-        .catch(err => { console.log('deleteResolveTicketPic CATCH ERROR: ', err) });
+        .catch(err => { console.log('deleteResolveTicketPic CATCH ERROR: ', err.response.data.message) });
     }
     else if (type === 'comment'){
         axiosWithAuth().delete(`/tickets/comments/picture/${id}`)
         .then((res) =>{
             dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
         })
-        .catch(err => { console.log('deleteCommentPic CATCH ERROR: ', err) });
+        .catch(err => { console.log('deleteCommentPic CATCH ERROR: ', err.response.data.message) });
     }
     else if (type === 'reply'){
         axiosWithAuth().delete(`/tickets/comments/replies/picture/${id}`)
         .then((res) =>{
             dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
         })
-        .catch(err => { console.log('deleteReplyPic CATCH ERROR: ', err) });
+        .catch(err => { console.log('deleteReplyPic CATCH ERROR: ', err.response.data.message) });
     }
 }
 export const deleteVideo = (type, parentID ,id) => dispatch => {
-    // console.log('deletePic firing: ', type, id)
-    // if (type === 'open'){
-    //     axiosWithAuth().delete(`/tickets/picture/open/${id}`)
-    //     .then((res) =>{
-    //         console.log(res);
-    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
-    //     })
-    //     .catch(err => { console.log('deleteOpenTicketPic CATCH ERROR: ', err) });
-    // }
-    // else if (type === 'resolved'){
-    //     axiosWithAuth().delete(`/tickets/picture/resolved/${id}`)
-    //     .then((res) =>{
-    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
-    //     })
-    //     .catch(err => { console.log('deleteResolveTicketPic CATCH ERROR: ', err) });
-    // }
-    // else if (type === 'comment'){
-    //     axiosWithAuth().delete(`/tickets/comments/picture/${id}`)
-    //     .then((res) =>{
-    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
-    //     })
-    //     .catch(err => { console.log('deleteCommentPic CATCH ERROR: ', err) });
-    // }
-    // else if (type === 'reply'){
-    //     axiosWithAuth().delete(`/tickets/comments/replies/picture/${id}`)
-    //     .then((res) =>{
-    //         dispatch({ type: DELETE_PICTURE, payload: {type: type, parentID: parentID, id: id} });
-    //     })
-    //     .catch(err => { console.log('deleteReplyPic CATCH ERROR: ', err) });
-    // }
+    console.log('deleteVid firing: ', type, parentID, id)
+    if (type === 'open'){
+        // axiosWithAuth().delete(`/tickets/video/open/${id}`)
+        // .then((res) =>{
+        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        // })
+        // .catch(err => { console.log('deleteOpenTicketVid CATCH ERROR: ', err.response.data.message) });
+    }
+    else if (type === 'resolved'){
+        // axiosWithAuth().delete(`/tickets/video/resolved/${id}`)
+        // .then((res) =>{
+        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        // })
+        // .catch(err => { console.log('deleteResolveTicketVid CATCH ERROR: ', err.response.data.message) });
+    }
+    else if (type === 'comment'){
+        // axiosWithAuth().delete(`/tickets/comments/video/${id}`)
+        // .then((res) =>{
+        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        // })
+        // .catch(err => { console.log('deleteCommentVid CATCH ERROR: ', err.response.data.message) });
+    }
+    else if (type === 'reply'){
+        // axiosWithAuth().delete(`/tickets/comments/replies/video/${id}`)
+        // .then((res) =>{
+        //     dispatch({ type: DELETE_VIDEO, payload: {type: type, parentID: parentID, id: id} });
+        // })
+        // .catch(err => { console.log('deleteReplyVid CATCH ERROR: ', err.response.data.message) });
+    }
 }

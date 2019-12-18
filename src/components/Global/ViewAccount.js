@@ -205,12 +205,12 @@ function ViewAccount(props) {
                                 </div>
                                 <DefaultProfile edit={false} icon={faUserCircle}/>
                             </ProfileFilter>)}
-                            <Info>
+                    <Info>
                         <Text1>{props.otherUser.name}</Text1>
                         <Text2>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</Text2>
                         <Text2>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</Text2>
                     </Info>
-                        </ProfileWrapper>
+                    </ProfileWrapper>
                 {/* <ProfileInfo> */}
                     {/* <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p> */}
                
@@ -241,38 +241,36 @@ function ViewAccount(props) {
                 </ProfileWrapper>
                 {props.otherUser.profile_picture && <button className='button' onClick={deleteProfilePic}>Remove</button>}
             </ProOuter>
-            <form onSubmit={handleSubmit}>
-            <label><h3 className="bold">Username:</h3>    
+            <EditForm onSubmit={handleSubmit}>
+            <Label><h3 className="bold">Username</h3>    
                 <div className='tooltip2'>
                  <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
                  <span className={editUserName ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{editUserName ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
                 </div>
-            </label>
-            <div>
-            </div>
-            <label><h3 className="bold">Name:</h3>
+            </Label>
+            <Label><h3 className="bold">Name</h3>
                 <input className="text-input" name="name" onChange={handleChange} placeholder={props.otherUser.name} />
-            </label>
-            <label><h3 className="bold">Email:</h3>
+            </Label>
+            <Label><h3 className="bold">Email</h3>
                 <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
-            </label> 
-            <label><h3 className="bold">Cohort:</h3>
+            </Label> 
+            <Label><h3 className="bold">Cohort</h3>
                 <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
-            </label>    
-            <label><h3 className="bold">New password:</h3>
+            </Label>    
+            <Label><h3 className="bold">New password</h3>
                     <input className="text-input" type='password' name="newPassword" onChange={handleChange} placeholder='New Password'/> 
-            </label>
+            </Label>
            <PasswordDiv>
-                <label>
+                <Label>
                     <p>Re-enter password to save changes:</p>
                     <input className="text-input" type='password' name='oldPassword' onChange={handleChange} placeholder='Current Password' />
-                </label>
+                </Label>
             </PasswordDiv> 
                 <br /><br />
                 <button className="button" type="submit">Submit changes</button>
-            </form> </>}
+            </EditForm> </>}
 
-            {(props.currentUser.id == props.match.params.id || isAdmin) && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
+            {(props.currentUser.id == props.match.params.id || isAdmin) && <ButtonParent><MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton></ButtonParent>}
             
             </StyledLoader>  
             </MainChild>
@@ -299,7 +297,6 @@ const StyledLoader = styled(LoadingOverlay)`
 
 const OuterDiv = styled.div `
     width: 100%;
-    border: 1px solid blue;
     background: #fff;
     
 `;
@@ -320,7 +317,6 @@ const Div = styled.div `
 `;
 const ProOuter = styled.div `
     width: 100%;
-    border:1px solid red;
     background: #fff;
     display: flex;
     align-items: center;
@@ -329,6 +325,7 @@ const ProOuter = styled.div `
 `;
 const MarginButton = styled.button `
     margin-top: 25px;
+    
 `;
 const PasswordDiv = styled.div `
     margin-top: 50px;
@@ -374,7 +371,7 @@ const ProfileImg = styled.div`
 `;
 const ProfileWrapper = styled.div `
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items:center;
     padding: 5%;
 
@@ -395,13 +392,10 @@ const ProfileFilter = styled.div `
 `;
 
 const ProfileInfo = styled.div`
-border: 1px solid orange;
 background: #fff;
 display: flex;
 justify-content: space-evenly;
 align-items:center;
-
-
 
 `
 
@@ -417,7 +411,6 @@ display: flex;
 justify-content: center;
 align-items: center;
 flex-direction: column;
-margin-left: 10%;
 padding: 5%;
 
 `
@@ -436,7 +429,24 @@ background: #fff;
 width: 50%;
 
 
+`
+
+const EditForm = styled.form`
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
 
 
+`
+const Label = styled.label`
+text-align: center;
+`
+
+const ButtonParent = styled.div `
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
 
 `

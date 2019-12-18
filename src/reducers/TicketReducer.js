@@ -1,5 +1,5 @@
 import { LOADING_START, LOADING_DONE, ADD_COMMENT, ADD_REPLY, SET_TICKET, TOGGLE_COLLAPSE, UPDATE_COMMENT, COLLAPSE_ALL, 
-  EXPAND_ALL, MARK_ANSWER, REMOVE_ANSWER, DELETE_COMMENT, UPDATE_REPLY, DELETE_REPLY, UPDATE_TICKET, WIPE_TICKET, DELETE_PICTURE } from '../actions/TicketActions.js';
+  EXPAND_ALL, MARK_ANSWER, REMOVE_ANSWER, DELETE_COMMENT, UPDATE_REPLY, DELETE_REPLY, UPDATE_TICKET, WIPE_TICKET, DELETE_PICTURE, DELETE_VIDEO } from '../actions/TicketActions.js';
 
 const initialState = {
     loading: true,
@@ -7,7 +7,6 @@ const initialState = {
     comments: '',
     openPictures: [],
     resolvedPictures: [],
-    openVideo: null,
     resolvedVideo: null,
   };
 
@@ -258,8 +257,13 @@ export const TicketReducer = (state = initialState, action) => {
             return{
               ...state,
             }
+        case DELETE_VIDEO:
+          console.log('DELETE_VIDEO FIRING', action.payload)
+        return {
+          ...state,
+        }
+
         default: 
-        console.log('REDUCER DEFAULT- how did you get here?'); 
         return state;
   }
 }

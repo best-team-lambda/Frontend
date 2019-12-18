@@ -493,9 +493,6 @@ header + section:first-of-type {
   justify-content: space-evenly;
   margin: 0 auto;
 }
-.modalDiv {
-  max-width: 30%;
-}
 .uploadDiv {
   margin-top: 0;
   margin-left: 5%;
@@ -681,6 +678,7 @@ header + section:first-of-type {
   height: 100px;
   border-radius: 5px;
   width: 110px;
+  padding: 10%;
 }
 .viewTicketPhoto {
   height: 100px;
@@ -818,6 +816,9 @@ header + section:first-of-type {
   border-width: 8px;
   border-style: solid;
   border-color: transparent green transparent  transparent;
+}
+.modalDiv {
+  max-width: 30%;
 }
 /* Style the Image Used to Trigger the Modal */
 .modalImg {
