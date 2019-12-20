@@ -8,7 +8,6 @@ export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const SET_OTHER_USER = 'SET_OTHER_USER';
 export const WIPE_OTHER_USER = 'WIPE_OTHER_USER';
 
-
 // export const loadingStart = () =>{
 //     return { type: LOADING_START, payload: null };
 // }
@@ -18,9 +17,8 @@ export const loadingDone = () =>{
 export const login = (user) => {
     return { type: SET_CURRENT_USER, payload: user };
 }
-export const logout = () =>{
-    return { type: LOGOUT, payload: null };
-}
+export const logout = () => ({ type: LOGOUT, payload: null });
+
 export const getCurrentUser = () => dispatch => {
     dispatch({ type: LOADING_START, payload: null });
     axiosWithAuth().get('/users/user')

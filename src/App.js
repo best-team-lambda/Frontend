@@ -57,10 +57,8 @@ function App(props) {
           {!props.loading && 
           <div className="main-content">
             <Route exact path='/Register' render={props => <SignUpForm {...props} />} />
-
             <PrivateRoute path='/Dashboard' component={Dashboard} currentUser={props.currentUser} />
-          </div>
-          }
+          </div>}
           <Footer />
         </div>
       </StyledLoader>

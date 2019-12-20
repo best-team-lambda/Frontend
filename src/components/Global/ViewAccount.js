@@ -9,7 +9,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
-
+import DeleteAccountModal from "./DeleteAccountModal";
 import axiosWithAuth from "../../utils/axiosWithAuth"
 
 function ViewAccount(props) {
@@ -139,6 +139,7 @@ function ViewAccount(props) {
             if (props.currentUser.id == props.match.params.id)
             {
                 setLoading(true);
+                // console.log('loading')
                 // CHECK IF NEEDED AND DO THIS FIRST, THEN UPDATE THE USER AND SPREAD THIS IN. USER UPDATER SHOULD ALWAYS SPREAD FULL OBJ IN AND
                 //ONLY UPDATE VARS RETURNED IN THE SERVER RES.
                 props.updateUser(userObj, setLoading);
@@ -195,61 +196,47 @@ function ViewAccount(props) {
         }
     }
 
-    const deleteAcc = async () => {
-        //e.preventDefault();
-        let pass = {password: '@PP1e'}
-        console.log('del acc firing')
-        axiosWithAuth().delete('/users/user', {data: {password: currentPassword}})
-        .then(res => {
-            sessionStorage.clear();
-            props.history.push('/login')
-        })
-        .catch(err => {
-            console.log('error', err.response.data.message);
-        })
-       
+    const deleteAcc = () => {
+        const modal = document.getElementById('modal') 
+        modal.style.display='block'
     }
 
-    
+    console.log(props.otherUser);
     return (
-        //
         <Main>
             <MainChild>
+                <DeleteAccountModal />
         <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
-                    <ProfileWrapper>
-                  
-                            {props.otherUser.profile_picture ? (
-                            <ProfileFilter>
-                                <div >
-                                    Edit
-                                    <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
-                                </div>
-                                <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
-                            </ProfileFilter>) : (
-                            <ProfileFilter>
-                                <div className='editPicture'>
-                                    Edit
-                                    <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
-                                </div>
-                                <DefaultProfile edit={false} icon={faUserCircle}/>
-                            </ProfileFilter>)}
-                    <Info>
-                        <Text1>{props.otherUser.name}</Text1>
-                        <Text2>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</Text2>
-                        <Text3>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</Text3>
-                    </Info>
-                    {(props.currentUser.id == props.match.params.id || isAdmin) && 
-                        <ButtonParent>
-                            <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>Edit</MarginButton>
-                        </ButtonParent>
-                    }
-                    </ProfileWrapper>
-        
-                {/* <ProfileInfo> */}
-                    {/* <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p> */}
-               
-                    </>} 
+                <ProfileWrapper>
+                
+                        {props.otherUser.profile_picture ? (
+                        <ProfileFilter>
+                            <div >
+                                Edit
+                                <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
+                            </div>
+                            <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
+                        </ProfileFilter>) : (
+                        <ProfileFilter>
+                            <div className='editPicture'>
+                                Edit
+                                <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
+                            </div>
+                            <DefaultProfile edit={false} icon={faUserCircle}/>
+                        </ProfileFilter>)}
+                <Info>
+                    <Text1>{props.otherUser.name}</Text1>
+                    <Text2>{props.otherUser.email !== null ? props.otherUser.email :'Email: None'}</Text2>
+                    <Text3>{props.otherUser.cohort !== null ? `Cohort: ${props.otherUser.cohort}` : 'Cohort: Unknown'}</Text3>
+                </Info>
+                {(props.currentUser.id == props.match.params.id || isAdmin) && 
+                    <ButtonParent>
+                        <MarginButton style={{marginBottom: '4rem'}} className="button" onClick={() => setShowEditForm(!showEditForm)}>Edit Profile</MarginButton>
+                    </ButtonParent>
+                }
+                </ProfileWrapper>
+            </>} 
             
             {showEditForm && <>
             <OuterDiv2>
@@ -275,12 +262,15 @@ function ViewAccount(props) {
                         <DefaultProfile edit={true} icon={faUserCircle}/>
                     </ProfileFilter>)}</label>
                      <SideContent>
+                    {props.otherUser.profile_picture && <RemoveBtn onClick={deleteProfilePic}>Remove Photo</RemoveBtn>}
+                    {(props.currentUser.id == props.match.params.id || isAdmin) && 
+                        <RemoveBtn onClick={(e)=>{e.preventDefault();deleteAcc();}}>Delete Account</RemoveBtn>
+                    }
                     <Name>{props.otherUser.name}</Name>
             
                 </SideContent>
                 </ProfileWrapper>
                
-                {props.otherUser.profile_picture && <button className='button' onClick={deleteProfilePic}>Remove</button>}
             </ProOuter>
     
             <EditForm onSubmit={handleSubmit}>
@@ -316,12 +306,6 @@ function ViewAccount(props) {
                 <EditButton>
                 {enterPasswordField && <ButtonParent><MarginButton className="button" type="submit">Submit Changes</MarginButton></ButtonParent>}
             {((props.currentUser.id == props.match.params.id || isAdmin) && !enterPasswordField) && <ButtonParent><MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton></ButtonParent>}
-            {/* DONT DELETE!! */}
-            {/* {(props.currentUser.id == props.match.params.id || isAdmin) && 
-                        <ButtonParent>
-                            <button className="button" onClick={(e)=>{e.preventDefault();deleteAcc();}}>Delete Account</button>
-                        </ButtonParent>
-                    } */}
                 </EditButton>
                 
             </EditForm></>}
@@ -343,7 +327,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, { getOtherUser, updateUser, adminUpdateUser, addProfilePicture, updateProfilePicture, deleteProfilePicture,
     adminAddProfilePicture, adminUpdateProfilePicture, adminDeleteProfilePicture, })(ViewAccount)
 
-
+// #region Styled components
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
     z-index: 2;
@@ -379,7 +363,7 @@ const ProOuter = styled.div `
 
 `;
 const MarginButton = styled.button `
- margin-bottom: 2%;
+ margin: 2rem 0;
     
 `;
 const PasswordDiv = styled.div `
@@ -437,8 +421,9 @@ const ProfileWrapper = styled.div `
     `;
 const ProfileFilter = styled.div `
     font-family: 'Patua One', sans-serif;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+    margin-top:50px;
     display: flex;
     font-size: 3.5rem;
     align-items: center;
@@ -460,14 +445,17 @@ align-items:center;
 
 const Text1 = styled.h2 `
     text-transform: capitalize;
+    margin: 0.7rem;
 `
 const Text2 =styled.h3`
     font-style: italic;
-    font-size: 1.7rem;
+    font-size: 2rem;
+    margin: 0.7rem;
 `
 
 const Text3 =styled.h5`
     text-transform: uppercase;
+    margin: 0.7rem;
 `
 
 const Info = styled.div`
@@ -565,8 +553,21 @@ const SideContent = styled.div `
 `
 const Name = styled.h2 `
     text-transform: capitalize;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1rem;
 `
 
 const Title = styled.h3`
 text-align: center;
 `
+
+const RemoveBtn = styled.h3 `
+    font-style:italic;
+    margin-top: 0;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+
+`
+//#endregion

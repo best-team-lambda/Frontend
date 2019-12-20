@@ -32,9 +32,9 @@ export const getTicket = (props) => dispatch => {
     axiosWithAuth()
       .get(`/tickets/${props.match.params.id}`)
       .then(res => {
-        console.log('GetTicket Res', res.data);
-        console.log('GetTicket TicketDetails:', res.data.ticket_details);
-        console.log('GetTicket Comments:', res.data.ticket_comments);
+        // console.log('GetTicket Res', res.data);
+        // console.log('GetTicket TicketDetails:', res.data.ticket_details);
+        // console.log('GetTicket Comments:', res.data.ticket_comments);
         dispatch({ type: SET_TICKET, payload: res.data });
       })
       .catch(err => {
@@ -44,14 +44,23 @@ export const getTicket = (props) => dispatch => {
         props.history.push('/Dashboard/OpenTickets');
       });
 }
-export const updateTicket = (ticketID, editedTicket) => dispatch => {
-    // console.log('updateTicket firing: ', ticketID, editedTicket);
-    axiosWithAuth().put(`/tickets/${ticketID}`, { ...editedTicket })
-    .then((res) =>{
-        // console.log('updateComment res data: ', res.data);
+export const updateTicket = (ticketID, formData, setLoading, setEditingQuestion, setEditQuestionObj, setImages, setVideo) => dispatch => {
+    // console.log('updateTicket action firing');
+    setLoading(true);
+    axiosWithAuth().put(`tickets/${ticketID}/sendall/`, formData)
+    .then(res =>{
+        // console.log('updateTicket res: ', res);
         dispatch({ type: UPDATE_TICKET, payload: res.data });
+        setEditingQuestion(false);
+        setEditQuestionObj({title: '', category: '', description: ''});
+        setImages(false);
+        setVideo(false);
+        setLoading(false);
     })
-    .catch(err => { console.log('updateComment CATCH ERROR: ', err.response) });
+    .catch(err => {
+        console.log('UpdateTicket Catch Error', err.response.data.message);
+        setLoading(false);
+    });
 }
 export const deleteTicket = (props) => dispatch => {
     dispatch({ type: LOADING_START, payload: null });
@@ -122,10 +131,10 @@ export const addComment = (ticketID, newCommentText, setLoading, pictures, video
             });
         }
         else{
-            console.log('no picture or video comment')
+            // console.log('no picture or video comment')
             axiosWithAuth().get(`/tickets/comments/${newCommentID}`)
             .then(res => {
-                console.log('comment axios res: ', res)
+                // console.log('comment axios res: ', res)
                 dispatch({ type: ADD_COMMENT, payload: res.data });
                 setLoading(false);
             })
@@ -134,14 +143,23 @@ export const addComment = (ticketID, newCommentText, setLoading, pictures, video
     .catch(err => { console.log('addComment CATCH ERROR: ', err) 
     setLoading(false); });
 }
-export const updateComment = (commentID, updatedText, collapsedStatus) => dispatch => {
-    // console.log('updateComment firing: ', commentID, updatedText);
-    axiosWithAuth().put(`/tickets/comments/${commentID}`, { description: updatedText, collapsed: collapsedStatus})
-    .then((res) =>{
-        // console.log('updateComment res data: ',res.data);
-        dispatch({ type: UPDATE_COMMENT, payload: res.data });
+export const updateComment = (commentID, formData, setLoading, setEditCommentText, setEditCommentID, setImages, setVideo) => dispatch => {
+    // console.log('updateComment firing');
+    setLoading(true);
+    axiosWithAuth().put(`tickets/comments/${commentID}/sendall/`, formData)
+    .then(res =>{
+    //   console.log('updateComment res: ', res);
+      dispatch({ type: UPDATE_COMMENT, payload: res.data.comment });
+      setEditCommentID('');
+      setEditCommentText('');
+      setImages(false);
+      setVideo(false);
+      setLoading(false);
     })
-    .catch(err => { console.log('updateComment CATCH ERROR: ', err.response) });
+    .catch(err => {
+      console.log('Update Comment Catch Error', err.response.data.message);
+      setLoading(false);
+    });
 }
 export const deleteComment = (commentID) => dispatch => {
     axiosWithAuth().delete(`/tickets/comments/${commentID}`)
@@ -155,32 +173,32 @@ export const addReply = (commentID, newReplyText, setLoading, pictures, video) =
     setLoading(true);
     axiosWithAuth().post(`/tickets/comments/${commentID}/replies`, {description: newReplyText})
     .then((res) =>{
-        console.log("reply response", res.data);
+        // console.log("reply response", res.data);
         newReplyID = res.data.id;
-        console.log('pictures', pictures)
+        // console.log('pictures', pictures)
         if (pictures){
-            console.log('pictures true')
+            // console.log('pictures true')
             axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/comments/replies/${newReplyID}/pictures`, pictures)
             .then(res => {
-                console.log('pictures success, res: ', res)
+                // console.log('pictures success, res: ', res)
                 if (video){
-                    console.log('video')
+                    // console.log('video')
                     axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/comments/replies/${newReplyID}/video`, video)
                     .then(()=>{
-                        console.log('picture and video reply');
+                        // console.log('picture and video reply');
                         axiosWithAuth().get(`/tickets/replies/${newReplyID}`)
                         .then(res => {
-                            console.log('reply axios res: ', res)
+                            // console.log('reply axios res: ', res)
                             dispatch({ type: ADD_REPLY, payload: res.data });
                             setLoading(false);
                         })}
                     );
                 }
                 else{
-                    console.log('picture but no video reply')
+                    // console.log('picture but no video reply')
                     axiosWithAuth().get(`/tickets/replies/${newReplyID}`)
                     .then(res => {
-                        console.log('reply axios res: ', res)
+                        // console.log('reply axios res: ', res)
                         dispatch({ type: ADD_REPLY, payload: res.data });
                         setLoading(false);
                     })
@@ -188,23 +206,23 @@ export const addReply = (commentID, newReplyText, setLoading, pictures, video) =
             })
         }
         else if (video){
-            console.log('else if video')
+            // console.log('else if video')
             axiosWithAuth().post(`https://ddq.herokuapp.com/api/tickets/comments/replies/${newReplyID}/video`, video)
             .then(()=>{
-                console.log('no picture, video true reply')
+                // console.log('no picture, video true reply')
                 axiosWithAuth().get(`/tickets/replies/${newReplyID}`)
                 .then(res => {
-                    console.log('reply axios res: ', res)
+                    // console.log('reply axios res: ', res)
                     dispatch({ type: ADD_REPLY, payload: res.data });
                     setLoading(false);
                 })
             });
         }
         else{
-            console.log('no picture or video reply')
+            // console.log('no picture or video reply')
             axiosWithAuth().get(`/tickets/replies/${newReplyID}`)
             .then(res => {
-                console.log('reply axios res: ', res)
+                // console.log('reply axios res: ', res)
                 dispatch({ type: ADD_REPLY, payload: res.data });
                 setLoading(false);
             })
@@ -213,13 +231,23 @@ export const addReply = (commentID, newReplyText, setLoading, pictures, video) =
     .catch(err => { console.log('addReply CATCH ERROR: ', err) 
     setLoading(false); });
 }
-export const updateReply = (replyID, updatedText) => dispatch => {
-    axiosWithAuth().put(`/tickets/comments/replies/${replyID}`, {description: updatedText})
-    .then((res) =>{
-        // console.log('updateReply res data: ', res.data);
-        dispatch({ type: UPDATE_REPLY, payload: res.data });
+export const updateReply = (editReplyID, formData, setLoading, setEditReplyText, setEditReplyID, setImages, setVideo) => dispatch => {
+    // console.log('updateReply firing');
+    setLoading(true);
+    axiosWithAuth().put(`tickets/comments/replies/${editReplyID}/sendall/`, formData)
+    .then(res =>{
+    //   console.log('updateReply res: ', res);
+      dispatch({ type: UPDATE_REPLY, payload: res.data.reply });
+      setEditReplyID('');
+      setEditReplyText('');
+      setImages(false);
+      setVideo(false);
+      setLoading(false);
     })
-    .catch(err => { console.log('updateReply CATCH ERROR: ', err) });
+    .catch(err => {
+      console.log(err.response.data.message);
+      setLoading(false);
+    });
 }
 export const deleteReply = (replyID) => dispatch => {
     axiosWithAuth().delete(`/tickets/comments/replies/${replyID}`)
@@ -230,11 +258,7 @@ export const deleteReply = (replyID) => dispatch => {
     .catch(err => { console.log('deleteReply CATCH ERROR: ', err) });
 }
 export const markAsAnswer = (ticketID, commentOrReply) => dispatch => {
-    console.log('markAsAnswer action commentOrReply: ', commentOrReply);
-    // let commentId = '';
-    // let replyId = '';
-    // replyId = commentOrReply.comment_id;
-    // console.log(replyId);
+    // console.log('markAsAnswer action commentOrReply: ', commentOrReply);
     let objToSend;
     if (commentOrReply.comment_id !== undefined){
         objToSend = { reply_id: commentOrReply.id, solution: commentOrReply.description }
@@ -301,7 +325,7 @@ export const deletePicture = (type, parentID ,id) => dispatch => {
     }
 }
 export const deleteVideo = (type, parentID ,id) => dispatch => {
-    console.log('deleteVid firing: ', type, parentID, id)
+    // console.log('deleteVid firing: ', type, parentID, id)
     if (type === 'open'){
         axiosWithAuth().delete(`/tickets/video/open/${id}`)
         .then((res) =>{

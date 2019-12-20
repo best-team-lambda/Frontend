@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { logout } from '../../actions/AppActions.js';
@@ -6,7 +6,6 @@ import logo from '../../images/logo.png';
 
 
 function Header(props) {
-
     const logOut = () => {
         sessionStorage.removeItem('token');
         props.logout();
@@ -56,4 +55,4 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { logout })(Header)
+export default connect(mapStateToProps, {  logout })(Header)

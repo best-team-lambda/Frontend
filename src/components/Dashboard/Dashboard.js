@@ -8,18 +8,18 @@ import OpenTicketList from './OpenTickets/OpenTicketList.js';
 import UserTicketList from './Mine/UserTicketList.js';
 import ClosedTicketList from './Closed/ClosedTicketList.js';
 import ViewTicket from './ViewTicket.js';
+//import MyOpenTicket from "./"
 
 import CourseBuilder from '../CourseBuilder.js';
 import LambdaTK from './LambdaTK/LambdaTK.js';
 import Course from "./LambdaTK/Course"
-
-
+//my open ticket is TENTATIVE
 export default function Dashboard(props) {
         
     return (
+        <>
         <div className='dashboard'>
                 <SidebarNav props={props} />
-                {/* <Route exact path='/Dashboard/Account' component={Account} /> */}
                 <Route exact path='/Dashboard/Account/:id' component={ViewAccount} />
                 <Route exact path='/Dashboard/CreateTicket' component={CreateTicket} />
                 <Route exact path='/Dashboard/OpenTickets' component={OpenTicketList} />
@@ -29,6 +29,8 @@ export default function Dashboard(props) {
                 <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} />
                 <Route exact path='/Dashboard/Lambda' component={LambdaTK} />
                 <Route exact path='/Dashboard/Lambda/:course' component={Course} />
+              
         </div>
+        </>
     )
 }

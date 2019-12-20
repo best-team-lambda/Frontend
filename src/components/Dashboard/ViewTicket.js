@@ -6,11 +6,13 @@ addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, up
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
-import axiosWithAuth from '../../utils/axiosWithAuth.js';
+// import axiosWithAuth from '../../utils/axiosWithAuth.js';
+import axios from 'axios';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 import ImageModal from "../ImageModal";
+import axiosWithAuth from "../../utils/axiosWithAuth";
 
 function ViewTicket(props) {
 // #region local state
@@ -31,7 +33,7 @@ function ViewTicket(props) {
   const Fragment = React.Fragment;
   // #endregion
 // #region console logs
-  console.log('ViewTicket Props',props)
+  // console.log('ViewTicket Props',props)
   // console.log('props.currentUser: ', props.currentUser);
   // console.log('props.ticket: ', props.ticket)
   // console.log('props.comments: ', props.comments)
@@ -121,84 +123,77 @@ function ViewTicket(props) {
     }
   }
   const editTicket = () => {
-    if (editQuestionObj.title !== '' || editQuestionObj.category !== '' || editQuestionObj.description !== ''){
-      // props.updateQuestion(editCommentID, editCommentText, collapsedStatus);
-      // let editedTicket = {title: props.ticket.title, category: props.ticket.category, description: props.ticket.description};
-      let editedTicket = {};
-      if (editQuestionObj.title !== '')
-      {
-        editedTicket = {...editedTicket, title: editQuestionObj.title};
-      }
-      if (editQuestionObj.category !== '')
-      {
-        editedTicket = {...editedTicket, category: editQuestionObj.category};
-      }
-      if (editQuestionObj.description !== '')
-      {
-        editedTicket = {...editedTicket, description: editQuestionObj.description};
-      }
-      props.updateTicket(ticketID, editedTicket);
-      setEditingQuestion(false);
-      setEditQuestionObj({title: '', category: '', description: ''});
-    }
-    else if (images.length || video){
-      console.log('pictureeeeee');
-      setLoading(true);
-      if (images.length){
-        const imagesData = new FormData();
-        for(let i = 1; i <= images.length; i++) {
-          imagesData.append('image' + i, images[i-1]);
-      }
-        axiosWithAuth().post(`/tickets/${ticketID}/pictures/open`, imagesData)
-        .then(res =>{
-          setLoading(false);
-            console.log('EditCommentPostVideo res: ', res);
-        })
-        .catch(err => {console.log('EditCommentPostVideo CATCH ERROR: ', err.response.data.message) 
-        setLoading(false);})
-      }
-      // below works if no video posted to ticket already and nothing else edited
-      if (video){
-        if (props.ticket.open_video_id){
-          setLoading(false);
-          alert('Only one video is allowed per ticket. Delete the current video before adding another.');
-        }
-        else{
-          const videoData = new FormData();
-          videoData.append('video', video);
-          axiosWithAuth().post(`/tickets/${ticketID}/video/open`, videoData)
-          .then(res =>{
-            setLoading(false);
-              console.log('EditCommentPostVideo res: ', res);
-          })
-          .catch(err => {console.log('EditCommentPostVideo CATCH ERROR: ', err.response.data.message) 
-          setLoading(false);})
-        }
-      }
+    if (!editQuestionObj.title && !editQuestionObj.category && !editQuestionObj.description && !images && !video){
+      alert('You must make a change before submitting.');
     }
     else{
-      alert('No changes have been made. Modify the ticket before submitting');
+      const data = new FormData();
+      if (editQuestionObj.title !== ''){
+        data.append('title', editQuestionObj.title);
+      }
+      if (editQuestionObj.category !== ''){
+        data.append('category', editQuestionObj.category);
+      }
+      if (editQuestionObj.description !== ''){
+        data.append('description', editQuestionObj.description);
+      }
+      if (images.length)
+      {
+        for(let i = 1; i <= images.length; i++) {
+          data.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        data.append('video', video);
+      }
+
+      props.updateTicket(ticketID, data, setLoading, setEditingQuestion, setEditQuestionObj, setImages, setVideo);
     }
   }
   const editComment = () => {
-    if (editCommentText !== ''){
-      let collapsedStatus = props.comments.find(comment => {return comment.id == editCommentID}).collapsed;
-      props.updateComment(editCommentID, editCommentText, collapsedStatus);
-      setEditCommentID('');
-      setEditCommentText('');
+    if (!editCommentText && !images && !video){
+      alert('You must make a change before submitting.');
     }
     else{
-      alert('You must add text to update the comment.');
+      const data = new FormData();
+      if (editCommentText !== ''){
+        data.append('description', editCommentText);
+      }
+      if (images.length)
+      {
+        for(let i = 1; i <= images.length; i++) {
+          data.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        data.append('video', video);
+      }
+      let collapsedStatus = props.comments.find(comment => {return comment.id == editCommentID}).collapsed;
+      data.append('collapsed', collapsedStatus);
+
+      props.updateComment(editCommentID, data, setLoading, setEditCommentText, setEditCommentID, setImages, setVideo);
     }
   }
   const editReply = () => {
-    if (editReplyText !== ''){
-      props.updateReply(editReplyID, editReplyText);
-      setEditReplyID('');
-      setEditReplyText('');
+    if (!editReplyText && !images && !video){
+      alert('You must make a change before submitting.');
     }
     else{
-      alert('You must add text to update the comment.');
+      const data = new FormData();
+      if (editReplyText !== ''){
+        data.append('description', editReplyText);
+      }
+      if (images.length)
+      {
+        for(let i = 1; i <= images.length; i++) {
+          data.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        data.append('video', video);
+      }
+
+      props.updateReply(editReplyID, data, setLoading, setEditReplyText, setEditReplyID, setImages, setVideo);
     }
   }
 // #endregion

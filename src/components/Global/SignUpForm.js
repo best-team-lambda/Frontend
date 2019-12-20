@@ -16,6 +16,8 @@ function SignUpForm(props) {
     username: "",
     password: "",
     name: "",
+    email: "",
+    cohort: ""
   });
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserCohort, setNewUserCohort] = useState('');
@@ -23,62 +25,76 @@ function SignUpForm(props) {
   // console.log('newUser: ', newUser);
 
   const handleChange = e => {
-    if (e.target.name === 'email'){
-      setNewUserEmail(e.target.value);
-    }
-    else if (e.target.name === 'cohort'){
-      setNewUserCohort(e.target.value);
-    }
-    else{
-      setNewUser({ ...newUser, [e.target.name]: e.target.value });
-      if(e.target.name === 'username'){
-        if(isValidUsername(e.target.value))
-        {
-          setUsernameInvalid(false);
-          isUsernameAvailable(e.target.value)
-          .then(res => { setUsernameAvailable(res); })
-        }
-        else
-        {
-          setUsernameInvalid(true);
-        }
+    if(e.target.name === 'username'){
+      if(isValidUsername(e.target.value)){
+        setUsernameInvalid(false);
+        isUsernameAvailable(e.target.value)
+        .then(res => setUsernameAvailable(res))
       }
     }
-  };
+    setNewUser({...newUser,[e.target.name]:e.target.value})
 
+    // if (e.target.name === 'email'){
+    //   setNewUserEmail(e.target.value);
+    // }
+    // else if (e.target.name === 'cohort'){
+    //   setNewUserCohort(e.target.value);
+    // }
+    // else{
+    //   setNewUser({ ...newUser, [e.target.name]: e.target.value });
+    //   if(e.target.name === 'username'){
+    //     if(isValidUsername(e.target.value))
+    //     {
+    //       setUsernameInvalid(false);
+    //       isUsernameAvailable(e.target.value)
+    //       .then(res => { setUsernameAvailable(res); })
+    //     }
+    //     else
+    //     {
+    //       setUsernameInvalid(true);
+    //     }
+    //   }
+    // }
+  };
   const handleSubmit = e => {
     e.preventDefault();
     // #region build user obj to send to validate
-    if (newUserEmail !== "") {
-      //email is not a required input- to validate check if it is not null then check the data
-      //empty strings cannot be sent to the backend as they will be stored incorrectly- 
-      //so if email/cohort is empty we will not send them on the user object
+    // if (newUserEmail != "") {
+    //   //email is not a required input- to validate check if it is not null then check the data
+    //   //empty strings cannot be sent to the backend as they will be stored incorrectly- 
+    //   //so if email/cohort is empty we will not send them on the user object
 
-      //add to newUser obj since not null
-      setNewUser({...newUser, email: newUserEmail})
-    }
-    if (newUserCohort !== "") {
-      //cohort is not a required input- to validate check if it is not null then check the data
-      //empty strings cannot be sent to the backend as they will be stored incorrectly- 
-      //so if email/cohort is empty we will not send them on the user object
+    //   //add to newUser obj since not null
+    //   setNewUser({...newUser, email: newUserEmail})
+    // }
+    // if (newUserCohort != "") {
+    //   //cohort is not a required input- to validate check if it is not null then check the data
+    //   //empty strings cannot be sent to the backend as they will be stored incorrectly- 
+    //   //so if email/cohort is empty we will not send them on the user object
 
-      //add to newUser obj since not null
-      setNewUser({...newUser, cohort: newUserCohort});
-    }
+    //   //add to newUser obj since not null
+    //   setNewUser({...newUser, cohort: newUserCohort});
+    // }
     // #endregion
-
-    console.log('newUser: ', newUser);
-    if (validateInputs(newUser) && isValidPassword(newUser.password)) {
+    const resBody = {...newUser}
+    if(!newUser.cohort){
+      delete resBody.cohort
+    }
+    if(!newUser.email){
+      delete resBody.email
+    }
+    console.log('newUser: ', resBody);
+    if (validateInputs(resBody) && isValidPassword(resBody.password)) {
       setLoading(true);
       axios
-        .post("https://ddq.herokuapp.com/api/auth/register", newUser)
+        .post("https://ddq.herokuapp.com/api/auth/register", resBody)
         .then(res => {
           // console.log('axios: api/auth/register response: ',res);
           // alert("Signed up! Logging in now..");
           axios
             .post("https://ddq.herokuapp.com/api/auth/login", {
-              username: newUser.username,
-              password: newUser.password
+              username: resBody.username,
+              password: resBody.password
             })
             .then(res => {
               // console.log('axios: api/auth/login response: ', res);
@@ -118,7 +134,10 @@ function SignUpForm(props) {
               <input className="text-input" name="username" onChange={handleChange} placeholder="username" />
               <span className={newUser.username ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{newUser.username ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
             </div>
+
             <input className="text-input" name="password" type="password" onChange={handleChange} placeholder="password" />
+      
+
             <input className="text-input" name="name" onChange={handleChange} placeholder="name" />
             <input className="text-input" name="email" type="email" onChange={handleChange} placeholder="email" />
             <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder="cohort" />

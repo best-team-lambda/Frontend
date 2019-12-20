@@ -6,13 +6,17 @@ export const SELECT_UNIT = 'SELECT_UNIT';
 export const SELECT_WEEK = 'SELECT_WEEK';
 export const SELECT_DAY = 'SELECT_DAY';
 
+// export const CLEAR_COURSE = 'CLEAR_COURSE';
+// export const CLEAR_UNIT = 'CLEAR_UNIT';
+// export const CLEAR_WEEK = 'CLEAR_WEEK';
+// export const CLEAR_DAY = 'CLEAR_DAY';
 
 
 export const getCourses = () => dispatch => {
         axiosWithAuth()
           .get(`/courses`)
           .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 dispatch({ type: SET_COURSES, payload: res.data });
           })
           .catch(err => {

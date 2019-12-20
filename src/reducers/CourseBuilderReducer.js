@@ -29,42 +29,101 @@ export const CourseBuilderReducer = (state = initialState, action) => {
             let pickedCourse = state.courses.find(course => {
                 return course.name === action.payload;
             })
+            if (action.payload === 'default'){
+                return {
+                    ...state,
+                    courseSelected: false,
+                    selectedCourse: '',
+                    units: '',
+                    unitSelected: false,
+                    selectedUnit: '',
+                    weekSelected: false,
+                    selectedWeek: '',
+                    daySelected: false,
+                    selectedDay: '',
+                    day: '',
+                };
+            }
             return {
                 ...state,
                 courseSelected: true,
                 selectedCourse: action.payload,
-                units: [...pickedCourse.units]
+                units: [...pickedCourse.units],
+                unitSelected: false,
+                selectedUnit: '',
+                weekSelected: false,
+                selectedWeek: '',
+                daySelected: false,
+                selectedDay: '',
+                day: '',
             };
             case SELECT_UNIT:
                 console.log('SELECT_UNIT FIRING', action.payload);
                 let pickedUnit = state.units.find(unit => {
                     return unit.number == action.payload;
                 })
-                console.log('pickedUnit', pickedUnit);
+                if (action.payload === 'default'){
+                    return {
+                        ...state,
+                        unitSelected: false,
+                        selectedUnit: '',
+                        weeks: '',
+                        weekSelected: false,
+                        selectedWeek: '',
+                        daySelected: false,
+                        selectedDay: '',
+                        day: '',
+                    }
+                }
                 return {
                     ...state,
                     unitSelected: true,
                     selectedUnit: action.payload,
-                    weeks: [...pickedUnit.weeks]
+                    weeks: [...pickedUnit.weeks],
+                    weekSelected: false,
+                    selectedWeek: '',
+                    daySelected: false,
+                    selectedDay: '',
+                    day: '',
                 };
             case SELECT_WEEK:
                 console.log('SELECT_WEEK FIRING', action.payload);
                 let pickedWeek = state.weeks.find(week => {
                     return week.number == action.payload;
                 })
-                console.log('pickedWeek', pickedWeek);
+                if (action.payload === 'default'){
+                    return {
+                        ...state,
+                        weekSelected: false,
+                        selectedWeek: '',
+                        days: '',
+                        daySelected: false,
+                        selectedDay: '',
+                        day: '',
+                    };
+                }
                 return {
                     ...state,
                     weekSelected: true,
                     selectedWeek: action.payload,
-                    days: [...pickedWeek.days]
+                    days: [...pickedWeek.days],
+                    daySelected: false,
+                    selectedDay: '',
+                    day: '',
                 };
             case SELECT_DAY:
                 console.log('SELECT_DAY FIRING', action.payload);
                 let pickedDay = state.days.find(day => {
                     return day.number == action.payload;
                 })
-                console.log('pickedDay', pickedDay);
+                if (action.payload === 'default'){
+                    return {
+                        ...state,
+                        daySelected: false,
+                        selectedDay: '',
+                        day: '',
+                    };
+                }
                 return {
                     ...state,
                     daySelected: true,

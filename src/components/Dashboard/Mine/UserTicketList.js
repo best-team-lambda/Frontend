@@ -6,6 +6,7 @@ import OpenTicket from '../OpenTickets/OpenTicket.js';
 import MyTicket from './MyTicket';
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
+import ThreadTicket from "./ThreadTicket"
 
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
@@ -104,8 +105,8 @@ function UserTicketList(props) {
             // console.log(res.data.resolvedTickets, res.data.commentedOn );
             setOpenTickets(res.data.openTickets);
             setResolvedTickets(res.data.resolvedTickets);
-            setCommentedTickets(res.data.commentedOn);
-            setRepliedTickets(res.data.repliedOn);
+            setCommentedTickets(res.data.commentedOn.filter((thread,i)=>{return thread.author_id !== props.currentUser.id && res.data.commentedOn[i].id !== res.data.commentedOn[i+1].id }));
+            setRepliedTickets(res.data.repliedOn.filter(replies=>replies.author_id !== props.currentUser.id));
             setLoading(false);
         })
         .catch(err => {
@@ -199,7 +200,7 @@ function UserTicketList(props) {
           if(triggered){        
             if (clickedOn === 'open' && !openCollapsed){
                 // console.log('bodytop, header bottom', ref1body.current.getBoundingClientRect().top, ref1.current.getBoundingClientRect().bottom)
-                if(ref1body.current.getBoundingClientRect().top < ref1.current.getBoundingClientRect().bottom){
+                if(ref1body.current && ref1body.current.getBoundingClientRect().top < ref1.current.getBoundingClientRect().bottom){
                     // console.log('offset before: ', window.pageYOffset)
                     // console.log('difference', (ref1.current.getBoundingClientRect().bottom - ref1body.current.getBoundingClientRect().top), 'bodyheight', ref1body.current.clientHeight)
                     window.scrollBy(0, ((ref1.current.getBoundingClientRect().bottom - ref1body.current.getBoundingClientRect().top)*-1))
@@ -207,17 +208,17 @@ function UserTicketList(props) {
                 }
             }
             else if (clickedOn === 'closed' && !resolvedCollapsed){
-                if(ref2body.current.getBoundingClientRect().top < ref2.current.getBoundingClientRect().bottom){
+                if(ref1body.current && ref2body.current.getBoundingClientRect().top < ref2.current.getBoundingClientRect().bottom){
                     window.scrollBy(0, ((ref2.current.getBoundingClientRect().bottom - ref2body.current.getBoundingClientRect().top)*-1))
                 }
             }
             else if (clickedOn === 'comments' && !commentsCollapsed){
-                if(ref3body.current.getBoundingClientRect().top < ref3.current.getBoundingClientRect().bottom){
+                if(ref1body.current && ref3body.current.getBoundingClientRect().top < ref3.current.getBoundingClientRect().bottom){
                     window.scrollBy(0, ((ref3.current.getBoundingClientRect().bottom - ref3body.current.getBoundingClientRect().top)*-1))
                 }
             }
             else if (clickedOn === 'replies' && !repliesCollapsed){
-                if(ref4body.current.getBoundingClientRect().top < ref4.current.getBoundingClientRect().bottom){
+                if(ref1body.current && ref4body.current.getBoundingClientRect().top < ref4.current.getBoundingClientRect().bottom){
                     window.scrollBy(0, ((ref4.current.getBoundingClientRect().bottom - ref4body.current.getBoundingClientRect().top)*-1))
                 }
             }
@@ -225,6 +226,19 @@ function UserTicketList(props) {
           }
       }, [triggered])
     // #endregion
+
+    const getMyComment = (ticket) => {
+        const comment = ticket.ticket_comments.find(comment => {
+            return comment.author_id === props.currentUser.id
+        })
+        let commentStr = ""
+        if(comment.description.length >= 100 ){
+            commentStr += comment.description.substring(0,100) + "..."
+        }else{
+            commentStr += comment.description
+        }
+        return commentStr
+    }
     
 // #region local funcs
     const handleCollapse = (name) => {
@@ -303,19 +317,18 @@ function UserTicketList(props) {
         window.scrollTo(0, 0);
     }
 // #endregion
-
+console.log(commentedTickets)
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
         <StyledLoader active={loading} spinner text='Loading...'>
             {/* <div style={{height: '200px', backgroundColor: 'blue'}}></div> */}
             <Sdiv ref={buttonDivRef}>
-                {/* <button className='button alignRight'>asdeafa</button> */}
                 <button className='button alignRight' onClick={scrollToTop}>Top</button>
                 <button className='button alignRight' onClick={scrollToBottom}>Bottom</button>
                 <button className='button alignRight' onClick={expandAll}>Expand All</button>
                 <button ref={ref} className='button alignRight' onClick={collapseAll}>Collapse All</button>
             </Sdiv>
-            <table className='tickettable' >
+            <table className='tickettable' style={{top: '75px'}} >
                 <thead  style={{position: 'sticky', top: `${0}px`, bottom: `${0}px`}}> <tr className='pointer' onClick={()=>{handleCollapse('open')}}> <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1> <Th1>Title</Th1> <Th1>Age</Th1> 
                 <Th1 onClick={()=>{console.log('dasdasfasf')}}>Link</Th1> </tr> </thead>
                 {/* {openTickets.length === 0 && <h2>None</h2>} */}
@@ -339,26 +352,31 @@ function UserTicketList(props) {
                         })}
                     </tbody>
                 }
-
-                <thead> <tr className='pointer' onClick={()=>{handleCollapse('comments')}}> <Th3 ref={ref3}>Threads</Th3> <Th3>Subject</Th3> <Th3>Title</Th3> <Th3>Age</Th3> 
+                <thead> <tr className='pointer' onClick={()=>{handleCollapse('comments')}}> <Th3 ref={ref3}>Threads</Th3> <Th3>Comment</Th3> <Th3>Title</Th3> <Th3>Status</Th3> 
                 <Th3 onClick={()=>{console.log('dasdasfasf')}}>Link</Th3> </tr> </thead>
                 {/* {commentedTickets.length === 0 && <h2>None</h2>} */}
                 {!commentsCollapsed && commentedTickets.length > 0 && //!collapsed
                     <tbody ref={ref3body}>
-                        {commentedTickets.map(ticket=>{
-                            return <tr key={`comment ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
-                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
+                        {commentedTickets.filter(ticket => ticket.author_id !== props.currentUser.is).map(ticket=>{
+                            console.log('authorID, currentuserID',ticket.author_id, props.currentUser.id)
+                            const myComment = getMyComment(ticket);
+                            return <tr key={`comment ${ticket.id}`}><ThreadTicket id={ticket.id} myComment={myComment} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                                title={ticket.title} description={ticket.description} created_at={ticket.created_at} status={ticket.status} author_image={ticket.author_image}/></tr>
+                    
                         })}
                     </tbody>
                 }
-
-                <thead> <tr className='pointer' onClick={()=>{handleCollapse('replies')}}> <Th4 ref={ref4}>Comments</Th4> <Th4>Subject</Th4> <Th4>Title</Th4> <Th4>Age</Th4> 
+                {/* NOT ACTUAL TDS, J*/}
+                <thead> <tr className='pointer' onClick={()=>{handleCollapse('replies')}}> <Th4 ref={ref4}>Replies</Th4> <Th4>To</Th4><Th4>By</Th4> <Th4>Status</Th4> 
                 <Th4 onClick={()=>{console.log('dasdasfasf')}}>Link</Th4> </tr> </thead>
                 {/* {repliedTickets.length === 0 && <h2>None</h2>} */}
                 {!repliesCollapsed && repliedTickets.length > 0 && //!collapsed
                     <tbody ref={ref4body}>
                         {repliedTickets.map(ticket=>{
-                            return <tr key={`reply ${ticket.id}`}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                            console.log(repliedTickets.length)
+                            const myComment = getMyComment(ticket)
+                            console.log(ticket);
+                            return <tr key={`reply ${ticket.id}`}><OpenTicket id={ticket.id} myComment={myComment} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
                             title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
                         })}
                     </tbody>
@@ -368,7 +386,8 @@ function UserTicketList(props) {
             {/* {<div style={{backgroundColor: 'blue', height: `${tableOffset}px`}}></div>} */}
             {<div style={{height: `${tableOffset}px`}}></div>}
             {/* if you delete this i will hurt you */}
-                
+{/* this div is adjusting the height of the table based off all the refs so the page will be the correct height for the sticky tables to function */}
+
                 <tbody>{allUserTickets && allUserTickets.map(ticket => {
                     // console.log('buggy part', ticket)
                         let shouldReturn = true;
@@ -436,3 +455,9 @@ const mapStateToProps = state => {
   }
 
 export default connect(mapStateToProps, {  })(UserTicketList)
+
+
+const RouteDiv = styled.div`
+
+
+`

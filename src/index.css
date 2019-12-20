@@ -738,7 +738,7 @@ header + section:first-of-type {
   /* Use half of the width (120/2 = 60), to center the tooltip */
   /* Position the tooltip text */
   position: absolute;
-  z-index: 5;
+  z-index: 90;
 }
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip2:hover .tooltiptext2 {
@@ -974,6 +974,16 @@ header + section:first-of-type {
 .tickettable > thead {
   color: #788896;
 }
+.tickettable {
+  top: 75px;
+  width: 100%;
+  text-align: center;
+  padding: 2%;
+  border-collapse: collapse;
+}
+.tickettable > thead {
+  color: #788896;
+}
 tbody td,
 thead th {
   padding: 2%;
@@ -1025,10 +1035,27 @@ td div {
 .firstTh {
   text-align: center;
 }
+.ticket-table-open {
+  width: 100%;
+  top: 0px;
+}
+.ticket-table-open .thead-open {
+  position: 'sticky';
+  top: 0px;
+  bottom: 0px;
+}
+.ticket-table-open .thead-open .tr-open .th-open {
+  position: sticky;
+  top: 75px;
+  z-index: 10;
+  background: #f3f3f3;
+  color: #788896;
+}
 th:after {
   content: '';
   position: absolute;
   left: 0;
+  top: 0px;
   width: 100%;
   bottom: 0;
   border-bottom: 2px solid #c3cfd9;

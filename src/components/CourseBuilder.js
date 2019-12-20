@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 import { getCourses, selectCourse, selectUnit, selectWeek, selectDay } from '../actions/CourseBuilderActions.js';
 
 
-
-
-
 function CourseBuilder(props) {
     useEffect(() => {
         props.getCourses();
@@ -72,9 +69,9 @@ function CourseBuilder(props) {
                                 <option default value='default'>Select Course</option>
                             {props.courses && props.courses.map(course => {
                                 return (
-                                    <option key={course.id} value={course.id}>{course.name}</option>
+                                <option key={course.id} value={course.id}>{course.name}</option>
                                 );
-                            })}
+                                })}
                             {/* <option value="AddCourse">Add Course</option> */}
                         </select>
 {/* End Course Select Dropdown */}
