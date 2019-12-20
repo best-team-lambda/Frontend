@@ -4,6 +4,20 @@ import { getCourses, selectCourse, selectUnit, selectWeek, selectDay } from '../
 
 
 function CourseBuilder(props) {
+
+// #region Console Logs
+    // console.log('Props Course',props.courses)
+    // console.log('Props courseSelected',props.courseSelected)
+    // console.log('Props Units',props.units)
+    // console.log('Props unitSelected',props.unitSelected)
+    // console.log('Props Weeks',props.weeks)
+    // console.log('Props weekSelected',props.weekSelected)
+    // console.log('Props Days',props.days)
+    // console.log('Props daySelected',props.daySelected)
+    // console.log('Props Day',props.day)
+    // console.log('Props daySelected',props.selectedDay)
+// #endregion
+// #region UseEffects
     useEffect(() => {
         props.getCourses();
     }, [])
@@ -15,7 +29,6 @@ function CourseBuilder(props) {
         // console.log(e.target.value);
         if (e.target.value === 'AddCourse')
         {
-            
             // setSelectedCourse({...newVar[0]})
             // setUnits([...newVar[0].units]);
             return null;
@@ -37,24 +50,8 @@ function CourseBuilder(props) {
             props.selectDay(e.target.value);
         }
     }
-    // const handleInput = e => {
-
-    // }
-
-    // const addThing = () => {
-
-    // }
-
-    console.log('Props Course',props.courses)
-    console.log('Props courseSelected',props.courseSelected)
-    console.log('Props Units',props.units)
-    console.log('Props unitSelected',props.unitSelected)
-    console.log('Props Weeks',props.weeks)
-    console.log('Props weekSelected',props.weekSelected)
-    console.log('Props Days',props.days)
-    console.log('Props daySelected',props.daySelected)
-    console.log('Props Day',props.day)
-    console.log('Props daySelected',props.selectedDay)
+// #endregion
+    
 
     return (            
         <div className='filterToolsDiv'>
@@ -72,7 +69,6 @@ function CourseBuilder(props) {
                                 <option key={course.id} value={course.id}>{course.name}</option>
                                 );
                                 })}
-                            {/* <option value="AddCourse">Add Course</option> */}
                         </select>
 {/* End Course Select Dropdown */}
 {/* Start Unit Select Dropdown */}
@@ -82,7 +78,6 @@ function CourseBuilder(props) {
                             {props.units && props.units.map(unit=>{
                             return <option key={unit.id} value={unit.number}>{unit.name}</option>
                             })}
-                            {/* <option value="AddUnit">Add Unit</option> */}
                         </select>
                         }
 {/* End Unit Select Dropdown */}
@@ -93,7 +88,6 @@ function CourseBuilder(props) {
                             {props.weeks && props.weeks.map(week=>{
                             return <option key={week.id} value={week.number}>{week.name}</option>
                             })}
-                            {/* <option value="AddWeek">Add Week</option> */}
                         </select>
                         }
 {/* End Week Select Dropdown */}
@@ -104,18 +98,11 @@ function CourseBuilder(props) {
                             {props.days && props.days.map(day=>{
                             return <option key={day.id} value={day.number}>{day.name}</option>
                             })}
-                            {/* <option value="AddDay">Add Day</option> */}
                         </select>
                         }
 {/* End Day Select Dropdown */}
                     </div>
 {/* End Dropdown Div */}
-
-                    {/* <input  className='searchBox' name="searchTerm" type="text" onChange={handleChange} placeholder="Filter" /> */}
-                    <br />
-                    {/* <button className="button" onClick={addThing}>Add</button>
-                    <button className="button" onClick={()=>{console.log(selectedCourse);}}>log</button> */}
-                    <br />
                 </>
             );
         })()}

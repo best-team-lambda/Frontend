@@ -10,9 +10,9 @@ import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
 import DeleteAccountModal from "./DeleteAccountModal";
-import axiosWithAuth from "../../utils/axiosWithAuth"
 
 function ViewAccount(props) {
+// #region Local State
     const [loading, setLoading] = useState(true);
     const [pictureLoading, setPictureLoading] = useState(false);
     const [usernameAvailable, setUsernameAvailable] = useState(true);
@@ -30,14 +30,13 @@ function ViewAccount(props) {
 
     const [enterPasswordField, setEnterPasswordField] = useState(false)
     // const [profilePicture, setProfilePicture] = useState(null);
-
+// #endregion
 // #region console logs
     // console.log('Current User', props.currentUser.id, 'Other User: ', props.match.params.id)
     // console.log('Decoded token', decode(sessionStorage.getItem('token')));
+    // console.log(props.otherUser);
 // #endregion
-
-// console.log(props.otherUser);
-
+// #region Use Effects
     useEffect(() => {
         // console.log(props.match.params.id, props.otherUser.id, props.currentUser.id)
         if (!props.otherUser || props.match.params.id != props.otherUser.id){
@@ -53,14 +52,15 @@ function ViewAccount(props) {
         }
       }, [props.otherUser, props.currentUser, props.match.params.id])
 
-      useEffect(()=>{
-        if(editUserName || editName || editEmail || editCohort || newPassword){
-            setEnterPasswordField(true)
-        }else{
-            setEnterPasswordField(false)
-        }
-      },[editName,editEmail,editCohort,newPassword,editUserName])
-
+    useEffect(()=>{
+    if(editUserName || editName || editEmail || editCohort || newPassword){
+        setEnterPasswordField(true)
+    }else{
+        setEnterPasswordField(false)
+    }
+    },[editName,editEmail,editCohort,newPassword,editUserName])
+// #endregion
+// #region Local Funcs
     const handleChange = e => {
         if (e.target.name === 'username'){
             if(isValidUsername(e.target.value))
@@ -93,7 +93,6 @@ function ViewAccount(props) {
             setCurrentPassword(e.target.value);
         }
     };
-    
     const resetInputs = () => {
         setLoading(false);
         setShowEditForm(false);
@@ -103,7 +102,6 @@ function ViewAccount(props) {
         setNewPassword('');
         setCurrentPassword('');
     }
-
     const handleSubmit = e => {
         e.preventDefault();
         e.target.reset();
@@ -157,7 +155,6 @@ function ViewAccount(props) {
             }
         }
     }
-
     const changeProfilePic = (picture) => {
         if(picture){
             const formData = new FormData();
@@ -185,7 +182,6 @@ function ViewAccount(props) {
             }
         }
     }
-
     const deleteProfilePic = () => {
         //add loading
         if (props.currentUser.id == props.match.params.id){
@@ -195,13 +191,12 @@ function ViewAccount(props) {
             props.adminDeleteProfilePicture(props.match.params.id, setPictureLoading);
         }
     }
-
     const deleteAcc = () => {
         const modal = document.getElementById('modal') 
         modal.style.display='block'
     }
+// #endregion
 
-    console.log(props.otherUser);
     return (
         <Main>
             <MainChild>
@@ -209,32 +204,31 @@ function ViewAccount(props) {
         <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
                 <ProfileWrapper>
-                
-                        {props.otherUser.profile_picture ? (
-                        <ProfileFilter>
-                            <div >
-                                Edit
-                                <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
-                            </div>
-                            <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
-                        </ProfileFilter>) : (
-                        <ProfileFilter>
-                            <div className='editPicture'>
-                                Edit
-                                <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
-                            </div>
-                            <DefaultProfile edit={false} icon={faUserCircle}/>
-                        </ProfileFilter>)}
-                <Info>
-                    <Text1>{props.otherUser.name}</Text1>
-                    <Text2>{props.otherUser.email !== null ? props.otherUser.email :'Email: None'}</Text2>
-                    <Text3>{props.otherUser.cohort !== null ? `Cohort: ${props.otherUser.cohort}` : 'Cohort: Unknown'}</Text3>
-                </Info>
-                {(props.currentUser.id == props.match.params.id || isAdmin) && 
-                    <ButtonParent>
-                        <MarginButton style={{marginBottom: '4rem'}} className="button" onClick={() => setShowEditForm(!showEditForm)}>Edit Profile</MarginButton>
-                    </ButtonParent>
-                }
+                    {props.otherUser.profile_picture ? (
+                    <ProfileFilter>
+                        <div >
+                            Edit
+                            <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
+                        </div>
+                        <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
+                    </ProfileFilter>) : (
+                    <ProfileFilter>
+                        <div className='editPicture'>
+                            Edit
+                            <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
+                        </div>
+                        <DefaultProfile edit={false} icon={faUserCircle}/>
+                    </ProfileFilter>)}
+                    <Info>
+                        <Text1>{props.otherUser.name}</Text1>
+                        <Text2>{props.otherUser.email !== null ? props.otherUser.email :'Email: None'}</Text2>
+                        <Text3>{props.otherUser.cohort !== null ? `Cohort: ${props.otherUser.cohort}` : 'Cohort: Unknown'}</Text3>
+                    </Info>
+                    {(props.currentUser.id == props.match.params.id || isAdmin) && 
+                        <ButtonParent>
+                            <MarginButton style={{marginBottom: '4rem'}} className="button" onClick={() => setShowEditForm(!showEditForm)}>Edit Profile</MarginButton>
+                        </ButtonParent>
+                    }
                 </ProfileWrapper>
             </>} 
             
@@ -274,28 +268,32 @@ function ViewAccount(props) {
             </ProOuter>
     
             <EditForm onSubmit={handleSubmit}>
-    
 
-            <Label><div><Title className="bold">Username</Title>    
-                <div className='tooltip2'>
-                 <Input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
-                 <span className={editUserName ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{editUserName ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
-                </div></div>
-           
-            {/* <Label><h3 className="bold">Name</h3>
-                <Input className="text-input" name="name" onChange={handleChange} placeholder={props.otherUser.name} />
-            </Label>
-  */}
-
-            <div><Title className="bold">Email</Title>
-                <Input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
-            </div></Label>
-            <Label><div><Title className="bold">Cohort</Title>
-                <Input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
+            <Label>
+                <div>
+                    <Title className="bold">Username</Title>    
+                    <div className='tooltip2'>
+                        <Input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
+                        <span className={editUserName ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{editUserName ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
+                    </div>
                 </div>
-        <div><Title className="bold">New password</Title>
-                    <Input className="text-input" type='password' name="newPassword" onChange={handleChange} placeholder='New Password'/> </div>
+                <div>
+                    <Title className="bold">Email</Title>
+                    <Input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
+                </div>
             </Label>
+
+            <Label>
+                <div>
+                    <Title className="bold">Cohort</Title>
+                    <Input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
+                </div>
+                <div>
+                    <Title className="bold">New password</Title>
+                    <Input className="text-input" type='password' name="newPassword" onChange={handleChange} placeholder='New Password'/> 
+                </div>
+            </Label>
+
            <PasswordDiv>
             {(enterPasswordField)&&<div>
                     <PassValidate>Re-enter password to save changes:</PassValidate>

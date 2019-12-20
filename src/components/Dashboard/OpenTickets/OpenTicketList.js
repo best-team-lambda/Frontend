@@ -18,7 +18,7 @@ function OpenTicketList(props) {
     useEffect(() => {
         axiosWithAuth().get('/tickets/open')
         .then(res => {
-            console.log(res.data);
+            // console.log('Open Ticket List res data: ', res.data);
             setOpenTickets(res.data);
             setLoading(false);
         })

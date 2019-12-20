@@ -16,15 +16,16 @@ export const getCourses = () => dispatch => {
         axiosWithAuth()
           .get(`/courses`)
           .then(res => {
-                // console.log(res.data);
+                console.log('getCourses res: ', res.data);
                 dispatch({ type: SET_COURSES, payload: res.data });
           })
           .catch(err => {
             console.log("CATCH ERROR: ", err);
           });
     }
-export const selectCourse = (courseID) => {
-        return { type: SELECT_COURSE, payload: courseID };
+export const selectCourse = (courseName) => {
+        console.log('selectCourse action firing. coursename: ', courseName);
+        return { type: SELECT_COURSE, payload: courseName };
 }
 export const selectUnit = (ID) => {
         return { type: SELECT_UNIT, payload: ID };

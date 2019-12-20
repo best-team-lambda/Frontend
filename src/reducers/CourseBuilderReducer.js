@@ -20,7 +20,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
     // console.log('CourseBuilderReducer firing: ', action);
     switch(action.type) {
         case SET_COURSES: 
-            console.log('', action.payload)
+            // console.log('SET_COURSES FIRING', action.payload)
         return{
             ...state, courses: [action.payload],
         }
@@ -58,7 +58,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
                 day: '',
             };
             case SELECT_UNIT:
-                console.log('SELECT_UNIT FIRING', action.payload);
+                // console.log('SELECT_UNIT FIRING', action.payload);
                 let pickedUnit = state.units.find(unit => {
                     return unit.number == action.payload;
                 })
@@ -87,7 +87,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
                     day: '',
                 };
             case SELECT_WEEK:
-                console.log('SELECT_WEEK FIRING', action.payload);
+                // console.log('SELECT_WEEK FIRING', action.payload);
                 let pickedWeek = state.weeks.find(week => {
                     return week.number == action.payload;
                 })
@@ -112,7 +112,7 @@ export const CourseBuilderReducer = (state = initialState, action) => {
                     day: '',
                 };
             case SELECT_DAY:
-                console.log('SELECT_DAY FIRING', action.payload);
+                // console.log('SELECT_DAY FIRING', action.payload);
                 let pickedDay = state.days.find(day => {
                     return day.number == action.payload;
                 })

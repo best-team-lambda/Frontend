@@ -102,15 +102,16 @@ function UserTicketList(props) {
         axiosWithAuth()
         .get(`/tickets/mine`)
         .then(res => {
-            // console.log(res.data.resolvedTickets, res.data.commentedOn );
+            // console.log('commentedon', res.data.commentedOn)
+            // console.log('repliedOn', res.data.repliedOn)
             setOpenTickets(res.data.openTickets);
             setResolvedTickets(res.data.resolvedTickets);
-            setCommentedTickets(res.data.commentedOn.filter((thread,i)=>{return thread.author_id !== props.currentUser.id && res.data.commentedOn[i].id !== res.data.commentedOn[i+1].id }));
-            setRepliedTickets(res.data.repliedOn.filter(replies=>replies.author_id !== props.currentUser.id));
+            setCommentedTickets(res.data.commentedOn);
+            setRepliedTickets(res.data.repliedOn)
             setLoading(false);
         })
         .catch(err => {
-            console.log("CATCH ERROR: ", err.response.data.message, '');
+            console.log("CATCH ERROR: ", err.response.data.message);
             setLoading(false);
         });
     }, [])
@@ -227,18 +228,18 @@ function UserTicketList(props) {
       }, [triggered])
     // #endregion
 
-    const getMyComment = (ticket) => {
-        const comment = ticket.ticket_comments.find(comment => {
-            return comment.author_id === props.currentUser.id
-        })
-        let commentStr = ""
-        if(comment.description.length >= 100 ){
-            commentStr += comment.description.substring(0,100) + "..."
-        }else{
-            commentStr += comment.description
-        }
-        return commentStr
-    }
+    // const getMyComment = (ticket) => {
+    //     const comment = ticket.ticket_comments.find(comment => {
+    //         return comment.author_id === props.currentUser.id
+    //     })
+    //     let commentStr = ""
+    //     if(comment.description.length >= 100 ){
+    //         commentStr += comment.description.substring(0,100) + "..."
+    //     }else{
+    //         commentStr += comment.description
+    //     }
+    //     return commentStr
+    // }
     
 // #region local funcs
     const handleCollapse = (name) => {
@@ -317,7 +318,7 @@ function UserTicketList(props) {
         window.scrollTo(0, 0);
     }
 // #endregion
-console.log(commentedTickets)
+
     return (
          <div className='helperDashboard'> {/* some styling is set in app.js to render dashboard correctly */}
         <StyledLoader active={loading} spinner text='Loading...'>
@@ -329,7 +330,7 @@ console.log(commentedTickets)
                 <button ref={ref} className='button alignRight' onClick={collapseAll}>Collapse All</button>
             </Sdiv>
             <table className='tickettable' style={{top: '75px'}} >
-                <thead  style={{position: 'sticky', top: `${0}px`, bottom: `${0}px`}}> <tr className='pointer' onClick={()=>{handleCollapse('open')}}> <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1> <Th1>Title</Th1> <Th1>Age</Th1> 
+                <thead  style={{position: 'sticky', top: `${0}px`, bottom: `${0}px`}}> <tr className='pointer' onClick={()=>{handleCollapse('open')}}> <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1><Th1>Title</Th1> <Th1>Age</Th1> 
                 <Th1 onClick={()=>{console.log('dasdasfasf')}}>Link</Th1> </tr> </thead>
                 {/* {openTickets.length === 0 && <h2>None</h2>} */}
                 {!openCollapsed && openTickets.length > 0 && //!collapsed
@@ -341,7 +342,7 @@ console.log(commentedTickets)
                     </tbody>
                 }
 
-                <thead> <tr className='pointer' onClick={()=>{handleCollapse('closed')}}> <Th2 ref={ref2}>Resolved Tickets</Th2> <Th2>Subject</Th2> <Th2>Title</Th2> <Th2>Age</Th2> 
+                <thead> <tr className='pointer' onClick={()=>{handleCollapse('closed')}}> <Th2 ref={ref2}>Resolved Tickets</Th2> <Th2>Subject</Th2> <Th2>Subject</Th2> <Th2>Age</Th2> 
                 <Th2 onClick={()=>{console.log('dasdasfasf')}}>Link</Th2> </tr> </thead>
                 {/* {resolvedTickets.length === 0 && <tbody><tr key='fsdfsdggs'><td align='center'><div style={{height: '40px', marginBottom: '30px'}}>none</div></td><td></td><td></td><td></td><td></td></tr></tbody>} */}
                 {!resolvedCollapsed && resolvedTickets.length > 0 && //!collapsed
@@ -352,33 +353,27 @@ console.log(commentedTickets)
                         })}
                     </tbody>
                 }
-                <thead> <tr className='pointer' onClick={()=>{handleCollapse('comments')}}> <Th3 ref={ref3}>Threads</Th3> <Th3>Comment</Th3> <Th3>Title</Th3> <Th3>Status</Th3> 
+                <thead> <tr className='pointer' onClick={()=>{handleCollapse('comments')}}> <Th3 ref={ref3}>Threads</Th3> <Th3>Ticket Title</Th3> <Th3>Comment</Th3> <Th3>Status</Th3> 
                 <Th3 onClick={()=>{console.log('dasdasfasf')}}>Link</Th3> </tr> </thead>
                 {/* {commentedTickets.length === 0 && <h2>None</h2>} */}
                 {!commentsCollapsed && commentedTickets.length > 0 && //!collapsed
                     <tbody ref={ref3body}>
-                        {commentedTickets.filter(ticket => ticket.author_id !== props.currentUser.is).map(ticket=>{
-                            console.log('authorID, currentuserID',ticket.author_id, props.currentUser.id)
-                            const myComment = getMyComment(ticket);
-                            return <tr key={`comment ${ticket.id}`}><ThreadTicket id={ticket.id} myComment={myComment} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
-                                title={ticket.title} description={ticket.description} created_at={ticket.created_at} status={ticket.status} author_image={ticket.author_image}/></tr>
-                    
-                        })}
-                    </tbody>
-                }
-                {/* NOT ACTUAL TDS, J*/}
-                <thead> <tr className='pointer' onClick={()=>{handleCollapse('replies')}}> <Th4 ref={ref4}>Replies</Th4> <Th4>To</Th4><Th4>By</Th4> <Th4>Status</Th4> 
+                        {commentedTickets.map(comment=>{
+                            return <tr key={`comment ${comment.id}`}><ThreadTicket id={comment.id} currentUser={props.currentUser} author_id={comment.author_id} author_name={comment.author_name} 
+                                title={comment.ticket_title} description={comment.description} created_at={comment.created_at} status={comment.ticket_status} author_image={comment.author_image}/></tr>
+                                    
+                        })} 
+                     </tbody>
+                 }
+                <thead> <tr className='pointer' onClick={()=>{handleCollapse('replies')}}> <Th4 ref={ref4}>Replies</Th4> <Th4>Ticket Title</Th4><Th4>Reply</Th4> <Th4>Status</Th4> 
                 <Th4 onClick={()=>{console.log('dasdasfasf')}}>Link</Th4> </tr> </thead>
                 {/* {repliedTickets.length === 0 && <h2>None</h2>} */}
                 {!repliesCollapsed && repliedTickets.length > 0 && //!collapsed
                     <tbody ref={ref4body}>
-                        {repliedTickets.map(ticket=>{
-                            console.log(repliedTickets.length)
-                            const myComment = getMyComment(ticket)
-                            console.log(ticket);
-                            return <tr key={`reply ${ticket.id}`}><OpenTicket id={ticket.id} myComment={myComment} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
-                            title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr>
-                        })}
+                        {repliedTickets.map(reply=>{
+                            return <tr key={`reply ${reply.id}`}><ThreadTicket id={reply.id} currentUser={props.currentUser} author_id={reply.author_id} author_name={reply.author_name} 
+                                title={reply.ticket_title} description={reply.description} created_at={reply.created_at} status={reply.ticket_status} author_image={reply.author_image}/></tr>          
+                        })} 
                     </tbody>
                 }
 

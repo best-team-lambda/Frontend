@@ -20,7 +20,6 @@ export default function ThreadTicket(props) {
     return (
         <>
             <td>
-                <h3 style={{margin: "0"}}>Ticket By:</h3>
                 <div className='tooltip'>
                     <Link to={`/Dashboard/Account/${props.author_id}`}>
                         {props.author_image 
@@ -31,9 +30,8 @@ export default function ThreadTicket(props) {
                     <Names>{props.author_name}</Names>
                 </div>
             </td>
-            <td>{props.myComment}</td>
             <td className='boldrows'>{props.title}</td>
-            {/* //<td>{props.myComment}</td> */}
+            <td>{props.description}</td>
             <td>{props.status.toUpperCase()}</td>
             <td><Link to={`/Dashboard/Tickets/${props.id}`}>View</Link></td>
         </>

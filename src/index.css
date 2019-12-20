@@ -293,6 +293,25 @@ footer {
   outline: 0;
   padding: 10px 18px;
 }
+.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1.ml-1 {
+  margin-left: 0.6rem;
+  margin-top: 0 !important;
+  font-size: 1.7rem !important;
+}
+.ml-2 {
+  margin-left: 1rem;
+  margin-top: 0 !important;
+  font-size: 1.7rem !important;
+}
+.ml-3 {
+  margin-left: 1.7rem;
+  margin-top: 0 !important;
+  font-size: 1.5rem !important;
+}
+.ml-4 {
+  margin-left: 1.8rem;
+  font-size: 1.5rem !important;
+}
 .main-hero {
   padding-top: 75px;
   height: 80vh;
@@ -911,12 +930,14 @@ header + section:first-of-type {
   display: flex;
 }
 .courseContainer {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 .courseBox {
   color: white;
-  width: 300px;
+  min-width: 300px;
   height: 165px;
   border-radius: 5px;
   margin: 10px;

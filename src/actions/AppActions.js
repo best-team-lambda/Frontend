@@ -17,8 +17,9 @@ export const loadingDone = () =>{
 export const login = (user) => {
     return { type: SET_CURRENT_USER, payload: user };
 }
-export const logout = () => ({ type: LOGOUT, payload: null });
-
+export const logout = () => {
+    return ({ type: LOGOUT, payload: null });
+}
 export const getCurrentUser = () => dispatch => {
     dispatch({ type: LOADING_START, payload: null });
     axiosWithAuth().get('/users/user')
@@ -31,7 +32,7 @@ export const getCurrentUser = () => dispatch => {
 export const getOtherUser = (id) => dispatch => {
     axiosWithAuth().get(`/users/${id}`)
     .then(res =>{
-        console.log('getOtherUser res: ', res);
+        // console.log('getOtherUser res: ', res);
         dispatch({ type: SET_OTHER_USER, payload: res.data })
     })
     .catch(err => {dispatch({ type: LOADING_DONE, payload: err }); console.log('GetOtherUser CATCH ERROR: ', err.response.data.message) });

@@ -19,7 +19,7 @@ function ClosedTicketList(props) {
         // props.loadingStart();
         axiosWithAuth().get('/tickets/resolved')
         .then(res => {
-            console.log(res.data)
+            // console.log('Closed Tickets Res: ', res.data)
             setClosedTickets(res.data)
             setLoading(false);
         })
@@ -34,7 +34,7 @@ function ClosedTicketList(props) {
             <table className='tickettable ticket-table-open'>
                 <thead className='thead-open'>
                 <tr className="tr-open">
-                        <th className='firstTh th-open'>Authors</th>
+                        <th className='firstTh th-open'>Author</th>
                         <th className="th-open">Subject</th>
                         <th className="th-open">Title</th>
                         <th className="th-open">Age</th>
