@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getTicket, toggleCollapse, collapseAll, expandAll, markAsAnswer, removeAnswer, 
-addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket } from '../../actions/TicketActions';
+addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket, deleteVideo } from '../../actions/TicketActions';
 import * as timeago from 'timeago.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
-import process2 from '../../images/process2.jpg';
-// import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
+// import axiosWithAuth from '../../utils/axiosWithAuth.js';
+import axios from 'axios';
 
 import styled from "styled-components";
 import LoadingOverlay from "react-loading-overlay";
 import ImageModal from "../ImageModal";
+import axiosWithAuth from "../../utils/axiosWithAuth";
 
 function ViewTicket(props) {
 // #region local state
@@ -74,67 +75,125 @@ function ViewTicket(props) {
   }
   const addComment = () => {
     if(commentInputText !== ''){
-      props.addComment(ticketID, commentInputText);
+      let commentPictures = '';
+      let commentVideo = '';
+
+      if(images.length){
+        commentPictures = new FormData();
+        for(let i = 1; i <= images.length; i++) {
+          commentPictures.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        commentVideo = new FormData();
+        commentVideo.append('video', video);
+      }
+      props.addComment(ticketID, commentInputText, setLoading, commentPictures, commentVideo);
       setCommentInputText('');
+      setImages('');
+      setVideo('');
     }
     else{
       alert('Comment cannot be empty! Add an answer.');
     }
   }
-  const submitReply = () => {
+  const addReply = () => {
     if(replyInputText !== ''){
-      props.addReply(replyToComment, replyInputText);
+      let replyPictures = '';
+      let replyVideo = '';
+
+      if(images.length){
+        replyPictures = new FormData();
+        for(let i = 1; i <= images.length; i++) {
+          replyPictures.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        replyVideo = new FormData();
+        replyVideo.append('video', video);
+      }
+      props.addReply(replyToComment, replyInputText, setLoading, replyPictures, replyVideo);
       setReplyInputText('');
       setReplyToComment('');
+      setImages('');
+      setVideo('');
     }
     else{
       alert('Reply cannot be empty! Add an answer.');
     }
   }
   const editTicket = () => {
-    if (editQuestionObj.title !== '' || editQuestionObj.category !== '' || editQuestionObj.description !== ''){
-      // props.updateQuestion(editCommentID, editCommentText, collapsedStatus);
-      // let editedTicket = {title: props.ticket.title, category: props.ticket.category, description: props.ticket.description};
-      let editedTicket = {};
-      if (editQuestionObj.title !== '')
-      {
-        editedTicket = {...editedTicket, title: editQuestionObj.title};
-      }
-      if (editQuestionObj.category !== '')
-      {
-        editedTicket = {...editedTicket, category: editQuestionObj.category};
-      }
-      if (editQuestionObj.description !== '')
-      {
-        editedTicket = {...editedTicket, description: editQuestionObj.description};
-      }
-      props.updateTicket(ticketID, editedTicket);
-      setEditingQuestion(false);
-      setEditQuestionObj({title: '', category: '', description: ''});
+    if (!editQuestionObj.title && !editQuestionObj.category && !editQuestionObj.description && !images && !video){
+      alert('You must make a change before submitting.');
     }
     else{
-      alert('No changes have been made. Modify the ticket before submitting');
+      const data = new FormData();
+      if (editQuestionObj.title !== ''){
+        data.append('title', editQuestionObj.title);
+      }
+      if (editQuestionObj.category !== ''){
+        data.append('category', editQuestionObj.category);
+      }
+      if (editQuestionObj.description !== ''){
+        data.append('description', editQuestionObj.description);
+      }
+      if (images.length)
+      {
+        for(let i = 1; i <= images.length; i++) {
+          data.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        data.append('video', video);
+      }
+
+      props.updateTicket(ticketID, data, setLoading, setEditingQuestion, setEditQuestionObj, setImages, setVideo);
     }
   }
   const editComment = () => {
-    if (editCommentText !== ''){
-      let collapsedStatus = props.comments.find(comment => {return comment.id == editCommentID}).collapsed;
-      props.updateComment(editCommentID, editCommentText, collapsedStatus);
-      setEditCommentID('');
-      setEditCommentText('');
+    if (!editCommentText && !images && !video){
+      alert('You must make a change before submitting.');
     }
     else{
-      alert('You must add text to update the comment.');
+      const data = new FormData();
+      if (editCommentText !== ''){
+        data.append('description', editCommentText);
+      }
+      if (images.length)
+      {
+        for(let i = 1; i <= images.length; i++) {
+          data.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        data.append('video', video);
+      }
+      let collapsedStatus = props.comments.find(comment => {return comment.id == editCommentID}).collapsed;
+      data.append('collapsed', collapsedStatus);
+
+      props.updateComment(editCommentID, data, setLoading, setEditCommentText, setEditCommentID, setImages, setVideo);
     }
   }
   const editReply = () => {
-    if (editReplyText !== ''){
-      props.updateReply(editReplyID, editReplyText);
-      setEditReplyID('');
-      setEditReplyText('');
+    if (!editReplyText && !images && !video){
+      alert('You must make a change before submitting.');
     }
     else{
-      alert('You must add text to update the comment.');
+      const data = new FormData();
+      if (editReplyText !== ''){
+        data.append('description', editReplyText);
+      }
+      if (images.length)
+      {
+        for(let i = 1; i <= images.length; i++) {
+          data.append('image' + i, images[i-1]);
+        }
+      }
+      if(video){
+        data.append('video', video);
+      }
+
+      props.updateReply(editReplyID, data, setLoading, setEditReplyText, setEditReplyID, setImages, setVideo);
     }
   }
 // #endregion
@@ -338,12 +397,12 @@ function ViewTicket(props) {
                 <div className='commentFixer'>
                   {props.ticket.author_image && 
                     <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><img className="viewTicketPhoto" src={props.ticket.author_image} alt='author'/></Link>
-                      <span className='tooltiptext'>View Profile</span>
+                      <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                     </div>
                   }
                   {!props.ticket.author_image && 
                     <div className='tooltip'><Link to={`/Dashboard/Account/${props.ticket.author_id}`}><Fa icon={faUserCircle}/></Link>
-                    <span className='tooltiptext'>View Profile</span>
+                    <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                     </div>
                     } 
                   <div className='commentText'>
@@ -360,16 +419,21 @@ function ViewTicket(props) {
                 if (image.url === activeImage){
                   return (
                   <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
-                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width} 
+                  id={image.id} type={'open'} parentId={props.ticket.id} editing={editingQuestion ? true : false}/>  
                 )}
                 else {
                   return (
                   <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
-                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                  alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width} 
+                  id={image.id} type={'open'} parentId={props.ticket.id} editing={editingQuestion ? true : false}/>  
                 )}
               })}</div>
 
-              <div className='mediaDiv'>{props.ticket.open_video && <iframe allowFullScreen="true" src={props.ticket.open_video}/>}</div>
+              {props.ticket.open_video && <div className='mediaDiv' style={{width: '320px'}}>
+                <iframe allowFullScreen="true" src={props.ticket.open_video} style={{width: '100%', height: '180px'}}/>
+                {editingQuestion && <button className='button' style={{margin: '0 auto'}} onClick={()=>{props.deleteVideo('open', props.ticket.id, props.ticket.open_video_id)}}>Delete</button>}
+              </div>}
 
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={collapseAll}>Collapse All</button>}
               {props.comments.length > 0 && !editingQuestion && <button className='button alignRight' onClick={expandAll}>Expand All</button>}
@@ -381,7 +445,6 @@ function ViewTicket(props) {
 
               {props.ticket.status == 'resolved' && props.currentUser.id === props.ticket.author_id && !editingQuestion && <button className='button alignRight' onClick={removeAnswer}>Re-open ticket</button>}
             </div>
-            
 {/* //#endregion End author question div  */}
 
 {/* Edit Question box */}
@@ -435,7 +498,7 @@ function ViewTicket(props) {
                       <div className='commentFixer'>
                         <div className='tooltip'>
                           <Link to={`/Dashboard/Account/${comment.author_id}`}><img className="viewTicketPhoto" src={comment.author_image} alt='comment author'/></Link>
-                          <span className='tooltiptext'>View Profile</span>
+                          <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                         </div>
                         <div className='commentText'>
                           <h4>{comment.author_name} replied:</h4>
@@ -448,17 +511,24 @@ function ViewTicket(props) {
                     <div className='mediaDiv'>{comment.comment_pictures.length > 0 && comment.comment_pictures.map(image => {
                       if (image.url === activeImage){
                         return (
-                        <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
-                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                        <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                        id={image.id} type={'comment'} parentId={comment.id} editing={editCommentID ? true : false}/>  
                       )}
                       else {
                         return (
-                        <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
-                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
+                        <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                        alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                        id={image.id} type={'comment'} parentId={comment.id} editing={editCommentID ? true : false}/>  
                       )}
                     })}</div>
-                    <div className='mediaDiv'>{comment.comment_videos && comment.comment_videos.map(video => <iframe allowFullScreen="true" src={comment.comment_video} />)}</div>
                     
+                    {comment.comment_videos && comment.comment_videos.map(video => 
+                      <div className='mediaDiv' style={{width: '320px'}}>
+                        <iframe allowFullScreen="true" src={video.url} style={{width: '100%', height: '180px'}} />
+                        {editCommentID && <button className='button' style={{margin: '0 auto'}} onClick={()=>{props.deleteVideo('comment', video.comment_id, video.id)}}>Delete</button>}
+                    </div>)}
+
                     {comment.comment_replies.length > 0 && comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>+ {comment.comment_replies.length} replies</button>}
                     {comment.comment_replies.length > 0 && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={toggleReplies}>- {comment.comment_replies.length} replies</button>}
 
@@ -472,7 +542,7 @@ function ViewTicket(props) {
                     
                     {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && comment.id != editCommentID && <button className='button alignRight' value={JSON.stringify(comment)} onClick={markAsAnswer}>Mark as Answer</button>}
                   </div>
-          {/* Edit comment box */}
+  {/* Edit comment box */}
                   {comment.id == editCommentID && <div>
                       <div className='replyBox'>
                         <h3>Edit Comment:</h3>
@@ -496,7 +566,7 @@ function ViewTicket(props) {
                         <button className="button" onClick={editComment}>Submit Changes</button>
                       </div>
                     </div>}
-          {/* End Edit comment box */}
+  {/* End Edit comment box */}
                   </>
                   {!comment.collapsed && comment.comment_replies.length > 0 && comment.comment_replies.map((reply)=>{
                     return <Fragment key={reply.id}>
@@ -505,7 +575,7 @@ function ViewTicket(props) {
                         <div className='commentFixer'>
                           <div className='tooltip'>
                             <Link to={`/Dashboard/Account/${reply.author_id}`}><img className="viewTicketPhoto" src={reply.author_image} alt='reply author'/></Link>
-                            <span className='tooltiptext'>View Profile</span>
+                            <span className='tooltiptext' style={{left: '57%'}}>View Profile</span>
                           </div>
                           <div className='commentText'>
                             <h4>{reply.author_name} replied:</h4>
@@ -514,29 +584,36 @@ function ViewTicket(props) {
                         </div>
                         <div className='secondDiv'><p>{timeago.format(reply.created_at)}</p></div>
                       </div>           
-                      
+                                        
+                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => {
+                        if (image.url === activeImage){
+                          return (
+                          <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
+                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                          id={image.id} type={'reply'} parentId={reply.id} editing={editReplyID ? true : false}/>  
+                        )}
+                        else {
+                          return (
+                          <ImageModal key={image.url} active={activeImage} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
+                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}
+                          id={image.id} type={'reply'} parentId={reply.id} editing={editReplyID ? true : false}/>  
+                        )}
+                      })}</div>
+                      {reply.reply_videos && reply.reply_videos.map(video => 
+                        <div className='mediaDiv' style={{width: '320px'}}>
+                          <iframe allowFullScreen="true" src={video.url} style={{width: '100%', height: '180px'}} />
+                          {editReplyID && <button className='button' style={{margin: '0 auto'}} onClick={()=>{props.deleteVideo('reply', video.reply_id, video.id)}}>Delete</button>}
+                      </div>)}
+
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={pickReplyToEdit}>Edit</button>}
                       {props.currentUser.id === reply.author_id && reply.id == editReplyID && <button className='button alignRight' value={reply.id} onClick={cancelReplyEdit}>Cancel Edit</button>}
                       
                       {props.currentUser.id === reply.author_id && reply.id != editReplyID && <button className='button alignRight' value={reply.id} onClick={deleteReply}>Delete</button>}
                       
                       {props.ticket.status != 'resolved' && props.currentUser.id === props.ticket.author_id && reply.id != editReplyID && <button className='button alignRight' value={JSON.stringify(reply)} onClick={markAsAnswer}>Mark as Answer</button>}
-                      
-                      <div className='mediaDiv'>{reply.reply_pictures.length > 0 && reply.reply_pictures.map(image => {
-                        if (image.url === activeImage){
-                          return (
-                          <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'block'} src={image.url} 
-                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
-                        )}
-                        else {
-                          return (
-                          <ImageModal key={image.url} setActiveImage={setActiveImage} modalToggle={'none'} src={image.url} 
-                          alt={`Uploaded by: ${props.ticket.author_name}`} caption={image.caption} width={image.width}/>  
-                        )}
-                      })}</div>
-                      <div className='mediaDiv'>{reply.reply_video && <iframe src={reply.reply_video} />}</div>
+    
                   </div> 
-          {/* Edit Reply Box */}
+  {/* Edit Reply Box */}
                   {reply.id == editReplyID && <div>
                       <div className='replyBox'>
                         <h3>Edit Reply:</h3>
@@ -560,7 +637,7 @@ function ViewTicket(props) {
                         <button className="button" onClick={editReply}>Submit Changes</button>
                       </div>
                     </div>}
-          {/* End Edit Reply Box */}
+  {/* End Edit Reply Box */}
                   </Fragment> })} 
 {/* New Reply Box Here */}
   {/* if no replies have add reply button on comment, else show answer box at bottom of replies if comment is expanded */}
@@ -568,7 +645,6 @@ function ViewTicket(props) {
                       {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id != replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={pickReplyToComment}>Add Reply</button>}
                       {comment.comment_replies.length > 0 && comment.id != editCommentID && comment.id == replyToComment && !comment.collapsed && <button className='button alignRight' value={comment.id} onClick={cancelReplyToComment}>Cancel Reply</button>}
                     </div>
-
                     {comment.id == replyToComment && !comment.collapsed && <div>
                       <div className='replyBox'>
                         <h3>Reply to thread:</h3>
@@ -589,7 +665,7 @@ function ViewTicket(props) {
                             </FileDiv>
                         </label>
                         {video && <p>{video.name}</p>}
-                        <button className="button" onClick={submitReply}>Submit Reply</button>
+                        <button className="button" onClick={addReply}>Submit Reply</button>
                       </div>
                     </div>}
   {/* End New Reply Box */}</Fragment>  })}  </>}
@@ -617,7 +693,7 @@ function ViewTicket(props) {
                           </FileDiv>
                       </label>
                       {video && <p>{video.name}</p>}
-                  <button className="button" onClick={addComment}>Submit Reply</button>
+                  <button className="button" onClick={addComment}>Submit Thread</button>
                 </div>
               </div>
 {/* End New Comment div */}
@@ -639,15 +715,16 @@ const mapStateToProps = state => {
       comments: state.TicketReducer.comments,
       openPictures: state.TicketReducer.openPictures,
       resolvedPictures: state.TicketReducer.resolvedPictures,
-      openVideo: state.TicketReducer.openVideo,
       resolvedVideo: state.TicketReducer.resolvedVideo,
   }
 }
 
 export default connect(mapStateToProps, { getTicket, toggleCollapse, collapseAll, expandAll, 
-  markAsAnswer, removeAnswer, addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket })(ViewTicket)
+  markAsAnswer, removeAnswer, addComment, updateComment, deleteComment, addReply, updateReply, deleteReply, updateTicket, deleteTicket, deleteVideo })(ViewTicket)
 
 
+
+// #region Styled Components
 const StyledLoader = styled(LoadingOverlay)`
     min-height: 100vh;
     width:100%;
@@ -693,3 +770,4 @@ const FileDiv = styled.div `
     align-items: center;
     margin-top: 2rem;
 `
+// #endregion

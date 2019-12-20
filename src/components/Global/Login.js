@@ -62,9 +62,9 @@ function Login(props) {
             //redirect to open queue
             props.history.push('/Dashboard/OpenTickets');
         })
-        .catch(err => {console.log('LOGIN CATCH ERROR: ', err);
+        .catch(err => {console.log('LOGIN CATCH ERROR: ', err.response.data.message);
         setLoading(false);
-        alert(err)});
+        alert(err.response.data.message)});
         setUserCredentials({username: '', password: ''})
     }
 

@@ -9,8 +9,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faUserCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 // import {faPencilAlt, faUserCircle, faCamera, faImages, faFileVideo} from "@fortawesome/free-solid-svg-icons";
 import LoadingOverlay from "react-loading-overlay";
+import DeleteAccountModal from "./DeleteAccountModal";
 
 function ViewAccount(props) {
+// #region Local State
     const [loading, setLoading] = useState(true);
     const [pictureLoading, setPictureLoading] = useState(false);
     const [usernameAvailable, setUsernameAvailable] = useState(true);
@@ -25,25 +27,40 @@ function ViewAccount(props) {
     const [editCohort, setEditCohort] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
-    // const [profilePicture, setProfilePicture] = useState(null);
 
+    const [enterPasswordField, setEnterPasswordField] = useState(false)
+    // const [profilePicture, setProfilePicture] = useState(null);
+// #endregion
 // #region console logs
     // console.log('Current User', props.currentUser.id, 'Other User: ', props.match.params.id)
     // console.log('Decoded token', decode(sessionStorage.getItem('token')));
+    // console.log(props.otherUser);
 // #endregion
-
-console.log(props.otherUser);
-
+// #region Use Effects
     useEffect(() => {
+        // console.log(props.match.params.id, props.otherUser.id, props.currentUser.id)
         if (!props.otherUser || props.match.params.id != props.otherUser.id){
+            setLoading(true);
+            props.getOtherUser(props.match.params.id);
+        }
+        else if (props.otherUser.id != props.currentUser.id && props.currentUser.id === props.match.params.id){
             setLoading(true);
             props.getOtherUser(props.match.params.id);
         }
         else{
             resetInputs();
         }
-      }, [props.otherUser, props.currentUser])
+      }, [props.otherUser, props.currentUser, props.match.params.id])
 
+    useEffect(()=>{
+    if(editUserName || editName || editEmail || editCohort || newPassword){
+        setEnterPasswordField(true)
+    }else{
+        setEnterPasswordField(false)
+    }
+    },[editName,editEmail,editCohort,newPassword,editUserName])
+// #endregion
+// #region Local Funcs
     const handleChange = e => {
         if (e.target.name === 'username'){
             if(isValidUsername(e.target.value))
@@ -75,8 +92,7 @@ console.log(props.otherUser);
         else if (e.target.name === 'oldPassword'){
             setCurrentPassword(e.target.value);
         }
-      };
-    
+    };
     const resetInputs = () => {
         setLoading(false);
         setShowEditForm(false);
@@ -86,10 +102,10 @@ console.log(props.otherUser);
         setNewPassword('');
         setCurrentPassword('');
     }
-
     const handleSubmit = e => {
         e.preventDefault();
         e.target.reset();
+
         // console.log(JSON.stringify(props.currentUser));
         // console.log(props.currentUser.profile_picture)
         let userObj = { password: currentPassword }
@@ -121,6 +137,7 @@ console.log(props.otherUser);
             if (props.currentUser.id == props.match.params.id)
             {
                 setLoading(true);
+                // console.log('loading')
                 // CHECK IF NEEDED AND DO THIS FIRST, THEN UPDATE THE USER AND SPREAD THIS IN. USER UPDATER SHOULD ALWAYS SPREAD FULL OBJ IN AND
                 //ONLY UPDATE VARS RETURNED IN THE SERVER RES.
                 props.updateUser(userObj, setLoading);
@@ -138,7 +155,6 @@ console.log(props.otherUser);
             }
         }
     }
-
     const changeProfilePic = (picture) => {
         if(picture){
             const formData = new FormData();
@@ -166,7 +182,6 @@ console.log(props.otherUser);
             }
         }
     }
-
     const deleteProfilePic = () => {
         //add loading
         if (props.currentUser.id == props.match.params.id){
@@ -176,37 +191,47 @@ console.log(props.otherUser);
             props.adminDeleteProfilePicture(props.match.params.id, setPictureLoading);
         }
     }
-    
+    const deleteAcc = () => {
+        const modal = document.getElementById('modal') 
+        modal.style.display='block'
+    }
+// #endregion
 
     return (
-        <OuterDiv>
-        <Div className='card'> 
+        <Main>
+            <MainChild>
+                <DeleteAccountModal />
         <StyledLoader active={loading} spinner text='Uploading...'> 
             {!showEditForm && <>
-                    <ProOuter>
-                        <ProfileWrapper>
-                            {props.otherUser.profile_picture ? (
-                            <ProfileFilter>
-                                <div className='editPicture'>
-                                    Edit
-                                    <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
-                                </div>
-                                <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
-                            </ProfileFilter>) : (
-                            <ProfileFilter>
-                                <div className='editPicture'>
-                                    Edit
-                                    <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
-                                </div>
-                                <DefaultProfile edit={false} icon={faUserCircle}/>
-                            </ProfileFilter>)}
-                        </ProfileWrapper>
-                    </ProOuter>
-                <h3 className="bold">Username:</h3><p>{props.otherUser.username}</p>
-                <h3 className="bold">Name:</h3><p>{props.otherUser.name}</p>
-                <h3 className="bold">Email:</h3><p>{props.otherUser.email !== null ? props.otherUser.email : 'None'}</p>
-                <h3 className="bold">Cohort:</h3><p>{props.otherUser.cohort !== null ? props.otherUser.cohort : 'Unknown'}</p>
-            </>}
+                <ProfileWrapper>
+                    {props.otherUser.profile_picture ? (
+                    <ProfileFilter>
+                        <div >
+                            Edit
+                            <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
+                        </div>
+                        <ProfileImg edit={false} style={{backgroundImage: `url('${props.otherUser.profile_picture}')`}}/>
+                    </ProfileFilter>) : (
+                    <ProfileFilter>
+                        <div className='editPicture'>
+                            Edit
+                            <FontAwesomeIcon icon={faCamera} className='fa-1x'/>
+                        </div>
+                        <DefaultProfile edit={false} icon={faUserCircle}/>
+                    </ProfileFilter>)}
+                    <Info>
+                        <Text1>{props.otherUser.name}</Text1>
+                        <Text2>{props.otherUser.email !== null ? props.otherUser.email :'Email: None'}</Text2>
+                        <Text3>{props.otherUser.cohort !== null ? `Cohort: ${props.otherUser.cohort}` : 'Cohort: Unknown'}</Text3>
+                    </Info>
+                    {(props.currentUser.id == props.match.params.id || isAdmin) && 
+                        <ButtonParent>
+                            <MarginButton style={{marginBottom: '4rem'}} className="button" onClick={() => setShowEditForm(!showEditForm)}>Edit Profile</MarginButton>
+                        </ButtonParent>
+                    }
+                </ProfileWrapper>
+            </>} 
+            
             {showEditForm && <>
             <OuterDiv2>
             <StyledLoader active={pictureLoading} spinner text='Uploading...'> 
@@ -230,45 +255,62 @@ console.log(props.otherUser);
                         </div>
                         <DefaultProfile edit={true} icon={faUserCircle}/>
                     </ProfileFilter>)}</label>
-                </ProfileWrapper>
-                {props.otherUser.profile_picture && <button className='button' onClick={deleteProfilePic}>Remove</button>}
-            </ProOuter>
-            <form onSubmit={handleSubmit}>
-            <label><h3 className="bold">Username:</h3>    
-                <div className='tooltip2'>
-                 <input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
-                 <span className={editUserName ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{editUserName ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
-                </div>
-            </label>
-            <div>
-            </div>
-            <label><h3 className="bold">Name:</h3>
-                <input className="text-input" name="name" onChange={handleChange} placeholder={props.otherUser.name} />
-            </label>
-            <label><h3 className="bold">Email:</h3>
-                <input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
-            </label> 
-            <label><h3 className="bold">Cohort:</h3>
-                <input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
-            </label>    
-            <label><h3 className="bold">New password:</h3>
-                    <input className="text-input" type='password' name="newPassword" onChange={handleChange} placeholder='New Password'/> 
-            </label>
-           <PasswordDiv>
-                <label>
-                    <p>Re-enter password to save changes:</p>
-                    <input className="text-input" type='password' name='oldPassword' onChange={handleChange} placeholder='Current Password' />
-                </label>
-            </PasswordDiv> 
-                <br /><br />
-                <button className="button" type="submit">Submit changes</button>
-            </form> </>}
-
-            {(props.currentUser.id == props.match.params.id || isAdmin) && <MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton>}
+                     <SideContent>
+                    {props.otherUser.profile_picture && <RemoveBtn onClick={deleteProfilePic}>Remove Photo</RemoveBtn>}
+                    {(props.currentUser.id == props.match.params.id || isAdmin) && 
+                        <RemoveBtn onClick={(e)=>{e.preventDefault();deleteAcc();}}>Delete Account</RemoveBtn>
+                    }
+                    <Name>{props.otherUser.name}</Name>
             
+                </SideContent>
+                </ProfileWrapper>
+               
+            </ProOuter>
+    
+            <EditForm onSubmit={handleSubmit}>
+
+            <Label>
+                <div>
+                    <Title className="bold">Username</Title>    
+                    <div className='tooltip2'>
+                        <Input className="text-input" name="username" onChange={handleChange} placeholder={props.otherUser.username} type="text"/> 
+                        <span className={editUserName ? (usernameInvalid ? 'taken' : (usernameAvailable ? 'available' : 'taken')) : null}>{editUserName ? (usernameInvalid ? 'invalid' : (usernameAvailable ? 'available': 'taken')) : null}</span>
+                    </div>
+                </div>
+                <div>
+                    <Title className="bold">Email</Title>
+                    <Input className="text-input" name="email" type="email" onChange={handleChange} placeholder={props.otherUser.email !== null ? props.otherUser.email : ''} />
+                </div>
+            </Label>
+
+            <Label>
+                <div>
+                    <Title className="bold">Cohort</Title>
+                    <Input className="text-input" name="cohort" type="text" onChange={handleChange} placeholder={props.otherUser.cohort !== null ? props.otherUser.cohort : ''} />
+                </div>
+                <div>
+                    <Title className="bold">New password</Title>
+                    <Input className="text-input" type='password' name="newPassword" onChange={handleChange} placeholder='New Password'/> 
+                </div>
+            </Label>
+
+           <PasswordDiv>
+            {(enterPasswordField)&&<div>
+                    <PassValidate>Re-enter password to save changes:</PassValidate>
+                    <input className="text-input" type='password' name='oldPassword' onChange={handleChange} placeholder='Current Password' />
+                </div>}
+            </PasswordDiv> 
+                {/* <br /><br /> */}
+                <EditButton>
+                {enterPasswordField && <ButtonParent><MarginButton className="button" type="submit">Submit Changes</MarginButton></ButtonParent>}
+            {((props.currentUser.id == props.match.params.id || isAdmin) && !enterPasswordField) && <ButtonParent><MarginButton className="button" onClick={() => setShowEditForm(!showEditForm)}>{showEditForm && 'Cancel'}{!showEditForm && 'Edit'}</MarginButton></ButtonParent>}
+                </EditButton>
+                
+            </EditForm></>}
+
             </StyledLoader>  
-        </Div>
-        </OuterDiv>
+            </MainChild>
+        </Main>
     )
 }
 
@@ -283,7 +325,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, { getOtherUser, updateUser, adminUpdateUser, addProfilePicture, updateProfilePicture, deleteProfilePicture,
     adminAddProfilePicture, adminUpdateProfilePicture, adminDeleteProfilePicture, })(ViewAccount)
 
-
+// #region Styled components
 const StyledLoader = styled(LoadingOverlay)`
     width:100%;
     z-index: 2;
@@ -291,10 +333,8 @@ const StyledLoader = styled(LoadingOverlay)`
 
 const OuterDiv = styled.div `
     width: 100%;
-    flex-direction: column;
-    align-items: center;
-    background: #383651;
-    justify-content: center;
+    margin-top: 10rem;
+    background: #fff;
 `;
 const OuterDiv2 = styled.div `
     width: 100%;
@@ -308,23 +348,21 @@ const OuterDiv2 = styled.div `
     }
 `;
 
+
 const Div = styled.div `
-    width: 60%;
-    flex-direction: column;
-    align-items: center;
-    background: white;
-    margin: 10rem auto;
-    padding: 3rem;
-    text-align: center;
+    width: 100%;
 `;
 const ProOuter = styled.div `
     width: 100%;
+    background: #fff;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
+
 `;
 const MarginButton = styled.button `
-    margin-top: 25px;
+ margin: 2rem 0;
+    
 `;
 const PasswordDiv = styled.div `
     margin-top: 50px;
@@ -340,8 +378,8 @@ const ImageInput = styled.input `
 `;
 const DefaultProfile = styled(FontAwesomeIcon) `
     position: absolute;
-    width: 200px !important;
-    height: 200px;
+    width: 150px !important;
+    height: 150px;
     /* border-radius: 50%; */
     background: white;
     ${props => props.edit && `
@@ -355,10 +393,12 @@ const DefaultProfile = styled(FontAwesomeIcon) `
 const ProfileImg = styled.div`
     position: absolute;
     /* border-radius: 50%; */
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
     background-size: cover;
     background-repeat: no-repeat;
+    max-height: 100%;
     background-position: 50% 50%; 
     ${props => props.edit && `
         &:hover {
@@ -369,15 +409,19 @@ const ProfileImg = styled.div`
     }
 `;
 const ProfileWrapper = styled.div `
-    width: 200px;
-    height: 200px;
-    margin: 2rem;
-`;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction: column;
+    padding: 1%;
+    width: 100%;
+    
+    `;
 const ProfileFilter = styled.div `
     font-family: 'Patua One', sans-serif;
-    width: 200px;
-    height: 200px;
-    /* border-radius: 50%; */
+    width: 150px;
+    height: 150px;
+    margin-top:50px;
     display: flex;
     font-size: 3.5rem;
     align-items: center;
@@ -388,3 +432,140 @@ const ProfileFilter = styled.div `
         align-items: center;
     }
 `;
+
+const ProfileInfo = styled.div`
+background: #fff;
+display: flex;
+justify-content: space-evenly;
+align-items:center;
+
+`
+
+const Text1 = styled.h2 `
+    text-transform: capitalize;
+    margin: 0.7rem;
+`
+const Text2 =styled.h3`
+    font-style: italic;
+    font-size: 2rem;
+    margin: 0.7rem;
+`
+
+const Text3 =styled.h5`
+    text-transform: uppercase;
+    margin: 0.7rem;
+`
+
+const Info = styled.div`
+
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+width: 80%;
+`
+// padding: 5%;
+
+const Main = styled.div`
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+
+background: #383651;
+`
+
+const MainChild = styled.div`
+margin: 8% 0;
+width: 65%;
+background: #fff;
+`
+
+//here and down are edit form edits 
+const EditForm = styled.form`
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+
+
+`
+
+const EditContainer = styled.div`
+
+`
+// position: relative;
+const Label = styled.label`
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+max-width: 100%;
+min-width: 100%;
+width: 100%;
+`
+// text-align: center;
+// display: flex;
+// justify-content: space-between;
+// align-items: center;
+const Input = styled.input `
+    @media (max-width: 1450px) {
+        width:100%;
+    }
+`
+//width: 100%;
+
+const ButtonParent = styled.div `
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+
+`
+const EditButton = styled.div`
+display: flex;
+justify-content: space-evenly;
+width: 70%;
+margin: 5%;
+align-items: center;
+flex-direction: column;
+`
+const LabelContainer = styled.div `
+    display: flex;
+`
+
+const LabelText = styled.h3 `
+   
+`
+
+const PassValidate = styled.p`
+text-align: center;
+
+
+`
+
+const SideContent = styled.div `
+    display: flex;
+    flex-direction:column;
+    justify-content: space-evenly;
+    align-items: center;
+`
+const Name = styled.h2 `
+    text-transform: capitalize;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1rem;
+`
+
+const Title = styled.h3`
+text-align: center;
+`
+
+const RemoveBtn = styled.h3 `
+    font-style:italic;
+    margin-top: 0;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+
+`
+//#endregion

@@ -1,4 +1,4 @@
-import { SELECT_COURSE, SELECT_UNIT, SELECT_WEEK, SELECT_DAY } from '../actions/CourseBuilderActions.js';
+import { SELECT_COURSE, SELECT_UNIT, SELECT_WEEK, SELECT_DAY, SET_COURSES } from '../actions/CourseBuilderActions.js';
 
 const initialState = {
     courseSelected: false,
@@ -11,122 +11,7 @@ const initialState = {
     selectedWeek: '',
     selectedDay: '',
 
-    courses: [
-        {
-        id: 1, 
-        name: 'Full Stack Web Development', 
-        units: 
-            [
-                {
-                    id: 1231231,
-                    name: 'Unit 1: Web Fundamentals',
-                    weeks: 
-                    [
-                        {
-                            id: 122311, 
-                            name: 'Week 1: User Interface and Git', 
-                            Days: [
-                                {
-                                    id: 221,
-                                    name: 'User Interface 1'
-                                },
-                                {
-                                    id: 222,
-                                    name: 'Git for Web Development'
-                                },
-                                {
-                                    id: 223,
-                                    name: 'User Interface 2'
-                                },
-                                {
-                                    id: 224,
-                                    name: 'User Interface 3'
-                                },
-                            ] 
-                        },
-                        {
-                            id: 231231231, 
-                            name: 'week 3', 
-                            Days: [
-                                {
-                                    id: 331,
-                                    name: 'monday'
-                                },
-                                {
-                                    id: 332,
-                                    name: 'tuesday'
-                                },
-                                {
-                                    id: 333,
-                                    name: 'wednesday'
-                                },
-                                {
-                                    id: 334,
-                                    name: 'thursday'
-                                },
-                            ] 
-                        },
-                    ]
-                },
-                {
-                    id: 323213212,
-                    name: 'dacf',
-                    weeks: 
-                    [
-                        
-                        {
-                            id: 1223311, 
-                            name: 'abac', 
-                            Days: [
-                                {
-                                    id: 2321,
-                                    name: 'monday'
-                                },
-                                {
-                                    id: 2232,
-                                    name: 'tuesday'
-                                },
-                                {
-                                    id: 2233,
-                                    name: 'wednesday'
-                                },
-                                {
-                                    id: 2234,
-                                    name: 'thursday'
-                                },
-                            ] 
-                        },
-                        {
-                            id: 23133231231, 
-                            name: 'week 3', 
-                            Days: [
-                                {
-                                    id: 3331,
-                                    name: 'monday'
-                                },
-                                {
-                                    id: 3332,
-                                    name: 'tuesday'
-                                },
-                                {
-                                    id: 3333,
-                                    name: 'wednesday'
-                                },
-                                {
-                                    id: 3334,
-                                    name: 'thursday'
-                                },
-                            ] 
-                        },
-                    ]
-                },
-            ]
-        }
-    ],
-    units: '',
-    weeks: '',
-    days: '',
-    day: '',
+    courses: [],
   };
 
 
@@ -134,63 +19,114 @@ export const CourseBuilderReducer = (state = initialState, action) => {
     // console.log('CourseBuilderReducer initialState: ', initialState);
     // console.log('CourseBuilderReducer firing: ', action);
     switch(action.type) {
+        case SET_COURSES: 
+            // console.log('SET_COURSES FIRING', action.payload)
+        return{
+            ...state, courses: [action.payload],
+        }
         case SELECT_COURSE:
-            console.log('SELECT_COURSE FIRING', state);
-            console.log('Payload: ', action.payload);
+            console.log('SELECT_COURSE FIRING', action.payload);
             let pickedCourse = state.courses.find(course => {
-                console.log(course.id);
-                console.log(action.payload);
-                return course.id === action.payload;
+                return course.name === action.payload;
             })
-            console.log('pickedCourse', pickedCourse);
+            if (action.payload === 'default'){
+                return {
+                    ...state,
+                    courseSelected: false,
+                    selectedCourse: '',
+                    units: '',
+                    unitSelected: false,
+                    selectedUnit: '',
+                    weekSelected: false,
+                    selectedWeek: '',
+                    daySelected: false,
+                    selectedDay: '',
+                    day: '',
+                };
+            }
             return {
                 ...state,
                 courseSelected: true,
                 selectedCourse: action.payload,
-                units: [...pickedCourse.units]
+                units: [...pickedCourse.units],
+                unitSelected: false,
+                selectedUnit: '',
+                weekSelected: false,
+                selectedWeek: '',
+                daySelected: false,
+                selectedDay: '',
+                day: '',
             };
             case SELECT_UNIT:
-                console.log('SELECT_UNIT FIRING', state);
-                console.log('Payload: ', action.payload);
+                // console.log('SELECT_UNIT FIRING', action.payload);
                 let pickedUnit = state.units.find(unit => {
-                    console.log(unit.id);
-                    console.log(action.payload);
-                    return unit.id === action.payload;
+                    return unit.number == action.payload;
                 })
-                console.log('pickedUnit', pickedUnit);
+                if (action.payload === 'default'){
+                    return {
+                        ...state,
+                        unitSelected: false,
+                        selectedUnit: '',
+                        weeks: '',
+                        weekSelected: false,
+                        selectedWeek: '',
+                        daySelected: false,
+                        selectedDay: '',
+                        day: '',
+                    }
+                }
                 return {
                     ...state,
                     unitSelected: true,
                     selectedUnit: action.payload,
-                    weeks: [...pickedUnit.weeks]
+                    weeks: [...pickedUnit.weeks],
+                    weekSelected: false,
+                    selectedWeek: '',
+                    daySelected: false,
+                    selectedDay: '',
+                    day: '',
                 };
             case SELECT_WEEK:
-                console.log('SELECT_WEEK FIRING', state);
-                console.log('Payload: ', action.payload);
+                // console.log('SELECT_WEEK FIRING', action.payload);
                 let pickedWeek = state.weeks.find(week => {
-                    console.log(week.id);
-                    console.log(action.payload);
-                    return week.id === action.payload;
+                    return week.number == action.payload;
                 })
-                console.log('pickedWeek', pickedWeek);
+                if (action.payload === 'default'){
+                    return {
+                        ...state,
+                        weekSelected: false,
+                        selectedWeek: '',
+                        days: '',
+                        daySelected: false,
+                        selectedDay: '',
+                        day: '',
+                    };
+                }
                 return {
                     ...state,
                     weekSelected: true,
                     selectedWeek: action.payload,
-                    days: [...pickedWeek.Days]
+                    days: [...pickedWeek.days],
+                    daySelected: false,
+                    selectedDay: '',
+                    day: '',
                 };
             case SELECT_DAY:
-                console.log('SELECT_DAY FIRING', state);
-                console.log('Payload: ', action.payload);
+                // console.log('SELECT_DAY FIRING', action.payload);
                 let pickedDay = state.days.find(day => {
-                    console.log(day.id);
-                    console.log(action.payload);
-                    return day.id === action.payload;
+                    return day.number == action.payload;
                 })
-                console.log('pickedDay', pickedDay);
+                if (action.payload === 'default'){
+                    return {
+                        ...state,
+                        daySelected: false,
+                        selectedDay: '',
+                        day: '',
+                    };
+                }
                 return {
                     ...state,
-                    DaySelected: true,
+                    daySelected: true,
                     selectedDay: action.payload,
                     day: pickedDay,
                 };

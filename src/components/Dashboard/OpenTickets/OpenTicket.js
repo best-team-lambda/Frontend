@@ -11,11 +11,10 @@ const Fa = styled(FontAwesomeIcon)`
     height: 60px;
 `
 
-
 export default function OpenTicket(props) {
     return (
         <>
-            <th align='center'>
+            <td align='center'>
                 <div className='tooltip'>
                     <Link to={`/Dashboard/Account/${props.author_id}`}>
                         {props.author_image 
@@ -25,13 +24,12 @@ export default function OpenTicket(props) {
                     <span className='tooltiptext'>View Profile</span>
                 </div>
                 <div>{props.author_name}</div>
-            </th>
-            <th className='boldrows'>{props.category}</th>
-            <th>{props.title}</th>
+            </td>
+            <td className='boldrows'>{props.category}</td>
+            <td>{props.title}</td>
             {/* <td>{props.description}</td> */}
-            <th>{timeago.format(props.created_at)}</th>
-            <th><Link to={`/Dashboard/Tickets/${props.id}`}>View</Link></th>
+            <td>{timeago.format(props.created_at)}</td>
+            <td><Link to={`/Dashboard/Tickets/${props.id}`}>View</Link></td>
         </>
     )
 }
-

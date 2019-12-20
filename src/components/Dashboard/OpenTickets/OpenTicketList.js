@@ -16,10 +16,9 @@ function OpenTicketList(props) {
     const [openTickets, setOpenTickets] = useState([]);
 
     useEffect(() => {
-        // setLoading(true);
         axiosWithAuth().get('/tickets/open')
         .then(res => {
-            console.log(res.data);
+            // console.log('Open Ticket List res data: ', res.data);
             setOpenTickets(res.data);
             setLoading(false);
         })
@@ -28,21 +27,25 @@ function OpenTicketList(props) {
         alert(err.response.data.message)});
     }, []);
 
+
     return (
          <div className='helperDashboard'>
         <StyledLoader active={loading} spinner text='Loading...'>
-            <table className='tickettable'>
-                <thead>
-                    <tr >
-                        <th className='firstTh stickyTH' >Author</th>
-                        <th className='stickyTH'>Subject</th>
-                        <th className='stickyTH'>Title</th>
-                        <th className='stickyTH'>Age</th>
-                        <th className='stickyTH'>Link</th>
+            <table className='tickettable ticket-table-open'>
+            {/* ticket-table-open */}
+            {/* className="thead-open"  */}
+                <thead className='thead-open'>
+                    <tr className="tr-open">
+                        <th className='firstTh stickyTH th-open' >Author</th>
+                        <th className='stickyTH th-open'>Subject</th>
+                        <th className='stickyTH th-open'>Title</th>
+                        <th className='stickyTH th-open'>Age</th>
+                        <th className='stickyTH th-open'>Link</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="tbody-open">
                     {openTickets && openTickets.map(ticket => {
+                      
                        let shouldReturn = true;
                        if(props.searchTerm){
                            if (props.searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(props.searchTerm.toLowerCase())){
@@ -66,7 +69,7 @@ function OpenTicketList(props) {
                        }
                         if (shouldReturn === true){
                             return (
-                                <tr key={ticket.id}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
+                                <tr className="tr-open" key={ticket.id}><OpenTicket id={ticket.id} currentUser={props.currentUser} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
                                 title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image}/></tr> )
                         }
                         else{return null}

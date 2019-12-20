@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { logout } from '../../actions/AppActions.js';
@@ -6,7 +6,6 @@ import logo from '../../images/logo.png';
 
 
 function Header(props) {
-
     const logOut = () => {
         sessionStorage.removeItem('token');
         props.logout();
@@ -21,9 +20,9 @@ function Header(props) {
             if (props.currentUser){
                 return (
                     <>
-                    {/* <h4>Welcome {props.currentUser.name}!</h4> */}
+                    <h4>Welcome {props.currentUser.name}!</h4>
                         <nav className='loggedIn'>
-                            {/* <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink> */}
+                            <NavLink className='navLink' to='/Dashboard/CourseBuilder'>Course Builder</NavLink>
           
                             <NavLink className='navLink' to='/Dashboard/CreateTicket'>Create Ticket</NavLink>
                             {/* <NavLink className='navLink' to='/Dashboard/OpenTickets'>Dashboard</NavLink> */}
@@ -56,4 +55,4 @@ const mapStateToProps = state => {
     }
   }
 
-export default connect(mapStateToProps, { logout })(Header)
+export default connect(mapStateToProps, {  logout })(Header)

@@ -6,21 +6,26 @@ export const SELECT_UNIT = 'SELECT_UNIT';
 export const SELECT_WEEK = 'SELECT_WEEK';
 export const SELECT_DAY = 'SELECT_DAY';
 
+// export const CLEAR_COURSE = 'CLEAR_COURSE';
+// export const CLEAR_UNIT = 'CLEAR_UNIT';
+// export const CLEAR_WEEK = 'CLEAR_WEEK';
+// export const CLEAR_DAY = 'CLEAR_DAY';
 
 
 export const getCourses = () => dispatch => {
         axiosWithAuth()
           .get(`/courses`)
           .then(res => {
-                console.log(res.data);
+                console.log('getCourses res: ', res.data);
                 dispatch({ type: SET_COURSES, payload: res.data });
           })
           .catch(err => {
-            console.log("CATCH ERROR: ", err.response.data.message);
+            console.log("CATCH ERROR: ", err);
           });
     }
-export const selectCourse = (courseID) => {
-        return { type: SELECT_COURSE, payload: courseID };
+export const selectCourse = (courseName) => {
+        console.log('selectCourse action firing. coursename: ', courseName);
+        return { type: SELECT_COURSE, payload: courseName };
 }
 export const selectUnit = (ID) => {
         return { type: SELECT_UNIT, payload: ID };

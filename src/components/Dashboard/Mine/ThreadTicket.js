@@ -15,25 +15,24 @@ const Names = styled.div `
     width: 100%;
 `
 
-export default function ClosedTicket(props) {
-    console.log(props)
+export default function ThreadTicket(props) {
+    // console.log(props)
     return (
         <>
             <td>
                 <div className='tooltip'>
-                <Link to={`/Dashboard/Account/${props.author_id}`}>
-                    {props.author_image 
-                    ? <img className="photo4" src={props.author_image} alt='ticket author'/> 
-                    : (<Fa icon={faUserCircle}/>)}
+                    <Link to={`/Dashboard/Account/${props.author_id}`}>
+                        {props.author_image 
+                                ? <img className="photo3" src={props.author_image} alt='ticket author'/> 
+                                : <Fa icon={faUserCircle} />}
+                        <span className='tooltiptext'>View Profile</span>
                     </Link>
-                    <span className='tooltiptext'>View Profile</span>
+                    <Names>{props.author_name}</Names>
                 </div>
-                <Names>{props.author_name}</Names>
             </td>
-            <td className='boldrows'>{props.category}</td>
-            <td>{props.title}</td>
-            {/* <td>{props.description}</td> */}
-            <td>{timeago.format(props.created_at)}</td>
+            <td className='boldrows'>{props.title}</td>
+            <td>{props.description}</td>
+            <td>{props.status.toUpperCase()}</td>
             <td><Link to={`/Dashboard/Tickets/${props.id}`}>View</Link></td>
         </>
     )

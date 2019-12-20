@@ -19,7 +19,7 @@ function ClosedTicketList(props) {
         // props.loadingStart();
         axiosWithAuth().get('/tickets/resolved')
         .then(res => {
-            console.log(res.data)
+            // console.log('Closed Tickets Res: ', res.data)
             setClosedTickets(res.data)
             setLoading(false);
         })
@@ -31,17 +31,18 @@ function ClosedTicketList(props) {
     return (
          <div className='helperDashboard'>
         <StyledLoader active={loading} spinner text='Loading...'>
-            <table className='tickettable'>
-                <thead>
-                <tr>
-                        <th className='firstTh'>Authors</th>
-                        <th>Subject</th>
-                        <th>Title</th>
-                        <th>Age</th>
-                        <th>Link</th>
+            <table className='tickettable ticket-table-open'>
+                <thead className='thead-open'>
+                <tr className="tr-open">
+                        <th className='firstTh th-open'>Author</th>
+                        <th className="th-open">Subject</th>
+                        <th className="th-open">Title</th>
+                        <th className="th-open">Age</th>
+                        <th className="th-open">Link</th>
                     </tr>
                 </thead>
                 <tbody>{closedTickets && closedTickets.map(ticket => {
+                    console.log(ticket)
                     let shouldReturn = true;
                     if(props.searchTerm){
                         if (props.searchType === 'Category' && ticket.category && !ticket.category.toLowerCase().includes(props.searchTerm.toLowerCase())){
@@ -65,7 +66,7 @@ function ClosedTicketList(props) {
                     }
                     if (shouldReturn === true){
                         return (
-                            <tr key={ticket.id}><ClosedTicket id={ticket.id} author_name={ticket.author_name} category={ticket.category} 
+                            <tr key={ticket.id}><ClosedTicket id={ticket.id} author_id={ticket.author_id} author_name={ticket.author_name} category={ticket.category} 
                             title={ticket.title} description={ticket.description} created_at={ticket.created_at} author_image={ticket.author_image} helper_image={ticket.helper_image}/></tr> )
                     }
                     else{return null}

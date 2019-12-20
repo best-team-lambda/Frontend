@@ -7,9 +7,10 @@ import thunk from 'redux-thunk';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
+import ScrollToTop from "./components/Global/ScrollToTop"
 import './css/index.css';
 
 
 const store = createStore(reducer, applyMiddleware(thunk));
 
-ReactDOM.render(<Provider store={store}><Router><App/></Router></Provider>, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}><Router><ScrollToTop><App/></ScrollToTop></Router></Provider>, document.getElementById('root'));
