@@ -33,11 +33,11 @@ function SidebarNav(props) {
     const location = useLocation()
     useEffect(() => {
         const URLForCourse = location.pathname.split('/').filter((param,i) => location.pathname.includes(props.course))
-        console.log(props)
+        // console.log(props)
         if(URLForCourse.length > 1){
             setStep(1)
         }
-        console.log('SideBarNav propscourse: ', URLForCourse);
+        // console.log('SideBarNav propscourse: ', URLForCourse);
     }, [location.pathname])
 
 
