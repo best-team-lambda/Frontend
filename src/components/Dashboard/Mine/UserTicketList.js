@@ -111,7 +111,8 @@ function UserTicketList(props) {
             setLoading(false);
         })
         .catch(err => {
-            console.log("CATCH ERROR: ", err.response.data.message);
+            // console.log("CATCH ERROR: ", err.response.data.message);
+            console.log("CATCH ERROR: ", err);
             setLoading(false);
         });
     }, [])
@@ -331,7 +332,7 @@ function UserTicketList(props) {
             </Sdiv>
             <table className='tickettable' style={{top: '75px'}} >
                 <thead  style={{position: 'sticky', top: `${0}px`, bottom: `${0}px`}}> <tr className='pointer' onClick={()=>{handleCollapse('open')}}> <Th1 ref={ref1}>Open Tickets</Th1> <Th1>Subject</Th1><Th1>Title</Th1> <Th1>Age</Th1> 
-                <Th1 onClick={()=>{console.log('dasdasfasf')}}>Link</Th1> </tr> </thead>
+                <Th1>Link</Th1> </tr> </thead>
                 {/* {openTickets.length === 0 && <h2>None</h2>} */}
                 {!openCollapsed && openTickets.length > 0 && //!collapsed
                     <tbody ref={ref1body}>
@@ -343,7 +344,7 @@ function UserTicketList(props) {
                 }
 
                 <thead> <tr className='pointer' onClick={()=>{handleCollapse('closed')}}> <Th2 ref={ref2}>Resolved Tickets</Th2> <Th2>Subject</Th2> <Th2>Subject</Th2> <Th2>Age</Th2> 
-                <Th2 onClick={()=>{console.log('dasdasfasf')}}>Link</Th2> </tr> </thead>
+                <Th2>Link</Th2> </tr> </thead>
                 {/* {resolvedTickets.length === 0 && <tbody><tr key='fsdfsdggs'><td align='center'><div style={{height: '40px', marginBottom: '30px'}}>none</div></td><td></td><td></td><td></td><td></td></tr></tbody>} */}
                 {!resolvedCollapsed && resolvedTickets.length > 0 && //!collapsed
                     <tbody ref={ref2body}>
@@ -354,19 +355,18 @@ function UserTicketList(props) {
                     </tbody>
                 }
                 <thead> <tr className='pointer' onClick={()=>{handleCollapse('comments')}}> <Th3 ref={ref3}>Threads</Th3> <Th3>Ticket Title</Th3> <Th3>Comment</Th3> <Th3>Status</Th3> 
-                <Th3 onClick={()=>{console.log('dasdasfasf')}}>Link</Th3> </tr> </thead>
+                <Th3>Link</Th3> </tr> </thead>
                 {/* {commentedTickets.length === 0 && <h2>None</h2>} */}
-                {!commentsCollapsed && commentedTickets.length > 0 && //!collapsed
+                {/* {!commentsCollapsed && commentedTickets.length > 0 && //!collapsed
                     <tbody ref={ref3body}>
                         {commentedTickets.map(comment=>{
-                            return <tr key={`comment ${comment.id}`}><ThreadTicket id={comment.id} currentUser={props.currentUser} author_id={comment.author_id} author_name={comment.author_name} 
-                                title={comment.ticket_title} description={comment.description} created_at={comment.created_at} status={comment.ticket_status} author_image={comment.author_image}/></tr>
-                                    
+                            return <tr key={`comment ${comment}`}><ThreadTicket id={comment.id} currentUser={props.currentUser} author_id={comment.author_id} author_name={comment.author_name} 
+                                title={comment.ticket_title} description={comment.description} created_at={comment.created_at} status={comment.ticket_status} author_image={comment.author_image}/></tr>     
                         })} 
                      </tbody>
-                 }
+                 } */}
                 <thead> <tr className='pointer' onClick={()=>{handleCollapse('replies')}}> <Th4 ref={ref4}>Replies</Th4> <Th4>Ticket Title</Th4><Th4>Reply</Th4> <Th4>Status</Th4> 
-                <Th4 onClick={()=>{console.log('dasdasfasf')}}>Link</Th4> </tr> </thead>
+                <Th4>Link</Th4> </tr> </thead>
                 {/* {repliedTickets.length === 0 && <h2>None</h2>} */}
                 {!repliesCollapsed && repliedTickets.length > 0 && //!collapsed
                     <tbody ref={ref4body}>
