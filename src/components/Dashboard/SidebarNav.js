@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { connect } from 'react-redux';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { setSearchTerm, setSearchType, setAskedAnsweredBoth, setOpenClosedAll } from '../../actions/SearchActions.js';
 import { getCourses, selectCourse, selectUnit, selectWeek, selectDay } from '../../actions/CourseBuilderActions';
 import unclaimed from '../../images/unclaimed.png'
@@ -10,6 +10,7 @@ import closed from '../../images/closed.png'
 function SidebarNav(props) {
     const [step,setStep] = useState(null)
     const [lambda,setLambda] = useState({
+        
         weeks: null,
         days: null
     })
@@ -17,9 +18,9 @@ function SidebarNav(props) {
     // #endregion 
 
     // #region Console Logs
-    console.log('SideBarNav props.courses: ', props.courses);
-    console.log('SideBarNav props.selectedCourse: ', props.selectedCourse);
-    console.log('SideBarNav props.units: ', props.units);
+    // console.log('SideBarNav props.courses: ', props.courses);
+    // console.log('SideBarNav props.selectedCourse: ', props.selectedCourse);
+    // console.log('SideBarNav props.units: ', props.units);
     // #endregion
 
     // #region Use Effects
@@ -27,51 +28,24 @@ function SidebarNav(props) {
         if (!props.courses){
             props.getCourses();
         }
-            // props.selectCourse('Full Stack Web');
-        // if(props.m)
     }, [props.courses])
+
+    const location = useLocation()
     useEffect(() => {
-        console.log('SideBarNav props.units: ', props.units);
-    }, [props.units, props.courses])
+        const URLForCourse = location.pathname.split('/').filter((param,i) => location.pathname.includes(props.course))
+        // console.log(props)
+        if(URLForCourse.length > 1){
+            setStep(1)
+        }
+        // console.log('SideBarNav propscourse: ', URLForCourse);
+    }, [location.pathname])
+
 
     
     // #endregion
 
     // #region Local Funcs
     // #endregion
-
-
-        // useEffect(()=>{
-        //     if(props.weeks){
-        //         setLambda({
-        //             ...lambda,
-        //             weeks: [...props.weeks]
-        //         })
-        //     }
-        //     if(props.days){
-        //         setLambda({
-        //             ...lambda,
-        //             days: [...props.days]
-        //         })
-        //     }},[props.units,props.weeks,props.days])
-
-        // useEffect(()=>{
-        //     if(lambda.weeks && lambda.days){
-
-        //         if(props.daySelected){
-        //             props.days.find(day => day)
-        //             setLambda({...lambda, days: [props.daySelected]})
-        //         }else if(!props.daySelected){
-        //             setLambda({...lambda,days: [...props.days]})
-        //         }
-        //         if(props.weekSelected){
-        //             setLambda({...lambda, week: [props.weekSelected]})
-        //         }else if(!props.daySelected){
-        //             setLambda({...lambda, week: [...props.weeks]})
-        //         }
-        //     }
-        // },[props.daySelected,props.weekSelected])
-
 
 
     const handleChange = e => {
@@ -119,7 +93,7 @@ function SidebarNav(props) {
     const handleClickCourse = (e) => {
         e.preventDefault()
         props.selectCourse(e.target.name);
-        history.push('/Dashboard/Browse/Full%20Stack%20Web')
+        history.push('/Dashboard/Browse/FullStackWeb')
         setStep(2)
     }
 

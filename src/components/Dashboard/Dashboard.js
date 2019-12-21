@@ -37,7 +37,7 @@ export default function Dashboard(props) {
 
                 <Route exact path='/Dashboard/Tickets/:id' component={ViewTicket} />
 
-                <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} />
+                {/* <Route exact path='/Dashboard/CourseBuilder' component={CourseBuilder} /> */}
                 
                 {/* <Route exact path='/Dashboard/Lambda' component={LambdaTK} />
                 <Route exact path='/Dashboard/Lambda/:course' component={Course} /> */}
