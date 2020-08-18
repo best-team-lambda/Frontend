@@ -15,7 +15,10 @@ function Header(props) {
   return (
     <>
     <header>
-        <Link to='/Dashboard/OpenTickets'><img className="logo" src={logo} alt='Lambda Logo'/></Link>
+        {props.currentUser 
+            ? <Link to='/Dashboard/OpenTickets'><img className="logo" src={logo} alt='Lambda Logo'/></Link> 
+            : <Link to='/'><img className="logo" src={logo} alt='Lambda Logo'/></Link>
+        }
         {(()=>{ //immediately invoked function to allow javascript inside JSX. syntax: {(()=>{})()}
             if (props.currentUser){
                 return (
